@@ -1,0 +1,1897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard · 2BuyAndSell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: phone-first single column, one question per screen; three agent-chosen layouts (Classic, Bold, Profile); dashboard = tabs for Leads, My page, Marketing kit. */
+:root{
+  --brand:#1e3a5f;
+  --on-brand:#ffffff;
+  --gold:#c9962b;
+  --ink:#16202a;
+  --muted:#5d6874;
+  --paper:#f5f6f8;
+  --card:#ffffff;
+  --line:#e1e5ea;
+  --brand-fg:var(--brand);
+  --btn-bg:var(--brand);
+  --brand-soft:color-mix(in srgb, var(--brand) 9%, #ffffff);
+  --good:#1e7f48; --good-soft:#e3f3ea;
+  --info:#2f5fa8; --info-soft:#e6eef9;
+  --warn:#a86a12; --warn-soft:#fbf0dc;
+  --bad:#b23b30;  --bad-soft:#f9e5e2;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#e8ecf1; --muted:#9aa6b3; --paper:#0f141a; --card:#171e26; --line:#29323d;
+    --brand-fg:color-mix(in srgb, var(--brand) 45%, #ffffff);
+    --brand-soft:color-mix(in srgb, var(--brand) 30%, #171e26);
+    --good:#5cc98a; --good-soft:#15301f; --info:#8db3ee; --info-soft:#18273d;
+    --warn:#eab75a; --warn-soft:#352812; --bad:#f08b7f; --bad-soft:#3a1c18;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#e8ecf1; --muted:#9aa6b3; --paper:#0f141a; --card:#171e26; --line:#29323d;
+  --brand-fg:color-mix(in srgb, var(--brand) 45%, #ffffff);
+  --brand-soft:color-mix(in srgb, var(--brand) 30%, #171e26);
+  --good:#5cc98a; --good-soft:#15301f; --info:#8db3ee; --info-soft:#18273d;
+  --warn:#eab75a; --warn-soft:#352812; --bad:#f08b7f; --bad-soft:#3a1c18;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5;-webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+[hidden]{display:none !important}
+a{color:var(--brand-fg)}
+
+/* demo switcher */
+.demo{background:#11161c;color:#f1f3f5;font-size:13px}
+.demo .in{max-width:1080px;margin:0 auto;padding:6px 16px;display:flex;align-items:center;gap:10px;overflow-x:auto}
+.demo span{opacity:.7;white-space:nowrap}
+.demo a{color:#f1f3f5;text-decoration:none;padding:4px 10px;border-radius:999px;white-space:nowrap;font-weight:600}
+.demo a[aria-current="page"]{background:#f1f3f5;color:#11161c}
+
+/* product header */
+.head{background:var(--card);border-bottom:1px solid var(--line)}
+.head .in{max-width:1080px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:12px}
+.ph{border-radius:50%;object-fit:cover;flex:none;display:block}
+.ini{border-radius:50%;background:var(--brand);color:var(--on-brand);display:grid;place-items:center;font-family:var(--display);font-weight:800;flex:none}
+.who-agent{min-width:0;margin-right:auto}
+.who-agent b{display:block;font-size:16px;line-height:1.2}
+.who-agent small{display:block;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hlogo{max-height:34px;max-width:110px;object-fit:contain;flex:none}
+.lang{display:flex;border:1px solid var(--line);border-radius:999px;padding:2px;flex:none}
+.lang button{border:0;background:transparent;padding:5px 11px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;color:var(--muted)}
+.lang button[aria-pressed="true"]{background:var(--brand);color:var(--on-brand)}
+/* Bold layout header */
+.lay-bold .head{background:var(--brand);border-bottom-color:transparent;color:var(--on-brand)}
+.lay-bold .who-agent small{color:var(--on-brand);opacity:.8}
+.lay-bold .lang{border-color:color-mix(in srgb, var(--on-brand) 35%, transparent)}
+.lay-bold .lang button{color:var(--on-brand);opacity:.8}
+.lay-bold .lang button[aria-pressed="true"]{background:var(--on-brand);color:var(--brand);opacity:1}
+.lay-bold .head .ini{background:var(--on-brand);color:var(--brand)}
+
+/* tool shell */
+.shell{max-width:1000px;margin:0 auto}
+.side{display:none}
+.col{max-width:620px;margin:0 auto;padding:24px 16px 40px}
+@media (min-width:960px){
+  .lay-profile .shell{display:grid;grid-template-columns:300px 1fr;gap:32px;padding:24px 16px 0}
+  .lay-profile .side{display:block;position:sticky;top:20px;align-self:start}
+  .lay-profile .col{margin:0;padding:0 0 40px}
+  .lay-profile .pcard.inline{display:none}
+}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--good);background:var(--good-soft);padding:5px 11px;border-radius:999px}
+.start h1{font-size:clamp(30px,7vw,40px);font-weight:800;margin:16px 0 10px}
+.start p.lede{color:var(--muted);margin:0 0 24px;font-size:18px}
+.band{background:var(--brand);color:var(--on-brand);margin:-24px -16px 22px;padding:26px 16px 34px;border-radius:0 0 26px 26px}
+.band p.lede{color:var(--on-brand);opacity:.85;margin-bottom:0}
+.band .badge{background:color-mix(in srgb, var(--on-brand) 16%, transparent);color:var(--on-brand)}
+@media (min-width:660px){.band{margin:0 0 22px;border-radius:24px;padding:30px 28px 34px}}
+.pcard{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:22px}
+.pc-top{display:flex;gap:14px;align-items:center}
+.pc-top b{display:block;font-family:var(--display);font-size:21px;line-height:1.2}
+.pc-top small{display:block;color:var(--muted);font-size:14px}
+.pc-tag{margin:12px 0 0;font-size:16px}
+.pc-act{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.pc-act a{text-decoration:none}
+.pc-logo{display:block;max-height:44px;max-width:160px;object-fit:contain;margin-top:14px}
+.side .pcard{margin:0}
+.side .pc-top{flex-direction:column;align-items:flex-start}
+.picks{display:grid;gap:12px}
+.pick{display:flex;align-items:center;gap:14px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;cursor:pointer;width:100%}
+.pick:hover{border-color:var(--brand-fg)}
+.pick .ic{width:46px;height:46px;border-radius:12px;background:var(--brand-soft);color:var(--brand-fg);display:grid;place-items:center;flex:none}
+.pick b{display:block;font-family:var(--display);font-size:19px}
+.pick small{display:block;color:var(--muted);font-size:15px}
+.pick .arrow{margin-left:auto;color:var(--muted);font-size:22px}
+
+/* question */
+.progress{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.progress .bar{flex:1;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.progress .bar i{display:block;height:100%;background:var(--brand-fg);transition:width .25s}
+.progress small{color:var(--muted);font-size:14px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.section-tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--brand-fg);margin-bottom:8px}
+.q h2{font-size:clamp(24px,5.6vw,30px);font-weight:800}
+.q .hint{color:var(--muted);margin:8px 0 0}
+.opts{display:grid;gap:10px;margin-top:22px}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:15px 16px;font-weight:600;cursor:pointer;min-height:56px}
+.opt .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);flex:none;display:grid;place-items:center}
+.opt[aria-pressed="true"]{border-color:var(--brand-fg);background:var(--brand-soft)}
+.opt[aria-pressed="true"] .dot{border-color:var(--brand-fg)}
+.opt[aria-pressed="true"] .dot::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--brand-fg)}
+.money{position:relative;margin-top:22px}
+.money span{position:absolute;left:18px;top:50%;transform:translateY(-50%);font-size:26px;color:var(--muted);font-family:var(--display);font-weight:800}
+.money input{width:100%;font-family:var(--display);font-weight:800;font-size:30px;padding:14px 16px 14px 42px;border:1.5px solid var(--line);border-radius:14px;background:var(--card);font-variant-numeric:tabular-nums}
+.money input:focus{border-color:var(--brand-fg);outline:none;box-shadow:0 0 0 3px var(--brand-soft)}
+.navbar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom));z-index:6}
+.navbar .in{max-width:620px;margin:0 auto;display:flex;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:14px 20px;font-weight:700;font-size:17px;cursor:pointer;background:var(--btn-bg);color:var(--on-brand);white-space:nowrap;text-decoration:none}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.grow{flex:1}
+.btn.small{padding:8px 14px;font-size:14px;border-radius:10px}
+.linkbtn{background:none;border:0;color:var(--brand-fg);font-weight:700;cursor:pointer;padding:6px 0;text-decoration:underline;text-underline-offset:3px}
+
+/* results */
+.res{display:grid;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}
+.card h2{font-size:21px;font-weight:800}
+.card .sub{color:var(--muted);margin:6px 0 0;font-size:15px}
+.scorecard{display:flex;gap:18px;align-items:center}
+.ring{position:relative;flex:none}
+.ring svg{display:block}
+.ring .n{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.ring b{font-family:var(--display);font-size:32px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.ring small{display:block;color:var(--muted);font-size:11px}
+.pill{display:inline-block;font-weight:700;font-size:13px;padding:4px 11px;border-radius:999px;white-space:nowrap}
+.t-ready{background:var(--good-soft);color:var(--good)}
+.t-close{background:var(--info-soft);color:var(--info)}
+.t-build{background:var(--warn-soft);color:var(--warn)}
+.t-start{background:var(--bad-soft);color:var(--bad)}
+.scorecard h3{font-size:21px;margin:8px 0 4px}
+.scorecard p{margin:0;color:var(--muted);font-size:15px}
+.kicker{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--brand-fg);margin-bottom:10px}
+.stat{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.stat:last-child{border-bottom:0;padding-bottom:0}
+.stat:first-child{padding-top:0}
+.stat .k{font-weight:600}
+.stat .k small{display:block;color:var(--muted);font-weight:400;font-size:13px}
+.stat .v{font-family:var(--display);font-weight:800;font-size:22px;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.stat .v.neg{color:var(--bad)}
+.bd{width:100%;border-collapse:collapse;font-size:15px;font-variant-numeric:tabular-nums}
+.bd td{padding:7px 0;border-bottom:1px dashed var(--line)}
+.bd td:last-child{text-align:right;white-space:nowrap}
+.bd tr.total td{border-bottom:0;border-top:2px solid var(--ink);font-weight:700;padding-top:10px}
+.programs{display:grid;gap:12px}
+.prog{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding-left:12px;border-left:4px solid var(--line)}
+.prog b{display:block}
+.prog small{color:var(--muted);font-size:14px}
+.prog.ok{border-color:var(--good)} .prog.maybe{border-color:var(--warn)} .prog.no{border-color:var(--bad)}
+.prog .pill{font-size:12px}
+.ok .pill{background:var(--good-soft);color:var(--good)}
+.maybe .pill{background:var(--warn-soft);color:var(--warn)}
+.no .pill{background:var(--bad-soft);color:var(--bad)}
+.steps{margin:0;padding-left:22px;display:grid;gap:10px}
+.cross{background:var(--brand-soft);border:1px solid color-mix(in srgb, var(--brand-fg) 25%, transparent)}
+.cross b{font-family:var(--display);font-size:18px;display:block}
+.cross p{margin:4px 0 14px;color:var(--muted)}
+.fields{display:grid;gap:14px;margin-top:16px}
+label.f,.f{display:block;font-weight:600;font-size:15px;margin-bottom:6px}
+.opt-l{color:var(--muted);font-weight:400}
+input.t,textarea.t,select.t{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--paper);font-size:17px}
+input.t:focus,textarea.t:focus,select.t:focus{border-color:var(--brand-fg);outline:none}
+.consent{display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--muted)}
+.consent input{margin-top:2px;width:22px;height:22px;flex:none;accent-color:var(--brand)}
+.err{color:var(--bad);font-size:14px;font-weight:600;margin:0;min-height:1.2em}
+.thanks{background:var(--good-soft);color:var(--ink);border-radius:12px;padding:16px;font-weight:600}
+details.assume summary{cursor:pointer;color:var(--muted);font-size:15px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+@media (max-width:440px){.two{grid-template-columns:1fr}}
+.foot-actions{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.fine{font-size:13px;color:var(--muted);margin:0;text-align:center}
+
+/* dashboard */
+.dash{max-width:1080px;margin:0 auto;padding:22px 16px 60px}
+.dash-top h1{font-size:clamp(26px,5vw,34px);font-weight:800}
+.dash-top p{color:var(--muted);margin:4px 0 0}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:18px 0 18px;overflow-x:auto}
+.tabs button{border:0;background:none;padding:10px 14px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--brand-fg)}
+.exm{font-size:12px;font-weight:700;background:var(--warn-soft);color:var(--warn);padding:3px 9px;border-radius:999px;vertical-align:middle;white-space:nowrap}
+.bar-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:7px 14px;font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:6px 0 16px}
+@media (max-width:640px){.tiles{grid-template-columns:1fr 1fr}}
+.tile{text-align:left;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer}
+.tile[aria-pressed="true"]{box-shadow:0 0 0 2px var(--brand-fg)}
+.tile .k{font-size:13px;color:var(--muted);font-weight:700}
+.tile .v{font-family:var(--display);font-size:28px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
+.tile.ready{border-left-color:var(--good)} .tile.close{border-left-color:var(--info)} .tile.build{border-left-color:var(--warn)} .tile.start{border-left-color:var(--bad)}
+.leads{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.lrow{display:grid;grid-template-columns:2.2fr 1fr .7fr 1.2fr 1fr 1.6fr 1fr auto;gap:12px;align-items:center;padding:13px 16px;border-bottom:1px solid var(--line);font-size:15px}
+.lrow:last-child{border-bottom:0}
+.lrow.hd{background:var(--paper);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700}
+.lrow .nm b{display:block}
+.lrow .nm small{color:var(--muted);font-size:13px;display:block;word-break:break-word}
+.type{font-size:12px;font-weight:700;padding:3px 9px;border-radius:6px;white-space:nowrap;background:var(--paper);border:1px solid var(--line)}
+.type.both{background:var(--brand);color:var(--on-brand);border-color:var(--brand)}
+.score{font-weight:800;font-variant-numeric:tabular-nums}
+.lbl{display:none}
+.cbox{display:flex;align-items:center;gap:6px;font-size:14px}
+.cbox input{width:18px;height:18px;accent-color:var(--brand)}
+@media (max-width:900px){
+  .lrow.hd{display:none}
+  .lrow{grid-template-columns:1fr 1fr;gap:8px 14px;padding:16px}
+  .lrow .nm,.lrow .act{grid-column:1 / -1}
+  .lrow .act .btn{width:100%}
+  .lbl{display:block;font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+}
+.golive{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+@media (max-width:820px){.golive{grid-template-columns:1fr}}
+.golive h3{font-size:17px;margin:4px 0 6px}
+.golive p{margin:0;color:var(--muted);font-size:15px}
+.golive .n{font-family:var(--display);font-weight:800;color:var(--brand-fg);font-size:13px}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+
+/* My page */
+.pg{display:grid;gap:16px}
+.pg h2{font-size:19px;margin-bottom:4px}
+.pg .sub{color:var(--muted);margin:0 0 14px;font-size:15px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:640px){.grid2{grid-template-columns:1fr}}
+.uploads{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:520px){.uploads{grid-template-columns:1fr}}
+.up{border:1.5px dashed var(--line);border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center}
+.up .prev{width:64px;height:64px;border-radius:12px;background:var(--paper);display:grid;place-items:center;overflow:hidden;flex:none;color:var(--muted);font-size:12px;text-align:center}
+.up .prev img{width:100%;height:100%;object-fit:cover}
+.up .prev.logo img{object-fit:contain}
+.up label.btn{cursor:pointer}
+.up input{position:absolute;width:1px;height:1px;opacity:0}
+.colorbox{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start}
+@media (max-width:600px){.colorbox{grid-template-columns:1fr;justify-items:center}}
+.wheel{position:relative;width:240px;height:240px;touch-action:none}
+.wheel canvas{display:block;border-radius:50%;cursor:crosshair}
+.wheel .mk{position:absolute;width:22px;height:22px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1.5px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.3);transform:translate(-50%,-50%);pointer-events:none}
+.ctrls{display:grid;gap:12px;width:100%}
+.ctrls input[type=range]{width:100%;accent-color:var(--brand)}
+.prevrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.prevbtn{display:inline-flex;padding:10px 16px;border-radius:10px;background:var(--brand);color:var(--on-brand);font-weight:700}
+.contrast{font-size:14px;color:var(--muted)}
+.swatches{display:flex;gap:10px;flex-wrap:wrap}
+.sw{width:36px;height:36px;border-radius:50%;border:3px solid var(--card);box-shadow:0 0 0 1px var(--line);cursor:pointer;padding:0}
+.sw[aria-pressed="true"]{box-shadow:0 0 0 3px var(--ink)}
+.themes{display:flex;gap:8px;flex-wrap:wrap}
+.theme{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--line);border-radius:999px;padding:5px 6px 5px 6px;background:var(--card)}
+.theme button.apply{display:inline-flex;align-items:center;gap:8px;border:0;background:none;cursor:pointer;font-weight:700;font-size:14px;padding:0 4px 0 0}
+.theme i{width:22px;height:22px;border-radius:50%;display:block}
+.theme button.del{border:0;background:var(--paper);border-radius:50%;width:24px;height:24px;cursor:pointer;color:var(--muted);font-size:14px;line-height:1}
+.layouts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:640px){.layouts{grid-template-columns:1fr}}
+.lay{border:2px solid var(--line);border-radius:16px;padding:12px;background:var(--card);cursor:pointer;text-align:left}
+.lay[aria-pressed="true"]{border-color:var(--brand-fg);box-shadow:0 0 0 3px var(--brand-soft)}
+.lay b{display:block;margin-top:10px}
+.lay small{color:var(--muted);font-size:14px}
+.mini{height:110px;border-radius:10px;background:var(--paper);border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column;gap:6px;padding:8px}
+.mini i{display:block;border-radius:4px;background:var(--line)}
+.mini .hb{height:14px;background:var(--card);border:1px solid var(--line)}
+.mini .hb.br{background:var(--brand);border-color:var(--brand)}
+.mini .bd2{height:34px;background:var(--brand);border-radius:8px}
+.mini .ln{height:8px;width:70%}
+.mini .ln.s{width:45%}
+.mini .row{display:flex;gap:6px;flex:1}
+.mini .row .sd{width:34%;background:var(--card);border:1px solid var(--line);border-radius:6px;display:flex;flex-direction:column;align-items:center;padding-top:6px;gap:4px}
+.mini .row .sd u{width:22px;height:22px;border-radius:50%;background:var(--brand);display:block}
+.mini .row .mn{flex:1;display:flex;flex-direction:column;gap:6px}
+
+/* Marketing kit */
+.kit-intro{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px}
+.kit-intro p{margin:4px 0 0;color:var(--muted);max-width:62ch}
+.posts{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:820px){.posts{grid-template-columns:1fr}}
+.post{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;display:grid;gap:12px;align-content:start}
+.post h3{font-size:17px}
+.post .num{font-size:12px;font-weight:700;color:var(--brand-fg);letter-spacing:.05em;text-transform:uppercase}
+.post .imgwrap{background:var(--paper);border-radius:12px;display:grid;place-items:center;padding:10px;min-height:200px}
+.post img.pv{max-width:100%;max-height:340px;border-radius:8px;display:block;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.post .cap{white-space:pre-wrap;font-size:14px;background:var(--paper);border-radius:12px;padding:12px;max-height:220px;overflow:auto}
+.post .acts{display:flex;gap:8px;flex-wrap:wrap}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px;background:var(--paper);border-radius:12px;padding:10px}
+.th{position:relative;aspect-ratio:1;border:2px solid transparent;border-radius:10px;padding:0;overflow:hidden;cursor:pointer;background:var(--card)}
+.th img{width:100%;height:100%;object-fit:cover;display:block}
+.th.on{border-color:var(--brand-fg);box-shadow:0 0 0 2px var(--brand-soft)}
+.adtag{position:absolute;left:3px;bottom:3px;background:#1e7f48;color:#fff;font-size:9px;font-weight:800;letter-spacing:.04em;padding:1px 4px;border-radius:4px}
+.adnote{margin:0;font-size:13px;color:var(--muted)}
+.adnote.ok{color:var(--good);font-weight:600}
+.adnote.warn{color:var(--warn);font-weight:600}
+.up-th{display:grid;place-items:center;font-size:13px;font-weight:700;color:var(--brand-fg);border:2px dashed var(--line)}
+.up-th input{position:absolute;width:1px;height:1px;opacity:0}
+.post canvas.pv{max-width:100%;max-height:340px;border-radius:8px}
+.vidcv{display:block;height:58vh;max-height:620px;width:auto;max-width:100%;margin:12px auto 0;border-radius:14px;background:#000;box-shadow:0 4px 18px rgba(0,0,0,.25)}
+.vbar{height:6px;background:var(--line);border-radius:3px;margin-top:12px;overflow:hidden}
+.vbar i{display:block;height:100%;width:0;background:var(--brand,#1e3a5f);transition:width .2s linear}
+.btn.vidbtn{background:#f1c45a;color:#1a1406;border-color:#f1c45a}
+
+.legal{border-top:1px solid var(--line);background:var(--card);margin-top:8px}
+.legal .in{max-width:1000px;margin:0 auto;padding:22px 16px 28px;display:grid;gap:8px;font-size:14px;color:var(--muted);text-align:center}
+.legal p{margin:0}
+.legal .req{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:15px}
+.legal .who{color:var(--ink);font-weight:600}
+.legal a{color:var(--brand-fg)}
+.legal .pw{font-size:12px;opacity:.8}
+.has-nav .legal .in{padding-bottom:110px}
+.eho{display:inline-flex;gap:4px;align-items:center;vertical-align:middle}
+.doc h1{font-size:clamp(28px,6vw,34px);margin:12px 0 4px}
+.doc h2{font-size:18px;margin:22px 0 6px}
+.doc p{margin:0;max-width:65ch}
+.doc .upd{color:var(--muted);font-size:14px}
+.checklist{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.checklist li{display:flex;gap:10px;align-items:flex-start;font-size:15px}
+.checklist .ic{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:14px}
+.checklist .ok .ic{background:var(--good-soft);color:var(--good)}
+.checklist .no .ic{background:var(--warn-soft);color:var(--warn)}
+.checklist small{display:block;color:var(--muted)}
+.cbx{display:flex;gap:10px;align-items:center;font-weight:600}
+.cbx input{width:20px;height:20px;accent-color:var(--brand)}
+.hero{position:relative;background-color:#2a3440;background-size:cover;background-repeat:no-repeat;color:#fff;isolation:isolate}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(40,24,10,.20) 0%,rgba(40,24,10,.34) 34%,rgba(32,20,10,.62) 72%,rgba(26,18,10,.80) 100%)}
+.lay-bold .hero::before{background:linear-gradient(180deg,rgba(12,18,26,.08) 0%,color-mix(in srgb,var(--brand) 45%,transparent) 42%,color-mix(in srgb,var(--brand) 92%,transparent) 100%)}
+.hero .in{max-width:1000px;margin:0 auto;min-height:460px;padding:40px 16px 64px;display:flex;flex-direction:column;justify-content:flex-end;gap:12px}
+@media (min-width:760px){.hero .in{min-height:520px;padding:56px 24px 76px}}
+.hero h1{font-size:clamp(32px,7.5vw,52px);font-weight:800;max-width:16ch;margin:0;text-shadow:0 2px 14px rgba(0,0,0,.35)}
+.hero .lede{margin:0;font-size:18px;max-width:46ch;color:rgba(255,255,255,.92);text-shadow:0 1px 8px rgba(0,0,0,.35)}
+.greet{display:inline-flex;align-items:center;gap:10px;align-self:flex-start;background:rgba(255,255,255,.94);color:#16202a;border-radius:999px;padding:5px 16px 5px 5px;font-weight:600;font-size:15px;max-width:100%;box-shadow:0 4px 16px rgba(0,0,0,.18)}
+.greet .ph,.greet .ini{border:2px solid #fff}
+.trust{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px 18px}
+.trust li{display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:600;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.85),0 0 14px rgba(0,0,0,.55)}
+.trust svg{color:#7fe3a0;filter:drop-shadow(0 1px 3px rgba(0,0,0,.7));flex:none}
+.picks.lifted{margin-top:-60px;position:relative}
+.pcard.lifted-card{margin-top:-60px;position:relative;box-shadow:0 10px 28px rgba(16,24,40,.16);border-color:transparent}
+.picks.lifted .pick{box-shadow:0 10px 28px rgba(16,24,40,.14);border-color:transparent}
+@media (min-width:960px){.lay-profile .picks.lifted{margin-top:0}}
+.speaks{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;background:none;border:0;padding:0;font-size:16px;font-weight:600;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.85),0 0 16px rgba(0,0,0,.6)}
+.speaks svg{filter:drop-shadow(0 1px 4px rgba(0,0,0,.5))}
+.speaks.plain{color:var(--muted);text-shadow:none;margin:-10px 0 20px}
+.band .speaks.plain{background:color-mix(in srgb,var(--on-brand) 16%,transparent);color:var(--on-brand);margin:14px 0 0}
+.pc-langs{display:flex!important;align-items:center;gap:5px;color:var(--brand-fg)!important;font-weight:600}
+.ms{position:relative}
+.ms summary{list-style:none;cursor:pointer;padding:12px 40px 12px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--paper);font-size:16px;position:relative;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ms summary::-webkit-details-marker{display:none}
+.ms summary::after{content:"▾";position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.ms[open] summary::after{content:"▴"}
+.ms-panel{margin-top:6px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);padding:10px;max-height:340px;overflow:auto}
+.ms-opt{display:flex;align-items:center;gap:10px;padding:8px 6px;border-radius:8px;cursor:pointer;font-size:15px}
+.ms-opt:hover{background:var(--paper)}
+.ms-opt input{width:20px;height:20px;accent-color:var(--brand);flex:none}
+.lang-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.lchip{background:var(--brand-soft);color:var(--brand-fg);font-weight:700;font-size:13px;padding:4px 10px;border-radius:999px}
+select.t{appearance:auto}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(10,14,20,.55);display:none;align-items:flex-end;justify-content:center;z-index:20}
+.modal.open{display:flex}
+.modal .card{width:100%;max-width:560px;border-radius:18px 18px 0 0;padding-bottom:calc(20px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}
+@media (min-width:640px){.modal{align-items:center;padding:16px}.modal .card{border-radius:18px}}
+.modal .to{font-size:14px;color:var(--muted);margin-top:8px;word-break:break-word}
+.modal textarea{min-height:170px;margin-top:6px}
+.modal .row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.modal .row > *{flex:1 1 140px}
+.modal .note{font-size:13px;color:var(--muted);margin:12px 0 0}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:10px;font-weight:600;font-size:14px;display:none;z-index:30}
+.toast.show{display:block}
+@media (prefers-reduced-motion: reduce){ .progress .bar i{transition:none} }
+</style>
+</head>
+<body>
+
+<nav class="demo" aria-label="Demo views">
+  <div class="in">
+    <span><b>2BuyAndSell</b> demo:</span>
+    <a href="#tool" id="nav-tool">What customers see</a>
+    <a href="#agent" id="nav-agent">Agent dashboard</a>
+  </div>
+</nav>
+
+<header class="head">
+  <div class="in">
+    <span id="hPhoto"></span>
+    <div class="who-agent"><b id="hName">Monica</b><small id="hBroker"></small></div>
+    <img class="hlogo" id="hLogo" alt="" hidden>
+    <div class="lang" id="langBox" role="group" aria-label="Language">
+      <button type="button" id="lang-en" aria-pressed="true">EN</button>
+      <button type="button" id="lang-es" aria-pressed="false">ES</button>
+    </div>
+  </div>
+</header>
+
+<main id="view-tool"><div id="heroWrap" hidden></div><div class="shell"><aside class="side" id="side"></aside><div class="col" id="app"></div></div><footer class="legal" id="legalFoot"></footer></main>
+<div class="navbar" id="navbar" hidden><div class="in" id="navIn"></div></div>
+
+<main id="view-agent" hidden>
+  <div class="dash">
+    <div class="dash-top">
+      <h1>Agent dashboard <span class="exm">Demo</span></h1>
+      <p>Your 2BuyAndSell account: your leads, your page's look, and ready-to-post marketing.</p>
+    </div>
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" id="tab-leads" aria-selected="true">Leads</button>
+      <button type="button" role="tab" id="tab-page" aria-selected="false">My page</button>
+      <button type="button" role="tab" id="tab-kit" aria-selected="false">Marketing kit</button>
+    </div>
+    <section id="pane-leads"></section>
+    <section id="pane-page" hidden></section>
+    <section id="pane-kit" hidden></section>
+  </div>
+</main>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="card">
+    <h2 id="modalTitle" style="font-size:19px">Message</h2>
+    <div id="modalBody"></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
+<script>window.MODE="dash";</script>
+<script>
+(function(){
+"use strict";
+var MODE=window.MODE||"demo";
+
+/* ================= CUSTOMER TEXT (EN/ES) ================= */
+var T={
+en:{
+ badge:"✓ No credit check. Won't affect your score.",
+ startH:"Thinking about buying or selling in {city}?",
+ startP:"Answer a few quick questions and see where you stand in about 2 minutes.",
+ speakLbl:"I speak", fPref:"Preferred language", trust:["Free","No credit check","About 2 minutes","We never sell your info"], hi:"Hi, I'm {agent}. I'm here to help you make a plan.",
+ pickBuy:["Buy a home","See your readiness score and what you can afford"],
+ pickSell:["Sell my home","See what your home could net you"],
+ pickBoth:["Sell and buy","Plan your whole move, start to finish"],
+ call:"Call", email:"Email",
+ qof:"{n} of {t}", back:"Back", next:"Next", see:"See my results",
+ secSell:"Your current home", secBuy:"Your next home", outOf:"of 100",
+ changeAns:"Change my answers", startOver:"Start over",
+ tB:{ready:["Ready now","You look ready to buy","Your numbers line up. Next step: get pre-approved by a lender."],
+     close:["Close","You're close","A few small moves over the next 3–6 months could get you there."],
+     build:["Building","You're building toward it","With a plan, buying in 6–12 months is realistic."],
+     start:["Getting started","Let's build your plan","You're early in the process. Small steps now add up."]},
+ tS:{ready:["Ready to list","You're ready to list","Your home and numbers look ready. Next step: price it right."],
+     close:["Almost ready","You're almost ready to list","A little prep and planning sets you up for a strong sale."],
+     build:["Plan ahead","Start planning now","You have time to prep and pick the right moment to list."],
+     start:["Getting started","Let's look at your options","Talk through the numbers before you decide anything."]},
+ kSell:"Selling", kBuy:"Buying",
+ sVal:["Home value range","Based on your estimate and the home's condition"],
+ sEq:["Your equity","Value minus what you owe"],
+ sNet:["You could walk away with","After selling costs and payoff"],
+ bdH:"Where the money goes (middle of range)",
+ bd:{sale:"Sale price",agent:"Agent fees ({p}%, negotiable)",close:"Closing costs (about 2%)",prep:"Repairs and prep",payoff:"Mortgage payoff",net:"Estimated net"},
+ bAff:["Price range that fits","With a {p}"], bPay:["Monthly payment","At your price · debt-to-income {d}%"], bCash:["Cash needed to close","You have {h}"],
+ bCashBoth:"Includes your sale proceeds",
+ loansH:"Loans you may fit", nextH:"Your next steps",
+ prog:{va:["VA loan","$0 down for eligible veterans and service members"],fha:["FHA loan","3.5% down with 580+ credit, 10% at 500–579"],conv:["Conventional loan","3% down for many first-time buyers, 5% otherwise"]},
+ fit:{ok:"Good fit",maybe:"Possible",no:"Not yet"},
+ note:{vaCredit:"VA sets no minimum score, but many lenders do.",fha10:"Plan on 10% down at your score.",convLender:"Some lenders allow this score. Expect a higher rate.",needMil:"Requires military service.",below:"Your score would need to come up first."},
+ stepB:{checkCredit:"Get your free credit reports at AnnualCreditReport.com so you know where you stand.",
+  raiseCredit:"Build your score: pay every bill on time, keep card balances under 30% of the limit, and dispute any errors.",
+  dti:"Your monthly debts are high for your income. Paying off one or two small balances, or aiming a little lower on price, would help.",
+  save:"Save about {gap} more for down payment and closing costs, and ask about Texas down payment assistance programs.",
+  coe:"Request your VA Certificate of Eligibility (COE). It's free, and lenders will ask for it.",
+  job:"Stay in your current job or line of work. Lenders like a steady 2-year history.",
+  se:"Self-employed buyers need 2 years of tax returns. Keep your books clean.",
+  preapprove:"Get pre-approved with a lender so you can make offers with confidence.",
+  talk:"Book a free call with {agent} to see homes in your range and talk through neighborhoods."},
+ stepS:{prepReady:"Small touches pay off: declutter, deep clean, and touch up paint before photos.",
+  prepSome:"Pick the 2–3 updates with the best payoff, like paint, lighting and curb appeal.",
+  prepMajor:"Get repair quotes, or ask {agent} about selling as-is.",
+  underwater:"You may owe close to or more than the home is worth. Talk with {agent} about your options before listing.",
+  lowEquity:"Selling costs could take most of your equity, so price and timing matter a lot here.",
+  listSoon:"Book a listing appointment this month so you're ready for photos and pricing.",
+  nextHere:"Get pre-approved for your next home now so both moves line up.",
+  report:"Get your free home value report from {agent} for a real number based on recent sales nearby."},
+ crossSell:["Selling your current home?","See what it could net you and put it toward your next one."],
+ crossBuy:["Buying your next home here?","See what you could afford with your sale proceeds."],
+ crossBtn:"Add this to my plan",
+ leadH:{buy:"Get your full plan",sell:"Get your free home value report",both:"Get your full moving plan"},
+ leadSub:{buy:"We'll send this plan and set up a free 15-minute call. No obligation.",
+          sell:"{agent} will look at recent sales near you and send a real value range. No obligation.",
+          both:"{agent} will send your home value report and buying plan together. No obligation."},
+ fName:"Name", fEmail:"Email", fPhone:"Phone", fAddr:"Property address", optional:"(optional)", send:"Send it to me",
+ consent:"I agree that {agent} may contact me by email, phone or text about buying or selling a home. This is not a credit check or a loan application. Agreeing isn't required to see your results. Message and data rates may apply; reply STOP to opt out.",
+ errName:"Please add your name.", errEmail:"Please add a valid email.", errAddr:"Please add the property address.", errConsent:"Please check the box so {agent} can contact you.",
+ thanks:"Thanks, {name}! {agent} will be in touch soon.", demoNote:"",
+ assume:"Change the estimate assumptions", rate:"Interest rate (%)", tax:"Property tax + insurance (% of price per year)", comm:"Agent fees when selling (%)",
+ disclaimer:"These are estimates based only on your answers. Home values are based on your own estimate, not an appraisal. This is not a credit check, a loan approval or an offer of credit; a licensed loan officer can tell you what you qualify for. Equal Housing Opportunity.",
+ trec:"Texas Real Estate Commission Information About Brokerage Services · Texas Real Estate Commission Consumer Protection Notice",
+ q:{
+  b_credit:["About what is your credit score?","Your best guess is fine.",{lt500:"Under 500","500":"500–579","580":"580–619","620":"620–679","680":"680–739","740":"740 or higher",ns:"I'm not sure"}],
+  b_income:["What's your household income per year?","Before taxes. Include everyone who'll be on the loan."],
+  b_debts:["How much do you pay each month on debts?","Car payments, credit cards, student loans. Don't count rent."],
+  b_savings:["How much do you have saved for buying?","For your down payment and closing costs."],
+  b_savings2:["Besides your home sale, how much do you have saved?","We'll add your sale proceeds for you."],
+  b_price:["What home price do you have in mind?","A rough number is fine."],
+  b_job:["How steady is your income?","",{w2:"Same job for 2+ years",new:"Less than 2 years",se2:"Self-employed 2+ years",se0:"Self-employed under 2 years"}],
+  b_mil:["Have you served in the military?","Veterans and service members may qualify for $0 down.",{yes:"Yes, veteran or active duty",no:"No"}],
+  b_own:["Do you own a home right now?","",{rent:"No, I rent or live with family",sell:"Yes, and I'd sell it",keep:"Yes, and I'd keep it"}],
+  b_when:["When would you like to buy?","",{"3":"In the next 3 months","6":"3 to 6 months","12":"6 to 12 months",later:"Just exploring"}],
+  s_type:["What kind of home is it?","",{house:"Single-family house",town:"Townhome or condo",other:"Something else"}],
+  s_value:["What do you think your home is worth?","A guess is fine. Your free value report will give you a real number."],
+  s_owe:["About how much do you still owe on it?","Mortgage plus any home equity loan. Enter 0 if it's paid off."],
+  s_cond:["What shape is it in?","",{ready:"Move-in ready",some:"Needs some updates",major:"Needs major work"}],
+  s_why:["What's the main reason you're selling?","",{up:"Need more space",down:"Want something smaller",move:"Moving for work or family",other:"Something else"}],
+  s_next:["Where's your next home?","",{here:"Buying again in or near {city}",away:"Moving out of the area",unsure:"Not sure yet"}],
+  s_when:["When would you like to sell?","",{"3":"In the next 3 months","6":"3 to 6 months","12":"6 to 12 months",later:"Just exploring"}]
+ }
+},
+es:{
+ badge:"✓ Sin revisión de crédito. No afecta tu puntaje.",
+ startH:"¿Piensas comprar o vender casa en {city}?",
+ startP:"Contesta unas preguntas rápidas y ve dónde estás en unos 2 minutos.",
+ speakLbl:"Hablo", fPref:"Idioma preferido", trust:["Gratis","Sin revisión de crédito","Unos 2 minutos","Nunca vendemos tu información"], hi:"Hola, soy {agent}. Estoy aquí para ayudarte a hacer un plan.",
+ pickBuy:["Comprar casa","Ve tu puntaje de preparación y cuánto puedes pagar"],
+ pickSell:["Vender mi casa","Ve cuánto te podría dejar tu casa"],
+ pickBoth:["Vender y comprar","Planea tu mudanza de principio a fin"],
+ call:"Llamar", email:"Correo",
+ qof:"{n} de {t}", back:"Atrás", next:"Siguiente", see:"Ver mis resultados",
+ secSell:"Tu casa actual", secBuy:"Tu próxima casa", outOf:"de 100",
+ changeAns:"Cambiar mis respuestas", startOver:"Empezar de nuevo",
+ tB:{ready:["Listo","Pareces listo para comprar","Tus números cuadran. Siguiente paso: la pre-aprobación con un prestamista."],
+     close:["Cerca","Estás cerca","Unos pequeños cambios en los próximos 3–6 meses te pueden llevar ahí."],
+     build:["Avanzando","Vas en camino","Con un plan, comprar en 6–12 meses es realista."],
+     start:["Comenzando","Armemos tu plan","Estás al inicio. Pasos pequeños ahora suman mucho."]},
+ tS:{ready:["Lista para vender","Tu casa está lista para salir al mercado","Tu casa y tus números se ven bien. Siguiente paso: ponerle el precio correcto."],
+     close:["Casi lista","Estás casi listo para vender","Un poco de preparación te pone en buena posición para vender bien."],
+     build:["Planea con tiempo","Empieza a planear ahora","Tienes tiempo para preparar la casa y escoger el mejor momento."],
+     start:["Comenzando","Veamos tus opciones","Revisa los números antes de decidir cualquier cosa."]},
+ kSell:"Venta", kBuy:"Compra",
+ sVal:["Rango de valor de la casa","Según tu cálculo y el estado de la casa"],
+ sEq:["Tu plusvalía (equity)","Valor menos lo que debes"],
+ sNet:["Te podrías quedar con","Después de los gastos de venta y de pagar la hipoteca"],
+ bdH:"A dónde va el dinero (mitad del rango)",
+ bd:{sale:"Precio de venta",agent:"Comisión de agentes ({p}%, negociable)",close:"Gastos de cierre (aprox. 2%)",prep:"Reparaciones y preparación",payoff:"Pago de la hipoteca",net:"Ganancia neta aprox."},
+ bAff:["Rango de precio adecuado","Con un {p}"], bPay:["Pago mensual","A tu precio · deuda vs. ingreso {d}%"], bCash:["Efectivo para cerrar","Tienes {h}"],
+ bCashBoth:"Incluye lo que ganarías de tu venta",
+ loansH:"Préstamos que podrías calificar", nextH:"Tus siguientes pasos",
+ prog:{va:["Préstamo VA","$0 de enganche para veteranos y militares elegibles"],fha:["Préstamo FHA","3.5% de enganche con 580+, 10% con 500–579"],conv:["Préstamo convencional","3% para muchos compradores primerizos, 5% en otros casos"]},
+ fit:{ok:"Buena opción",maybe:"Posible",no:"Todavía no"},
+ note:{vaCredit:"VA no fija un puntaje mínimo, pero muchos prestamistas sí.",fha10:"Con tu puntaje, planea 10% de enganche.",convLender:"Algunos prestamistas aceptan este puntaje. La tasa puede ser más alta.",needMil:"Requiere servicio militar.",below:"Primero tendría que subir tu puntaje."},
+ stepB:{checkCredit:"Saca tus reportes de crédito gratis en AnnualCreditReport.com para saber dónde estás.",
+  raiseCredit:"Sube tu puntaje: paga todo a tiempo, mantén tus tarjetas por debajo del 30% del límite y disputa cualquier error.",
+  dti:"Tus deudas mensuales están altas para tu ingreso. Pagar uno o dos saldos pequeños, o buscar un precio un poco más bajo, ayudaría.",
+  save:"Ahorra unos {gap} más para el enganche y el cierre, y pregunta por los programas de ayuda para el enganche en Texas.",
+  coe:"Pide tu Certificado de Elegibilidad del VA (COE). Es gratis y los prestamistas lo van a pedir.",
+  job:"Quédate en tu trabajo o en la misma línea de trabajo. A los prestamistas les gusta ver 2 años estables.",
+  se:"Si trabajas por tu cuenta, necesitas 2 años de declaraciones de impuestos. Mantén tus cuentas en orden.",
+  preapprove:"Obtén tu pre-aprobación con un prestamista para hacer ofertas con confianza.",
+  talk:"Agenda una llamada gratis con {agent} para ver casas en tu rango y hablar de vecindarios."},
+ stepS:{prepReady:"Los pequeños detalles cuentan: despeja espacios, haz una limpieza profunda y retoca la pintura antes de las fotos.",
+  prepSome:"Escoge las 2–3 mejoras que más rinden, como pintura, iluminación y la fachada.",
+  prepMajor:"Pide cotizaciones de reparación, o pregúntale a {agent} sobre vender la casa como está.",
+  underwater:"Podrías deber casi lo mismo o más de lo que vale la casa. Habla con {agent} sobre tus opciones antes de ponerla a la venta.",
+  lowEquity:"Los gastos de venta se podrían llevar casi toda tu plusvalía, así que el precio y el momento importan mucho.",
+  listSoon:"Agenda una cita este mes para preparar las fotos y el precio.",
+  nextHere:"Obtén tu pre-aprobación para tu próxima casa ahora, para que las dos mudanzas coincidan.",
+  report:"Pide tu reporte gratis del valor de tu casa a {agent}, con un número real basado en ventas recientes cerca de ti."},
+ crossSell:["¿Vas a vender tu casa actual?","Ve cuánto te podría dejar y úsalo para tu próxima casa."],
+ crossBuy:["¿Vas a comprar tu próxima casa aquí?","Ve cuánto podrías pagar con lo que ganes de tu venta."],
+ crossBtn:"Agregarlo a mi plan",
+ leadH:{buy:"Recibe tu plan completo",sell:"Recibe tu reporte gratis del valor de tu casa",both:"Recibe tu plan completo de mudanza"},
+ leadSub:{buy:"Te enviamos este plan y agendamos una llamada gratis de 15 minutos. Sin compromiso.",
+          sell:"{agent} revisará ventas recientes cerca de ti y te enviará un rango de valor real. Sin compromiso.",
+          both:"{agent} te enviará el reporte del valor de tu casa y tu plan de compra juntos. Sin compromiso."},
+ fName:"Nombre", fEmail:"Correo electrónico", fPhone:"Teléfono", fAddr:"Dirección de la propiedad", optional:"(opcional)", send:"Envíamelo",
+ consent:"Acepto que {agent} me contacte por correo, teléfono o mensaje de texto sobre comprar o vender una casa. Esto no es una revisión de crédito ni una solicitud de préstamo. No es necesario aceptar para ver tus resultados. Pueden aplicar cargos por mensajes y datos; responde STOP para darte de baja.",
+ errName:"Por favor escribe tu nombre.", errEmail:"Por favor escribe un correo válido.", errAddr:"Por favor escribe la dirección de la propiedad.", errConsent:"Por favor marca la casilla para que {agent} pueda contactarte.",
+ thanks:"¡Gracias, {name}! {agent} se pondrá en contacto pronto.", demoNote:"",
+ assume:"Cambiar los supuestos del cálculo", rate:"Tasa de interés (%)", tax:"Impuestos + seguro (% del precio al año)", comm:"Comisión de agentes al vender (%)",
+ disclaimer:"Estos son cálculos basados solo en tus respuestas. El valor de la casa se basa en tu propio cálculo, no en un avalúo. Esto no es una revisión de crédito, una aprobación de préstamo ni una oferta de crédito; un oficial de préstamos con licencia te puede decir para qué calificas. Igualdad de Oportunidades en la Vivienda.",
+ trec:"Texas Real Estate Commission Information About Brokerage Services · Texas Real Estate Commission Consumer Protection Notice",
+ q:{
+  b_credit:["¿Más o menos cuál es tu puntaje de crédito?","Un cálculo aproximado está bien.",{lt500:"Menos de 500","500":"500–579","580":"580–619","620":"620–679","680":"680–739","740":"740 o más",ns:"No sé"}],
+  b_income:["¿Cuál es el ingreso de tu hogar al año?","Antes de impuestos. Incluye a todos los que estarán en el préstamo."],
+  b_debts:["¿Cuánto pagas al mes en deudas?","Carro, tarjetas de crédito, préstamos estudiantiles. No cuentes la renta."],
+  b_savings:["¿Cuánto tienes ahorrado para comprar?","Para el enganche y los gastos de cierre."],
+  b_savings2:["Aparte de la venta de tu casa, ¿cuánto tienes ahorrado?","Nosotros sumamos lo que ganes de la venta."],
+  b_price:["¿Qué precio de casa tienes en mente?","Un número aproximado está bien."],
+  b_job:["¿Qué tan estable es tu ingreso?","",{w2:"Mismo trabajo por 2+ años",new:"Menos de 2 años",se2:"Por mi cuenta 2+ años",se0:"Por mi cuenta, menos de 2 años"}],
+  b_mil:["¿Has servido en el ejército?","Veteranos y militares podrían calificar con $0 de enganche.",{yes:"Sí, veterano o en servicio activo",no:"No"}],
+  b_own:["¿Eres dueño de una casa ahora?","",{rent:"No, rento o vivo con familia",sell:"Sí, y la vendería",keep:"Sí, y me la quedaría"}],
+  b_when:["¿Cuándo te gustaría comprar?","",{"3":"En los próximos 3 meses","6":"De 3 a 6 meses","12":"De 6 a 12 meses",later:"Solo explorando"}],
+  s_type:["¿Qué tipo de casa es?","",{house:"Casa unifamiliar",town:"Townhome o condominio",other:"Otro"}],
+  s_value:["¿Cuánto crees que vale tu casa?","Un cálculo está bien. Tu reporte gratis te dará un número real."],
+  s_owe:["¿Más o menos cuánto debes todavía?","Hipoteca más cualquier préstamo sobre la casa. Escribe 0 si ya está pagada."],
+  s_cond:["¿En qué estado está?","",{ready:"Lista para vivir",some:"Necesita algunas mejoras",major:"Necesita reparaciones mayores"}],
+  s_why:["¿Cuál es la razón principal para vender?","",{up:"Necesito más espacio",down:"Quiero algo más pequeño",move:"Me mudo por trabajo o familia",other:"Otra razón"}],
+  s_next:["¿Dónde será tu próxima casa?","",{here:"Voy a comprar otra en {city} o cerca",away:"Me voy del área",unsure:"Todavía no sé"}],
+  s_when:["¿Cuándo te gustaría vender?","",{"3":"En los próximos 3 meses","6":"De 3 a 6 meses","12":"De 6 a 12 meses",later:"Solo explorando"}]
+ }
+}};
+
+/* ================= HELPERS ================= */
+var lang="en";
+function L(){ return T[lang]; }
+function fill(s,v){ return String(s).replace(/\{(\w+)\}/g,function(_,k){return v[k]!=null?v[k]:"";}); }
+function cityName(){ return (settings&&settings.city||"").trim()||"your area"; }
+function cityTag(){ return cityName().replace(/[^A-Za-z0-9À-ÿ]/g,""); }
+function esc(s){ return String(s==null?"":s).replace(/\{city\}/g,cityName()).replace(/\{cityTag\}/g,cityTag()).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+function money(n){ var neg=n<0; n=Math.abs(Math.round(n)); return (neg?"−$":"$")+n.toLocaleString("en-US"); }
+function kfmt(n){ var neg=n<0; n=Math.abs(n); var s= n>=1000000 ? "$"+(n/1000000).toFixed(2).replace(/\.?0+$/,"")+"M" : n>=1000 ? "$"+Math.round(n/1000)+"k" : "$"+Math.round(n); return (neg?"−":"")+s; }
+function store(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); return true; }catch(e){ return false; } }
+function load(k){ try{ return JSON.parse(localStorage.getItem(k)||"null"); }catch(e){ return null; } }
+function toast(m){ var el=document.getElementById("toast"); el.textContent=m; el.classList.add("show"); clearTimeout(toast.t); toast.t=setTimeout(function(){el.classList.remove("show");},2400); }
+function digits(s){ return String(s||"").replace(/[^0-9+]/g,""); }
+
+/* ================= COLOR MATH ================= */
+function hexToRgb(h){ h=h.replace("#",""); if(h.length===3) h=h.split("").map(function(c){return c+c;}).join(""); var n=parseInt(h,16); return [(n>>16)&255,(n>>8)&255,n&255]; }
+function rgbToHex(r,g,b){ return "#"+[r,g,b].map(function(x){ x=Math.max(0,Math.min(255,Math.round(x))); return (x<16?"0":"")+x.toString(16); }).join(""); }
+function hsvToRgb(h,s,v){ var f=function(n){ var k=(n+h/60)%6; return v-v*s*Math.max(Math.min(k,4-k,1),0); }; return [f(5)*255,f(3)*255,f(1)*255]; }
+function rgbToHsv(r,g,b){ r/=255;g/=255;b/=255; var mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn,h=0;
+  if(d){ if(mx===r) h=((g-b)/d)%6; else if(mx===g) h=(b-r)/d+2; else h=(r-g)/d+4; h*=60; if(h<0) h+=360; }
+  return [h, mx?d/mx:0, mx]; }
+function lum(hex){ var c=hexToRgb(hex).map(function(v){ v/=255; return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4); }); return 0.2126*c[0]+0.7152*c[1]+0.0722*c[2]; }
+function contrastWhite(hex){ return 1.05/(lum(hex)+0.05); }
+function validHex(h){ return /^#?[0-9a-fA-F]{6}$/.test(h); }
+
+/* ================= SETTINGS ================= */
+var PRESETS=[["#1e3a5f","Navy"],["#2848c4","Royal blue"],["#8b1e3f","Burgundy"],["#5b2d86","Plum"],["#1d6a49","Forest"],["#2c3139","Charcoal"],["#b4532a","Rust"],["#0f6e7a","Teal"]];
+var OLDKEYS={navy:"#1e3a5f",royal:"#2848c4",burgundy:"#8b1e3f",plum:"#5b2d86",forest:"#1d6a49",charcoal:"#2c3139"};
+var settings=Object.assign({langs:["en","es"],langsOther:"",hero:"p12",heroCustom:"",license:"",iabs:"",assoc:"San Antonio Board of REALTORS®",realtor:true,har:"",realtorcom:"",zillow:"",facebook:"",instagram:"",city:"San Antonio",name:"",broker:"",email:"",phone:"",tagline:"",link:"",color:"#1e3a5f",layout:"classic",comm:5,photo:"",logo:"",themes:[]},{});
+if(OLDKEYS[settings.color]) settings.color=OLDKEYS[settings.color];
+if(!validHex(settings.color)) settings.color="#1e3a5f";
+if(!Array.isArray(settings.themes)) settings.themes=[];
+if(/^(https?:\/\/)?(www\.)?readytobuy\.com/i.test(settings.link||"")) settings.link=settings.link.replace(/^(https?:\/\/)?(www\.)?readytobuy\.com/i,"2buyandsell.com");
+function saveSettings(){ if(!store("rtb.settings",settings)) toast("Couldn't save in this browser. Changes last until you close the page."); }
+function agentName(){ return (settings.name||"").trim()||"your agent"; }
+function photoHTML(size){
+  if(settings.photo) return '<img class="ph" src="'+settings.photo+'" alt="'+esc(agentName())+'" width="'+size+'" height="'+size+'" style="width:'+size+'px;height:'+size+'px">';
+  return '<div class="ini" style="width:'+size+'px;height:'+size+'px;font-size:'+Math.round(size*0.45)+'px">'+esc(agentName().charAt(0).toUpperCase())+'</div>';
+}
+function applyBrand(){
+  var c=settings.color, root=document.documentElement.style;
+  root.setProperty("--brand",c);
+  root.setProperty("--on-brand", contrastWhite(c)>=4.5 ? "#ffffff" : "#111418");
+  document.body.classList.remove("lay-classic","lay-bold","lay-profile");
+  document.body.classList.add("lay-"+settings.layout);
+  document.getElementById("hPhoto").innerHTML=photoHTML(40);
+  document.getElementById("hName").textContent=agentName();
+  document.getElementById("hBroker").textContent=settings.broker||"";
+  var lb=document.getElementById("langBox"); lb.style.display=hasLang("es")?"":"none";
+  if(!hasLang("es") && lang==="es"){ lang="en"; document.documentElement.lang="en"; document.getElementById("lang-en").setAttribute("aria-pressed","true"); document.getElementById("lang-es").setAttribute("aria-pressed","false"); }
+  var lg=document.getElementById("hLogo");
+  if(settings.logo){ lg.src=settings.logo; lg.alt=(settings.broker||"")+" logo"; lg.hidden=false; } else lg.hidden=true;
+}
+
+/* ================= QUESTIONS & MATH ================= */
+var MONEY={b_income:1,b_debts:1,b_savings:1,b_price:1,s_value:1,s_owe:1};
+var OPTS={b_credit:["lt500","500","580","620","680","740","ns"],b_job:["w2","new","se2","se0"],b_mil:["yes","no"],b_own:["rent","sell","keep"],
+  b_when:["3","6","12","later"],s_type:["house","town","other"],s_cond:["ready","some","major"],s_why:["up","down","move","other"],s_next:["here","away","unsure"],s_when:["3","6","12","later"]};
+var FLOWS={
+  buy:["b_credit","b_income","b_debts","b_savings","b_price","b_job","b_mil","b_own","b_when"],
+  sell:["s_type","s_value","s_owe","s_cond","s_why","s_next","s_when"],
+  both:["s_type","s_value","s_owe","s_cond","s_why","s_when","b_credit","b_income","b_debts","b_savings","b_price","b_job","b_mil"]
+};
+var DEFAULTS={b_income:72000,b_debts:550,b_savings:12000,b_price:285000,s_value:310000,s_owe:185000};
+var st={screen:"start",flow:null,i:0,a:{},rate:6.5,tax:2.8,comm:settings.comm,submitted:false};
+
+var CREDIT_PTS={lt500:2,"500":8,"580":17,"620":25,"680":31,"740":35,ns:15};
+var CREDIT_MID={lt500:470,"500":540,"580":600,"620":650,"680":710,"740":760,ns:650};
+var JOB_PTS={w2:15,se2:12,new:9,se0:5};
+function pf(rate){ var r=rate/100/12,n=360; return r===0?1/n:r/(1-Math.pow(1+r,-n)); }
+function programs(c,isMil){
+  var s=CREDIT_MID[c],o=[];
+  o.push(!isMil?{key:"va",fit:"no",note:"needMil"}: s>=620?{key:"va",fit:"ok",note:"vaCredit"}: s>=500?{key:"va",fit:"maybe",note:"vaCredit"}:{key:"va",fit:"no",note:"below"});
+  o.push(s>=580?{key:"fha",fit:"ok"}: s>=500?{key:"fha",fit:"maybe",note:"fha10"}:{key:"fha",fit:"no",note:"below"});
+  o.push(s>=620?{key:"conv",fit:"ok"}: s>=580?{key:"conv",fit:"maybe",note:"convLender"}:{key:"conv",fit:"no",note:"below"});
+  return o;
+}
+function buyer(a,extraCash){
+  var list=programs(a.b_credit,a.b_mil==="yes"), s=CREDIT_MID[a.b_credit], first=(a.b_own==="rent");
+  var best= list[0].fit!=="no" ? {key:"va",down:0,mi:0} : s>=680 ? {key:"conv",down:first?0.03:0.05,mi:0.005} : {key:"fha",down:s>=580?0.035:0.10,mi:0.0055};
+  var savings=a.b_savings+(extraCash||0);
+  var per=(1-best.down)*pf(st.rate)+st.tax/100/12+(1-best.down)*best.mi/12;
+  var mi=a.b_income/12, pay=a.b_price*per, dti=mi>0?(pay+a.b_debts)/mi:9;
+  var cashNeed=a.b_price*(best.down+0.03);
+  var fits=Math.max(0,Math.min(Math.max(0,mi*0.43-a.b_debts)/per, savings/(best.down+0.03)));
+  var high=Math.floor(fits/5000)*5000, low=Math.floor(fits*0.85/5000)*5000;
+  var ratio=cashNeed>0?savings/cashNeed:1;
+  var score=Math.round(CREDIT_PTS[a.b_credit] + (mi<=0?0:dti<=0.36?30:dti<=0.43?24:dti<=0.5?12:3) + (ratio>=1?20:ratio>=0.6?13:ratio>=0.3?7:2) + JOB_PTS[a.b_job]);
+  var tier=score>=75?"ready":score>=55?"close":score>=35?"build":"start";
+  var steps=[];
+  if(a.b_credit==="ns") steps.push("checkCredit");
+  if(s<620) steps.push("raiseCredit");
+  if(dti>0.43) steps.push("dti");
+  if(ratio<1) steps.push("save");
+  if(a.b_mil==="yes") steps.push("coe");
+  if(a.b_job==="new") steps.push("job");
+  if(a.b_job==="se0") steps.push("se");
+  if(tier==="ready"||tier==="close") steps.push("preapprove");
+  steps.push("talk");
+  return {list:list,best:best,pay:pay,dti:dti,cashNeed:cashNeed,savings:savings,gap:Math.max(0,cashNeed-savings),low:low,high:high,score:score,tier:tier,steps:steps};
+}
+var COND={ready:{lo:.97,hi:1.03,prep:.005,pts:25},some:{lo:.92,hi:1.0,prep:.015,pts:17},major:{lo:.80,hi:.93,prep:.03,pts:8}};
+function seller(a){
+  var c=COND[a.s_cond], est=a.s_value, owe=a.s_owe, comm=st.comm/100;
+  var vLo=est*c.lo, vHi=est*c.hi, mid=(vLo+vHi)/2, costPct=comm+0.02+c.prep;
+  var netLo=vLo*(1-costPct)-owe, netHi=vHi*(1-costPct)-owe, eq=est-owe, eqPct=est>0?eq/est:0;
+  var score=Math.round((eqPct>=.3?35:eqPct>=.15?28:eqPct>=.08?18:eqPct>=0?8:0) + c.pts + ({"3":25,"6":20,"12":12,later:6})[a.s_when] + (a.s_next==="unsure"?8:15));
+  var tier=score>=75?"ready":score>=55?"close":score>=35?"build":"start";
+  var steps=[];
+  if(netLo<=0) steps.push("underwater"); else if(eqPct<.12) steps.push("lowEquity");
+  steps.push(a.s_cond==="ready"?"prepReady":a.s_cond==="some"?"prepSome":"prepMajor");
+  if(a.s_when==="3") steps.push("listSoon");
+  if(a.s_next==="here") steps.push("nextHere");
+  steps.push("report");
+  return {vLo:vLo,vHi:vHi,eq:eq,netLo:netLo,netHi:netHi,score:score,tier:tier,steps:steps,
+    bd:{sale:mid,agent:-mid*comm,close:-mid*0.02,prep:-mid*c.prep,payoff:-owe,net:mid*(1-costPct)-owe}};
+}
+
+/* ================= CUSTOMER TOOL ================= */
+var app=document.getElementById("app"), navbar=document.getElementById("navbar"), navIn=document.getElementById("navIn");
+var ICON={
+ buy:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>',
+ sell:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 5h12l-2 4 2 4H5"/></svg>',
+ both:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13l-3-3"/><path d="M20 16H7l3 3"/></svg>'
+};
+function profileCard(cls){
+  var t=L(), ph=digits(settings.phone);
+  return '<div class="pcard '+(cls||"")+'"><div class="pc-top">'+photoHTML(84)+'<div><b>'+esc(agentName())+'</b><small>'+esc(settings.broker||"")+'</small>'+(settings.phone?'<small>'+esc(settings.phone)+'</small>':'')+(speaksMore()?'<small class="pc-langs">'+GLOBE+' '+esc(langNative())+'</small>':'')+'</div></div>'+
+    (settings.tagline?'<p class="pc-tag">'+esc(settings.tagline)+'</p>':'')+
+    '<div class="pc-act">'+(ph?'<a class="btn small" href="tel:'+esc(ph)+'">'+esc(t.call)+'</a>':'')+(settings.email?'<a class="btn ghost small" href="mailto:'+esc(settings.email)+'">'+esc(t.email)+'</a>':'')+'</div>'+
+    (settings.logo?'<img class="pc-logo" src="'+settings.logo+'" alt="'+esc(settings.broker||"")+' logo">':'')+'</div>';
+}
+
+/* ================= LANGUAGES SPOKEN ================= */
+var LANGS=[["en","English","English","inglés"],["es","Español","Spanish","español"],["vi","Tiếng Việt","Vietnamese","vietnamita"],["zh","中文 (普通话)","Mandarin Chinese","chino mandarín"],["yue","粵語","Cantonese","cantonés"],
+ ["tl","Tagalog","Tagalog","tagalo"],["ko","한국어","Korean","coreano"],["ar","العربية","Arabic","árabe"],["hi","हिन्दी","Hindi","hindi"],["ur","اردو","Urdu","urdu"],["fa","فارسی","Farsi (Persian)","persa (farsi)"],
+ ["fr","Français","French","francés"],["de","Deutsch","German","alemán"],["pt","Português","Portuguese","portugués"],["ru","Русский","Russian","ruso"],["ja","日本語","Japanese","japonés"],["it","Italiano","Italian","italiano"],
+ ["pl","Polski","Polish","polaco"],["gu","ગુજરાતી","Gujarati","guyaratí"],["te","తెలుగు","Telugu","telugu"],["asl","ASL","American Sign Language","lengua de señas americana"]];
+function agentLangs(){
+  var out=[], sel=Array.isArray(settings.langs)?settings.langs:[];
+  LANGS.forEach(function(L){ if(sel.indexOf(L[0])>=0) out.push({code:L[0],native:L[1],en:L[2],es:L[3]}); });
+  String(settings.langsOther||"").split(",").map(function(x){return x.trim();}).filter(Boolean).forEach(function(x){ out.push({code:"x-"+x.toLowerCase(),native:x,en:x,es:x}); });
+  if(!out.length) out.push({code:"en",native:"English",en:"English",es:"inglés"});
+  return out;
+}
+function speaksMore(){ var a=agentLangs(); return a.length>1 || a[0].code!=="en"; }
+function hasLang(c){ return agentLangs().some(function(x){return x.code===c;}); }
+function langNative(){ return agentLangs().map(function(x){return x.native;}).join(" · "); }
+function joinWords(arr,l){ if(arr.length<2) return arr.join(""); var and=l==="es"?" y ":" and "; return arr.slice(0,-1).join(", ")+and+arr[arr.length-1]; }
+function speakSentence(l){ if(!speaksMore()) return ""; var names=agentLangs().map(function(x){return l==="es"?x.es:x.en;}); return (l==="es"?"Hablo ":"I speak ")+joinWords(names,l)+"."; }
+function langByCode(c){ var a=agentLangs(); for(var i=0;i<a.length;i++) if(a[i].code===c) return a[i]; for(var j=0;j<LANGS.length;j++) if(LANGS[j][0]===c) return {code:c,native:LANGS[j][1],en:LANGS[j][2],es:LANGS[j][3]}; return null; }
+var GLOBE='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>';
+
+function renderSide(){ document.getElementById("side").innerHTML = settings.layout==="profile" ? profileCard() : ""; }
+function render(){
+  window.scrollTo(0,0); renderSide(); renderFooter();
+  if(st.screen!=="start"){ var hw=document.getElementById("heroWrap"); hw.hidden=true; hw.innerHTML=""; }
+  if(st.screen==="start") renderStart(); else if(st.screen==="q") renderQ(); else renderResults();
+  document.body.classList.toggle("has-nav",!navbar.hidden);
+}
+function heroSrc(){
+  if(settings.hero==="none") return null;
+  if(settings.hero==="custom") return settings.heroCustom?{url:settings.heroCustom,fx:.5,fy:.5}:null;
+  var m=photoById(settings.hero||"p12"); return {url:"/photos/"+m.id+".jpg",fx:m.fx,fy:m.fy};
+}
+function renderStart(){
+  navbar.hidden=true;
+  var t=L(), H=heroSrc(), hw=document.getElementById("heroWrap");
+  var trust='<ul class="trust">'+t.trust.map(function(x){ return '<li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>'+esc(x)+'</li>'; }).join("")+'</ul>';
+  var h='<section class="start">';
+  if(H){
+    hw.hidden=false;
+    hw.innerHTML='<section class="hero" style="background-image:url(&quot;'+esc(H.url)+'&quot;);background-position:'+Math.round(H.fx*100)+'% '+Math.round(H.fy*100)+'%">'+
+      '<div class="in"><div class="greet">'+photoHTML(46)+'<span>'+esc(fill(t.hi,{agent:agentName()}))+'</span></div>'+
+      (speaksMore()?'<div class="speaks">'+GLOBE+'<span><b>'+esc(t.speakLbl)+':</b> '+esc(langNative())+'</span></div>':'')+
+      '<h1>'+esc(t.startH)+'</h1><p class="lede">'+esc(t.startP)+'</p>'+trust+'</div></section>';
+    if(settings.layout==="profile") h+=profileCard("inline lifted-card")+'<div class="picks">';
+    else h+='<div class="picks lifted">';
+  }else{
+    hw.hidden=true; hw.innerHTML="";
+    var hero='<span class="badge">'+esc(t.badge)+'</span><h1>'+esc(t.startH)+'</h1><p class="lede">'+esc(t.startP)+'</p>'+(speaksMore()?'<p class="speaks plain">'+GLOBE+'<span><b>'+esc(t.speakLbl)+':</b> '+esc(langNative())+'</span></p>':'');
+    if(settings.layout==="bold") h+='<div class="band">'+hero+'</div>';
+    else if(settings.layout==="profile") h+=profileCard("inline")+hero;
+    else h+=hero;
+    h+='<div class="picks">';
+  }
+  h+=pickBtn("buy",t.pickBuy)+pickBtn("sell",t.pickSell)+pickBtn("both",t.pickBoth)+'</div></section>';
+  app.innerHTML=h;
+  app.querySelectorAll(".pick").forEach(function(b){ b.addEventListener("click",function(){ startFlow(b.getAttribute("data-f"),0); }); });
+}
+function pickBtn(f,txt){ return '<button type="button" class="pick" data-f="'+f+'"><span class="ic">'+ICON[f]+'</span><span><b>'+esc(txt[0])+'</b><small>'+esc(txt[1])+'</small></span><span class="arrow" aria-hidden="true">›</span></button>'; }
+function startFlow(f,i){ st.flow=f; st.i=i||0; st.screen="q"; st.submitted=false; render(); }
+
+function renderQ(){
+  var t=L(), key=FLOWS[st.flow][st.i], total=FLOWS[st.flow].length;
+  var qk=(key==="b_savings"&&st.flow==="both")?"b_savings2":key, q=t.q[qk], isMoney=!!MONEY[key];
+  var h='<div class="progress"><div class="bar"><i style="width:'+Math.round(st.i/total*100)+'%"></i></div><small>'+esc(fill(t.qof,{n:st.i+1,t:total}))+'</small></div><section class="q">'+
+    (st.flow==="both"?'<div class="section-tag">'+esc(key.charAt(0)==="s"?t.secSell:t.secBuy)+'</div>':'')+
+    '<h2 id="qh">'+esc(q[0])+'</h2>'+(q[1]?'<p class="hint">'+esc(q[1])+'</p>':'');
+  if(isMoney){
+    var v=st.a[key]!=null?st.a[key]:DEFAULTS[key];
+    h+='<div class="money"><span aria-hidden="true">$</span><input id="mv" type="text" inputmode="numeric" autocomplete="off" aria-labelledby="qh" value="'+(v!=null?Number(v).toLocaleString("en-US"):"")+'"></div>';
+  }else{
+    h+='<div class="opts" role="group" aria-labelledby="qh">'+OPTS[key].map(function(o){ return '<button type="button" class="opt" data-v="'+o+'" aria-pressed="'+(st.a[key]===o)+'"><span class="dot"></span>'+esc(q[2][o])+'</button>'; }).join("")+'</div>';
+  }
+  app.innerHTML=h+'</section>';
+  var last=st.i===total-1;
+  navbar.hidden=false;
+  navIn.innerHTML='<button type="button" class="btn ghost" id="bk">'+esc(t.back)+'</button><button type="button" class="btn grow" id="nx">'+esc(last?t.see:t.next)+'</button>';
+  var nx=document.getElementById("nx");
+  document.getElementById("bk").addEventListener("click",function(){ if(st.i>0){st.i--;} else {st.screen="start";} render(); });
+  if(isMoney){
+    var inp=document.getElementById("mv");
+    var sync=function(){ var d=inp.value.replace(/[^0-9]/g,""); inp.value=d?Number(d).toLocaleString("en-US"):""; nx.disabled=!d; };
+    inp.addEventListener("input",sync); sync();
+    inp.addEventListener("keydown",function(e){ if(e.key==="Enter"&&!nx.disabled) nx.click(); });
+    nx.addEventListener("click",function(){ st.a[key]=Number(inp.value.replace(/[^0-9]/g,""))||0; advance(); });
+    setTimeout(function(){ try{inp.focus({preventScroll:true});}catch(e){} },50);
+  }else{
+    nx.disabled=st.a[key]==null;
+    app.querySelectorAll(".opt").forEach(function(b){ b.addEventListener("click",function(){
+      st.a[key]=b.getAttribute("data-v");
+      app.querySelectorAll(".opt").forEach(function(x){x.setAttribute("aria-pressed",x===b);});
+      nx.disabled=false; setTimeout(advance,180);
+    }); });
+    nx.addEventListener("click",advance);
+  }
+}
+function advance(){ if(st.screen!=="q") return; if(st.i<FLOWS[st.flow].length-1){ st.i++; } else { st.screen="results"; } render(); }
+
+function ring(score,tier,size){
+  var r=size/2-9, C=2*Math.PI*r, col={ready:"var(--good)",close:"var(--info)",build:"var(--warn)",start:"var(--bad)"}[tier];
+  return '<div class="ring" style="width:'+size+'px;height:'+size+'px"><svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'" aria-hidden="true">'+
+    '<circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="var(--line)" stroke-width="10"/>'+
+    '<circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="10" stroke-linecap="round" transform="rotate(-90 '+size/2+' '+size/2+')" stroke-dasharray="'+C.toFixed(2)+'" stroke-dashoffset="'+(C*(1-score/100)).toFixed(2)+'"/></svg>'+
+    '<div class="n"><div><b>'+score+'</b><small>'+esc(L().outOf)+'</small></div></div></div>';
+}
+function scoreCard(kicker,score,tier,txt){ return '<section class="card"><div class="kicker">'+esc(kicker)+'</div><div class="scorecard">'+ring(score,tier,112)+'<div><span class="pill t-'+tier+'">'+esc(txt[0])+'</span><h3>'+esc(txt[1])+'</h3><p>'+esc(txt[2])+'</p></div></div></section>'; }
+function stat(label,sub,val,neg){ return '<div class="stat"><div class="k">'+esc(label)+'<small>'+esc(sub)+'</small></div><div class="v'+(neg?" neg":"")+'">'+val+'</div></div>'; }
+function compute(){
+  var a=Object.assign({},st.a);
+  if(st.flow==="both"){ a.s_next="here"; a.b_own="sell"; a.b_when=a.s_when; }
+  var out={a:a};
+  if(st.flow!=="buy") out.s=seller(a);
+  if(st.flow!=="sell") out.b=buyer(a, st.flow==="both"?Math.max(0,out.s.netLo):0);
+  return out;
+}
+function renderResults(){
+  navbar.hidden=true;
+  var t=L(), R=compute(), a=R.a, h='<div class="res">', ag=agentName();
+  if(R.s){ var s=R.s;
+    h+=scoreCard(t.kSell,s.score,s.tier,t.tS[s.tier]);
+    h+='<section class="card">'+stat(t.sVal[0],t.sVal[1],kfmt(s.vLo)+"–"+kfmt(s.vHi))+stat(t.sEq[0],t.sEq[1],money(s.eq),s.eq<0)+stat(t.sNet[0],t.sNet[1],kfmt(s.netLo)+"–"+kfmt(s.netHi),s.netLo<0)+'</section>';
+    h+='<section class="card"><div class="kicker">'+esc(t.bdH)+'</div><table class="bd"><tbody>'+["sale","agent","close","prep","payoff"].map(function(k){ return '<tr><td>'+esc(fill(t.bd[k],{p:st.comm}))+'</td><td>'+money(s.bd[k])+'</td></tr>'; }).join("")+'<tr class="total"><td>'+esc(t.bd.net)+'</td><td>'+money(s.bd.net)+'</td></tr></tbody></table></section>';
+    h+='<section class="card"><div class="kicker">'+esc(t.nextH)+'</div><ol class="steps">'+s.steps.map(function(k){return '<li>'+esc(fill(t.stepS[k],{agent:ag}))+'</li>';}).join("")+'</ol></section>';
+    if(st.flow==="sell" && a.s_next==="here") h+=crossCard(t.crossBuy,"toBuy");
+  }
+  if(R.b){ var b=R.b;
+    h+=scoreCard(t.kBuy,b.score,b.tier,t.tB[b.tier]);
+    h+='<section class="card">'+stat(t.bAff[0],fill(t.bAff[1],{p:t.prog[b.best.key][0]}),b.high>0?kfmt(b.low)+"–"+kfmt(b.high):"—")+stat(t.bPay[0],fill(t.bPay[1],{d:Math.min(99,Math.round(b.dti*100))}),money(b.pay))+stat(t.bCash[0],st.flow==="both"?t.bCashBoth:fill(t.bCash[1],{h:money(b.savings)}),money(b.cashNeed))+'</section>';
+    h+='<section class="card"><div class="kicker">'+esc(t.loansH)+'</div><div class="programs">'+b.list.map(function(p){ var lb=t.prog[p.key]; return '<div class="prog '+p.fit+'"><div><b>'+esc(lb[0])+'</b><small>'+esc(lb[1])+(p.note?" · "+esc(t.note[p.note]):"")+'</small></div><span class="pill">'+esc(t.fit[p.fit])+'</span></div>'; }).join("")+'</div></section>';
+    h+='<section class="card"><div class="kicker">'+esc(t.nextH)+'</div><ol class="steps">'+b.steps.map(function(k){return '<li>'+esc(fill(t.stepB[k],{agent:ag,gap:money(b.gap)}))+'</li>';}).join("")+'</ol></section>';
+    if(st.flow==="buy" && a.b_own==="sell") h+=crossCard(t.crossSell,"toSell");
+  }
+  var needAddr=st.flow!=="buy";
+  h+='<section class="card" id="leadCard"><h2>'+esc(t.leadH[st.flow])+'</h2><p class="sub">'+esc(fill(t.leadSub[st.flow],{agent:ag}))+'</p>';
+  if(st.submitted) h+='<div class="thanks" style="margin-top:14px">'+esc(st.submitted)+'</div>';
+  else h+='<form id="leadForm" class="fields" novalidate>'+
+      '<div><label class="f" for="lname">'+esc(t.fName)+'</label><input class="t" id="lname" type="text" autocomplete="name"></div>'+
+      '<div><label class="f" for="lemail">'+esc(t.fEmail)+'</label><input class="t" id="lemail" type="email" autocomplete="email"></div>'+
+      '<div><label class="f" for="lphone">'+esc(t.fPhone)+' <span class="opt-l">'+esc(t.optional)+'</span></label><input class="t" id="lphone" type="tel" autocomplete="tel"></div>'+
+      (needAddr?'<div><label class="f" for="laddr">'+esc(t.fAddr)+'</label><input class="t" id="laddr" type="text" autocomplete="street-address"></div>':'')+
+      (speaksMore()?'<div><label class="f" for="lpref">'+esc(t.fPref)+'</label><select class="t" id="lpref">'+agentLangs().map(function(x){ return '<option value="'+esc(x.code)+'"'+(x.code===lang?" selected":"")+'>'+esc(x.native)+'</option>'; }).join("")+'</select></div>':'')+
+      '<label class="consent" for="lconsent"><input type="checkbox" id="lconsent"><span>'+esc(fill(t.consent,{agent:ag}))+' <a href="#privacy">'+esc(LEGAL[lang].foot.privacy)+'</a></span></label>'+
+      '<p class="err" id="lerr"></p><button class="btn" type="submit">'+esc(t.send)+'</button></form>';
+  h+='</section><section class="card"><details class="assume"><summary>'+esc(t.assume)+'</summary><div class="two">'+
+    (R.b?'<div><label class="f" for="aRate">'+esc(t.rate)+'</label><input class="t" id="aRate" type="number" step="0.125" min="1" max="15" value="'+st.rate+'"></div><div><label class="f" for="aTax">'+esc(t.tax)+'</label><input class="t" id="aTax" type="number" step="0.1" min="0" max="6" value="'+st.tax+'"></div>':'')+
+    (R.s?'<div><label class="f" for="aComm">'+esc(t.comm)+'</label><input class="t" id="aComm" type="number" step="0.25" min="0" max="10" value="'+st.comm+'"></div>':'')+
+    '</div></details></section><div class="foot-actions"><button type="button" class="linkbtn" id="chg">'+esc(t.changeAns)+'</button><button type="button" class="linkbtn" id="rst">'+esc(t.startOver)+'</button></div>'+
+    '<p class="fine">'+esc(t.disclaimer)+' <a href="#terms">'+esc(LEGAL[lang].foot.terms)+'</a></p></div>';
+  app.innerHTML=h;
+  document.getElementById("chg").addEventListener("click",function(){ startFlow(st.flow,0); });
+  document.getElementById("rst").addEventListener("click",function(){ st.a={}; st.flow=null; st.screen="start"; st.submitted=false; render(); });
+  [["aRate","rate"],["aTax","tax"],["aComm","comm"]].forEach(function(p){ var el=document.getElementById(p[0]); if(!el) return;
+    el.addEventListener("change",function(){ var v=parseFloat(el.value); if(isFinite(v)&&v>=0){ st[p[1]]=v; var y=window.scrollY; renderResults(); window.scrollTo(0,y); var d=app.querySelector("details.assume"); if(d) d.open=true; } }); });
+  app.querySelectorAll("[data-cross]").forEach(function(b){ b.addEventListener("click",function(){
+    var to=b.getAttribute("data-cross"); st.flow="both"; st.screen="q"; st.submitted=false;
+    st.i= to==="toSell"?0:FLOWS.both.indexOf("b_credit"); if(to==="toBuy") st.a.b_when=st.a.s_when; render(); }); });
+  var form=document.getElementById("leadForm");
+  if(form) form.addEventListener("submit",function(e){ e.preventDefault(); submitLead(R,needAddr); });
+}
+function crossCard(txt,to){ return '<section class="card cross"><b>'+esc(txt[0])+'</b><p>'+esc(txt[1])+'</p><button type="button" class="btn" data-cross="'+to+'">'+esc(L().crossBtn)+'</button></section>'; }
+function submitLead(R,needAddr){
+  var t=L(), g=function(id){var el=document.getElementById(id);return el?el.value.trim():"";};
+  var n=g("lname"), em=g("lemail"), ph=g("lphone"), ad=g("laddr"), ok=document.getElementById("lconsent").checked, err=document.getElementById("lerr");
+  if(!n){ err.textContent=t.errName; document.getElementById("lname").focus(); return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ err.textContent=t.errEmail; document.getElementById("lemail").focus(); return; }
+  if(needAddr && !ad){ err.textContent=t.errAddr; document.getElementById("laddr").focus(); return; }
+  if(!ok){ err.textContent=fill(t.errConsent,{agent:agentName()}); document.getElementById("lconsent").focus(); return; }
+  var lead={type:st.flow==="buy"?"buyer":st.flow==="sell"?"seller":"both",name:n,email:em,phone:ph,addr:ad,lang:lang,contacted:false,ago:"Just now",example:false,consentAt:new Date().toISOString()};
+  if(R.b) lead.b={score:R.b.score,tier:R.b.tier,high:R.b.high,best:R.b.best.key};
+  if(R.s) lead.s={score:R.s.score,tier:R.s.tier,netLo:R.s.netLo,netHi:R.s.netHi,why:R.a.s_why};
+  lead.when=R.s?R.a.s_when:R.a.b_when;
+  var pe=document.getElementById("lpref"); lead.pref=pe?pe.value:lang;
+  if(MODE==="public"){ sendLead(lead,t,n); return; }
+  leads.unshift(lead); store("rtb.leads.v2",leads);
+  st.submitted=fill(t.thanks,{name:n.split(" ")[0],agent:agentName()})+t.demoNote;
+  var y=window.scrollY; renderResults(); window.scrollTo(0,y);
+}
+function setLang(l){ lang=l; document.documentElement.lang=l;
+  document.getElementById("lang-en").setAttribute("aria-pressed",l==="en");
+  document.getElementById("lang-es").setAttribute("aria-pressed",l==="es");
+  var y=window.scrollY; if(location.hash==="#privacy"||location.hash==="#terms"){ renderDoc(location.hash.slice(1)); return; } render(); if(st.screen==="results") window.scrollTo(0,y); }
+document.getElementById("lang-en").addEventListener("click",function(){setLang("en");});
+document.getElementById("lang-es").addEventListener("click",function(){setLang("es");});
+
+/* ================= LEGAL: FOOTER, PRIVACY, DISCLAIMERS ================= */
+var PLATFORM="2BuyAndSell", LEGAL_DATE={en:"November 3, 2026",es:"3 de noviembre de 2026"};
+var CPN_URL="https://www.trec.texas.gov/forms/consumer-protection-notice";
+var IABS_FALLBACK="https://www.trec.texas.gov/node/1568";
+var LEGAL={
+ en:{
+  foot:{privacy:"Privacy Policy",terms:"Disclaimers & Terms",eho:"Equal Housing Opportunity",iabs:"Texas Real Estate Commission Information About Brokerage Services",cpn:"Texas Real Estate Commission Consumer Protection Notice",
+        lic:"TREC License #{n}",member:"Member, {a}",realtor:"REALTOR®",find:"Find me on",nar:"Member of Texas REALTORS® and the National Association of REALTORS®",powered:"Powered by {p}"},
+  back:"← Back", updated:"Last updated {d}",
+  privacyH:"Privacy Policy",
+  privacy:[
+   ["Who we are","This tool is offered by {agent}, a real estate agent with {broker}, using software provided by {platform}. Questions? Contact {agent} at {email}{phoneSep}{phone}."],
+   ["What we collect","The answers you enter, such as your price range, income, debts, savings, credit score range, home value, what you owe and your timeline. If you choose to send your plan or request a home value report, we also collect your name, email, phone number (optional), property address (for sellers), your language, and the date and time you agreed to be contacted. Like most websites, the service may also receive basic technical information such as your browser type."],
+   ["What we don't do","We do not pull your credit report, and using this tool does not affect your credit score. We do not sell your personal information."],
+   ["How we use it","To show your results; to send the plan or report you ask for; to contact you by email, phone or text about buying or selling a home if you agree; and to keep the tool working and improve it."],
+   ["When your information is saved","Your answers are used to calculate your results. They are saved and sent to {agent} only when you submit the form."],
+   ["Who we share it with","{broker}, which supervises {agent}; companies that help run this service, such as website hosting and email, who may use it only to provide that service; a lender or other provider only if you ask to be connected; and others when required by law."],
+   ["Texts and calls","By checking the consent box, you agree that {agent} may contact you, including by text message. Agreeing is not required to see your results or to buy or sell a home. Message and data rates may apply. Reply STOP to stop texts at any time, and use the unsubscribe link in any email."],
+   ["Your choices","You can ask to see, correct or delete the information you sent, or ask us to stop contacting you. Email {email} and we'll respond within a reasonable time."],
+   ["Security and how long we keep it","We use reasonable safeguards to protect your information and keep it only as long as needed to help you or as required by law."],
+   ["Children","This tool is meant for adults and is not directed to anyone under 18."],
+   ["Changes","If we change this policy, we'll update the date at the top of this page."]
+  ],
+  termsH:"Disclaimers & Terms",
+  terms:[
+   ["Estimates only","Results are estimates based only on the answers you enter and on general assumptions, such as the interest rate, taxes, insurance, closing costs and selling costs shown on the results page. Your actual numbers will be different."],
+   ["Not a credit check or loan offer","This tool does not check your credit and is not a loan application, pre-qualification, pre-approval, loan commitment or offer of credit. Loan program rules and lender requirements vary and change over time. Only a licensed loan officer can tell you what you qualify for."],
+   ["Not an appraisal","Home value ranges are based on your own estimate and the condition you select. They are not an appraisal or a market analysis. Ask {agent} for a home value report based on recent nearby sales."],
+   ["Fees are negotiable","Real estate commissions and broker fees are negotiable and are not set by law. Fees shown in seller estimates are an assumption you can change."],
+   ["Not legal, tax or financial advice","Talk with a qualified attorney, tax professional or financial advisor about your situation."],
+   ["Equal Housing Opportunity","{agent} and {broker} are committed to equal housing opportunity. We do not discriminate on the basis of race, color, religion, sex, disability, familial status or national origin, or any other class protected by law."],
+   ["Photos","Photos used in marketing are for illustration. People shown are models and are not clients."],
+   ["Accessibility","If anything on this site is hard to use, contact {agent} at {email} and we'll help."],
+   ["Brokerage","{agent} is a Texas real estate license holder associated with {broker}. Information about brokerage services and the TREC Consumer Protection Notice are linked at the bottom of every page."]
+  ]
+ },
+ es:{
+  foot:{privacy:"Política de privacidad",terms:"Avisos y términos",eho:"Igualdad de Oportunidades en la Vivienda",iabs:"Texas Real Estate Commission Information About Brokerage Services",cpn:"Texas Real Estate Commission Consumer Protection Notice",
+        lic:"Licencia TREC #{n}",member:"Miembro, {a}",realtor:"REALTOR®",find:"Encuéntrame en",nar:"Miembro de Texas REALTORS® y de la National Association of REALTORS®",powered:"Con tecnología de {p}"},
+  back:"← Regresar", updated:"Última actualización: {d}",
+  privacyH:"Política de privacidad",
+  privacy:[
+   ["Quiénes somos","Esta herramienta la ofrece {agent}, agente de bienes raíces con {broker}, usando software de {platform}. ¿Preguntas? Contacta a {agent} en {email}{phoneSep}{phone}."],
+   ["Qué información recopilamos","Las respuestas que escribes, como tu rango de precio, ingresos, deudas, ahorros, rango de crédito, valor de tu casa, lo que debes y tus tiempos. Si decides enviar tu plan o pedir un reporte de valor, también recopilamos tu nombre, correo, teléfono (opcional), dirección de la propiedad (para vendedores), tu idioma y la fecha y hora en que aceptaste que te contacten. Como la mayoría de los sitios, el servicio también puede recibir información técnica básica, como tu tipo de navegador."],
+   ["Lo que no hacemos","No revisamos tu reporte de crédito y usar esta herramienta no afecta tu puntaje. No vendemos tu información personal."],
+   ["Cómo la usamos","Para mostrarte tus resultados; para enviarte el plan o reporte que pidas; para contactarte por correo, teléfono o mensaje de texto sobre comprar o vender casa si lo aceptas; y para mantener y mejorar la herramienta."],
+   ["Cuándo se guarda tu información","Tus respuestas se usan para calcular tus resultados. Se guardan y se envían a {agent} solo cuando envías el formulario."],
+   ["Con quién la compartimos","Con {broker}, que supervisa a {agent}; con empresas que ayudan a operar este servicio, como hospedaje web y correo, que solo pueden usarla para dar ese servicio; con un prestamista u otro proveedor solo si pides que te conectemos; y con otros cuando la ley lo requiera."],
+   ["Mensajes y llamadas","Al marcar la casilla, aceptas que {agent} te contacte, incluso por mensaje de texto. No es necesario aceptar para ver tus resultados ni para comprar o vender casa. Pueden aplicar cargos por mensajes y datos. Responde STOP para dejar de recibir mensajes y usa el enlace para darte de baja en cualquier correo."],
+   ["Tus opciones","Puedes pedir ver, corregir o borrar la información que enviaste, o pedir que dejemos de contactarte. Escribe a {email} y te responderemos en un tiempo razonable."],
+   ["Seguridad y cuánto tiempo la guardamos","Usamos medidas razonables para proteger tu información y la guardamos solo el tiempo necesario para ayudarte o lo que exija la ley."],
+   ["Menores","Esta herramienta es para adultos y no está dirigida a menores de 18 años."],
+   ["Cambios","Si cambiamos esta política, actualizaremos la fecha al inicio de esta página."]
+  ],
+  termsH:"Avisos y términos",
+  terms:[
+   ["Solo son cálculos","Los resultados son cálculos basados solo en tus respuestas y en supuestos generales, como la tasa de interés, impuestos, seguro, gastos de cierre y gastos de venta que aparecen en la página de resultados. Tus números reales serán diferentes."],
+   ["No es revisión de crédito ni oferta de préstamo","Esta herramienta no revisa tu crédito y no es una solicitud de préstamo, precalificación, preaprobación, compromiso de préstamo ni oferta de crédito. Las reglas de los programas y los requisitos de cada prestamista varían y cambian. Solo un oficial de préstamos con licencia te puede decir para qué calificas."],
+   ["No es un avalúo","Los rangos de valor se basan en tu propio cálculo y en el estado que escoges. No son un avalúo ni un análisis de mercado. Pídele a {agent} un reporte de valor basado en ventas recientes cerca de ti."],
+   ["Las comisiones son negociables","Las comisiones y honorarios de bienes raíces son negociables y no los fija la ley. Las comisiones en los cálculos para vendedores son un supuesto que puedes cambiar."],
+   ["No es asesoría legal, fiscal ni financiera","Habla con un abogado, profesional de impuestos o asesor financiero sobre tu situación."],
+   ["Igualdad de Oportunidades en la Vivienda","{agent} y {broker} están comprometidos con la igualdad de oportunidades en la vivienda. No discriminamos por raza, color, religión, sexo, discapacidad, estado familiar u origen nacional, ni por ninguna otra categoría protegida por la ley."],
+   ["Fotos","Las fotos en la publicidad son ilustrativas. Las personas que aparecen son modelos, no clientes."],
+   ["Accesibilidad","Si algo en este sitio es difícil de usar, contacta a {agent} en {email} y te ayudamos."],
+   ["Corretaje","{agent} tiene licencia de bienes raíces en Texas y está asociado(a) con {broker}. La información sobre servicios de corretaje y el Aviso de Protección al Consumidor de TREC están enlazados al final de cada página."]
+  ]
+ }
+};
+var PROFILE_SITES=[["har","HAR.com"],["realtorcom","Realtor.com"],["zillow","Zillow"],["facebook","Facebook"],["instagram","Instagram"]];
+function safeUrl(u){ u=String(u||"").trim(); if(!u) return ""; if(!/^https?:\/\//i.test(u)) u="https://"+u; return /^https?:\/\/[^\s"<>]+$/i.test(u)?u:""; }
+function legalVars(){ return {agent:agentName(),broker:settings.broker||"the sponsoring broker",email:settings.email||"the agent's email",phone:settings.phone||"",phoneSep:settings.phone?" or ":"",platform:PLATFORM}; }
+function renderFooter(){
+  var el=document.getElementById("legalFoot"), F=LEGAL[lang].foot, iabs=safeUrl(settings.iabs)||IABS_FALLBACK;
+  var who=esc(agentName())+(settings.realtor?", "+F.realtor:"")+(settings.license?" · "+esc(fill(F.lic,{n:settings.license})):"")+" · "+esc(settings.broker||"");
+  var links=PROFILE_SITES.filter(function(p){return safeUrl(settings[p[0]]);}).map(function(p){ return '<a href="'+esc(safeUrl(settings[p[0]]))+'" target="_blank" rel="noopener">'+p[1]+'</a>'; });
+  el.innerHTML='<div class="in">'+
+    '<p class="req"><a href="'+esc(iabs)+'" target="_blank" rel="noopener">'+F.iabs+'</a><a href="'+CPN_URL+'" target="_blank" rel="noopener">'+F.cpn+'</a></p>'+
+    '<p class="who">'+who+'</p>'+(speaksMore()?'<p>'+GLOBE+' '+esc((lang==="es"?"Idiomas: ":"Languages: ")+langNative())+'</p>':'')+
+    (settings.assoc?'<p>'+esc(fill(F.member,{a:settings.assoc}))+(settings.realtor?' · '+esc(F.nar):'')+'</p>':(settings.realtor?'<p>'+esc(F.nar)+'</p>':''))+
+    (links.length?'<p>'+esc(F.find)+': '+links.join(" · ")+'</p>':'')+
+    '<p class="pol"><a href="#privacy">'+esc(F.privacy)+'</a> · <a href="#terms">'+esc(F.terms)+'</a> · <span class="eho"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M9 14h6M9 17h6"/></svg>'+esc(F.eho)+'</span></p>'+
+    '<p class="pw">'+esc(fill(F.powered,{p:PLATFORM}))+'</p></div>';
+}
+function renderDoc(kind){
+  navbar.hidden=true; document.body.classList.remove("has-nav"); renderSide();
+  var hw0=document.getElementById("heroWrap"); hw0.hidden=true; hw0.innerHTML="";
+  var Lg=LEGAL[lang], v=legalVars(), title=kind==="privacy"?Lg.privacyH:Lg.termsH, rows=kind==="privacy"?Lg.privacy:Lg.terms;
+  app.innerHTML='<article class="doc"><a class="linkbtn" href="#tool">'+esc(Lg.back)+'</a><h1>'+esc(title)+'</h1><p class="upd">'+esc(fill(Lg.updated,{d:LEGAL_DATE[lang]}))+'</p>'+
+    rows.map(function(r){ return '<h2>'+esc(fill(r[0],v))+'</h2><p>'+esc(fill(r[1],v))+'</p>'; }).join("")+
+    '</article>';
+  window.scrollTo(0,0); renderFooter();
+}
+
+/* ================= LEADS ================= */
+var EX=[
+ {type:"both",name:"Rachel & Tom Medina",email:"medinas@example.com",phone:"(210) 555-0131",addr:"Alamo Heights",lang:"en",when:"3",ago:"1 hr ago",s:{score:86,tier:"ready",netLo:118000,netHi:139000,why:"up"},b:{score:81,tier:"ready",high:465000,best:"conv"}},
+ {type:"buyer",name:"Daniel Ortiz",email:"d.ortiz@example.com",phone:"(210) 555-0142",lang:"en",when:"3",ago:"2 hrs ago",b:{score:84,tier:"ready",high:325000,best:"va"}},
+ {type:"seller",name:"Gloria Sánchez",email:"gloria.s@example.com",phone:"(210) 555-0176",addr:"Stone Oak",lang:"es",when:"6",ago:"Yesterday",s:{score:72,tier:"close",netLo:96000,netHi:121000,why:"down"}},
+ {type:"buyer",name:"Brianna Lee",email:"brianna.lee@example.com",phone:"",lang:"en",when:"3",ago:"Yesterday",contacted:true,b:{score:79,tier:"ready",high:290000,best:"conv"}},
+ {type:"buyer",name:"Linh Nguyen",email:"linh.n@example.com",phone:"(210) 555-0129",lang:"en",pref:"vi",when:"6",ago:"Yesterday",b:{score:71,tier:"close",high:280000,best:"conv"}},
+ {type:"buyer",name:"Marisol Treviño",email:"marisol.t@example.com",phone:"(210) 555-0187",lang:"es",when:"6",ago:"2 days ago",b:{score:66,tier:"close",high:255000,best:"fha"}},
+ {type:"seller",name:"Kevin Park",email:"kpark@example.com",phone:"(726) 555-0108",addr:"Converse",lang:"en",when:"12",ago:"3 days ago",s:{score:48,tier:"build",netLo:14000,netHi:31000,why:"move"}},
+ {type:"buyer",name:"Ana & Luis Garza",email:"garzafamily@example.com",phone:"(210) 555-0163",lang:"es",when:"12",ago:"4 days ago",b:{score:47,tier:"build",high:205000,best:"fha"}},
+ {type:"buyer",name:"Tyler Brooks",email:"tbrooks@example.com",phone:"",lang:"en",when:"later",ago:"1 week ago",b:{score:29,tier:"start",high:120000,best:"fha"}}
+].map(function(l){ l.example=true; l.contacted=!!l.contacted; return l; });
+var leads=[];
+function leadScore(l){ return l.type==="both"?Math.round((l.s.score+l.b.score)/2): l.type==="seller"?l.s.score:l.b.score; }
+function leadTier(l){ var s=leadScore(l); return s>=75?"ready":s>=55?"close":s>=35?"build":"start"; }
+var TIERL={ready:"Ready now",close:"Close",build:"Building",start:"Getting started"};
+var TYPEL={buyer:"Buyer",seller:"Seller",both:"Sell + Buy"};
+var WHENL={"3":"0–3 months","6":"3–6 months","12":"6–12 months",later:"Just exploring"};
+var LOANL={va:"VA",fha:"FHA",conv:"Conventional"};
+function keyNum(l){ if(l.type==="buyer") return "Buys up to "+kfmt(l.b.high); if(l.type==="seller") return "Nets "+kfmt(l.s.netLo)+"–"+kfmt(l.s.netHi); return "Nets "+kfmt(l.s.netLo)+"+ · buys to "+kfmt(l.b.high); }
+var fType="all", fTier=null;
+
+function renderLeads(){
+  var pane=document.getElementById("pane-leads");
+  var types=[["all","All"],["buyer","Buyers"],["seller","Sellers"],["both","Sell + Buy"]];
+  var pool=leads.filter(function(l){return fType==="all"||l.type===fType;});
+  var rows=leads.map(function(l,i){return {l:l,i:i};}).filter(function(x){ return (fType==="all"||x.l.type===fType)&&(!fTier||leadTier(x.l)===fTier); })
+    .sort(function(a,b){ return (b.l.type==="both")-(a.l.type==="both") || leadScore(b.l)-leadScore(a.l); });
+  var h='<div class="bar-row"><div class="chips" role="group" aria-label="Lead type">'+types.map(function(x){ var c=x[0]==="all"?leads.length:leads.filter(function(l){return l.type===x[0];}).length; return '<button type="button" class="chip" data-t="'+x[0]+'" aria-pressed="'+(fType===x[0])+'">'+x[1]+' · '+c+'</button>'; }).join("")+'</div>'+
+    '<button class="btn ghost small" type="button" id="copyCsv">Copy leads for Google Sheets</button></div>';
+  h+='<div class="tiles">'+["ready","close","build","start"].map(function(k){ var c=pool.filter(function(l){return leadTier(l)===k;}).length; return '<button type="button" class="tile '+k+'" data-k="'+k+'" aria-pressed="'+(fTier===k)+'"><div class="k">'+TIERL[k]+'</div><div class="v">'+c+'</div></button>'; }).join("")+'</div>';
+  h+='<div class="leads"><div class="lrow hd"><div>Lead</div><div>Type</div><div>Score</div><div>Stage</div><div>Timeline</div><div>Numbers</div><div>Contacted</div><div></div></div>';
+  if(!rows.length) h+='<div class="empty">No leads here yet.</div>';
+  rows.forEach(function(x){ var l=x.l, tr=leadTier(l);
+    h+='<div class="lrow"><div class="nm"><b>'+esc(l.name)+(l.example?' <span class="exm">Example</span>':'')+'</b><small>'+esc(l.email)+(l.phone?" · "+esc(l.phone):"")+(l.addr?" · "+esc(l.addr):"")+" · "+esc(l.ago)+(function(){ var pc=l.pref||l.lang; if(!pc||pc==="en") return ""; var L0=langByCode(pc); return " · Prefers "+(L0?L0.en:pc); })()+'</small></div>'+
+      '<div><span class="lbl">Type</span><span class="type '+(l.type==="both"?"both":"")+'">'+TYPEL[l.type]+'</span></div>'+
+      '<div><span class="lbl">Score</span><span class="score">'+leadScore(l)+'</span></div>'+
+      '<div><span class="lbl">Stage</span><span class="pill t-'+tr+'">'+TIERL[tr]+'</span></div>'+
+      '<div><span class="lbl">Timeline</span>'+WHENL[l.when]+'</div>'+
+      '<div><span class="lbl">Numbers</span>'+esc(keyNum(l))+(l.b?' <small style="color:var(--muted)">· '+LOANL[l.b.best]+'</small>':'')+'</div>'+
+      '<div><span class="lbl">Contacted</span><label class="cbox"><input type="checkbox" data-i="'+x.i+'"'+(l.contacted?" checked":"")+'> '+(l.contacted?"Yes":"Not yet")+'</label></div>'+
+      '<div class="act"><button type="button" class="btn small" data-m="'+x.i+'">Write message</button></div></div>';
+  });
+  h+='</div>'+(MODE==="dash"?shareCard()+'<div hidden>':'')+'<h2 style="font-size:22px;margin-top:30px">How this goes live</h2><div class="golive">'+
+    '<div class="card"><div class="n">STEP 1</div><h3>Each agent gets their own link</h3><p>Agents log in, set their photo, logo, colors and layout, and share a link like 2buyandsell.com/monica. Their TREC notice links show on every page.</p></div>'+
+    '<div class="card"><div class="n">STEP 2</div><h3>Their email is connected once</h3><p>Agents connect Gmail or Outlook, so follow-ups send from their own address and replies land in their inbox.</p></div>'+
+    '<div class="card"><div class="n">STEP 3</div><h3>Real numbers come later</h3><p>Home values from a paid property-data service, and credit only through a licensed lender with the buyer\'s written consent.</p></div></div>'+(MODE==="dash"?'</div>':'');
+  pane.innerHTML=h;
+  pane.querySelectorAll(".chip").forEach(function(b){ b.addEventListener("click",function(){ fType=b.getAttribute("data-t"); renderLeads(); }); });
+  pane.querySelectorAll(".tile").forEach(function(b){ b.addEventListener("click",function(){ var k=b.getAttribute("data-k"); fTier=(fTier===k)?null:k; renderLeads(); }); });
+  pane.querySelectorAll('input[type=checkbox][data-i]').forEach(function(c){ c.addEventListener("change",function(){ leads[+c.getAttribute("data-i")].contacted=c.checked; store("rtb.leads.v2",leads); renderLeads(); }); });
+  pane.querySelectorAll('[data-m]').forEach(function(b){ b.addEventListener("click",function(){ openMsg(+b.getAttribute("data-m")); }); });
+  document.getElementById("copyCsv").addEventListener("click",copyCsv);
+  var cml=document.getElementById("copyMyLink"); if(cml) cml.addEventListener("click",function(){ copyText("https://"+settings.link,"Link copied. Paste it in your bio, texts and emails."); });
+}
+
+/* ---------- follow-up messages ---------- */
+function followUp(l){
+  var first=l.name.split(/[ &]/)[0], a=agentName(), tr=leadTier(l), es=l.lang==="es", hi=es?"Hola "+first+", soy "+a+". ":"Hi "+first+", it's "+a+". ";
+  if(l.type==="both") return hi+(es?"Vi tus resultados para vender y comprar. Con lo que podrías ganar de tu venta, tu próxima casa podría llegar a unos "+kfmt(l.b.high)+". ¿Te parece si nos sentamos 20 minutos esta semana para planear las dos cosas juntas?"
+      :"I saw your sell-and-buy results. With what your home could net, your next one could go up to about "+kfmt(l.b.high)+". Can we sit down for 20 minutes this week and plan both moves together?");
+  if(l.type==="seller"){
+    var me={ready:"Your home sounds ready to list. I'll pull recent sales near you and send your value report today. When's a good time to walk through the house?",
+      close:"Your home is close to ready. I'll send your value report and a short list of the prep that pays off most. Want to go over it on a quick call?",
+      build:"You've got time to plan this right. I'll send your value report now and check in as your move date gets closer. Sound good?",
+      start:"Thanks for running your numbers. I'll send your value report so you know where you stand, with no pressure. I'm here whenever you have questions."};
+    var ms={ready:"Tu casa suena lista para vender. Voy a revisar ventas recientes cerca de ti y te mando tu reporte hoy. ¿Cuándo te queda bien para ver la casa?",
+      close:"Tu casa está casi lista. Te mando tu reporte de valor y una lista corta de lo que más conviene preparar. ¿Lo platicamos en una llamada rápida?",
+      build:"Tienes tiempo para planearlo bien. Te mando tu reporte de valor ahora y te escribo cuando se acerque tu fecha. ¿Te parece?",
+      start:"Gracias por revisar tus números. Te mando tu reporte de valor para que sepas dónde estás, sin presión. Aquí estoy para cualquier pregunta."};
+    return hi+(es?ms:me)[tr];
+  }
+  var p=kfmt(l.b.high);
+  var be={ready:"I saw your results, and you look ready to buy! Your range goes up to about "+p+". Want a quick call this week so I can connect you with a lender and start touring homes?",
+    close:"You're really close to being able to buy. A few small moves could get you to around "+p+". Can I walk you through the plan on a 15-minute call?",
+    build:"Buying in 6–12 months looks realistic for you. I can send a simple step list and check in once a month. Sound good?",
+    start:"You're just getting started, and that's fine. I'll send a few tips on building credit and saving for a down payment. I'm here whenever you have questions."};
+  var bs={ready:"Vi tus resultados: ¡estás listo para comprar! Tu rango llega a unos "+p+". ¿Te parece una llamada esta semana para conectarte con un prestamista y empezar a ver casas?",
+    close:"Estás muy cerca de poder comprar. Unos pasos pequeños te podrían llevar a unos "+p+". ¿Te explico el plan en una llamada de 15 minutos?",
+    build:"Comprar en 6–12 meses es realista para ti. Te mando una lista de pasos y te escribo cada mes. ¿Te parece?",
+    start:"Estás empezando y eso está bien. Te mando unos consejos para subir tu crédito y ahorrar para el enganche. Aquí estoy para cualquier pregunta."};
+  return hi+(es?bs:be)[tr];
+}
+function subjectFor(l){ var es=l.lang==="es"; return l.type==="seller"?(es?"Tu reporte del valor de tu casa":"Your home value report"):l.type==="both"?(es?"Tu plan para vender y comprar":"Your plan to sell and buy"):(es?"Tu plan para comprar casa":"Your home buying plan"); }
+function signature(){ return "\n\n"+[agentName(),settings.broker,settings.phone,settings.email].filter(Boolean).join("\n"); }
+
+var modal=document.getElementById("modal"), mBody=document.getElementById("modalBody");
+function closeMsg(){ if(closeMsg.onClose){ var f=closeMsg.onClose; closeMsg.onClose=null; f(); } modal.classList.remove("open"); }
+modal.addEventListener("click",function(e){ if(e.target===modal) closeMsg(); });
+document.addEventListener("keydown",function(e){ if(e.key==="Escape") closeMsg(); });
+function openMsg(i){
+  var l=leads[i];
+  document.getElementById("modalTitle").textContent="Message to "+l.name;
+  mBody.innerHTML='<p class="to">To: <b>'+esc(l.email)+'</b>'+(l.phone?' · '+esc(l.phone):'')+'<br>From: <b>'+esc(settings.email||"(add your email in My page)")+'</b></p>'+
+    '<div class="fields" style="margin-top:10px"><div><label class="f" for="mSubj">Subject</label><input class="t" id="mSubj" type="text"></div>'+
+    '<div><label class="f" for="mText">Message</label><textarea class="t" id="mText"></textarea></div></div>'+
+    '<div class="row"><a class="btn" id="mMail" href="#">Open in my email</a>'+(l.phone?'<a class="btn ghost" id="mSms" href="#">Send as text</a>':'')+'<button class="btn ghost" type="button" id="mCopy">Copy</button></div>'+
+    (function(){ var pc=l.pref||l.lang; if(!pc||pc==="en"||pc==="es") return ""; var L0=langByCode(pc); var nm=L0?L0.en:pc; return '<p class="note" style="color:var(--warn);font-weight:600">'+esc(l.name.split(" ")[0])+' prefers '+esc(nm)+'. '+(hasLang(pc)?'Consider calling, or rewrite this message in '+esc(nm)+'.':'You haven\'t listed '+esc(nm)+', so consider a call with an interpreter or a referral to a colleague who speaks it.')+'</p>'; })()+
+    '<label class="cbox" style="margin-top:12px"><input type="checkbox" id="mDone"> Mark as contacted</label>'+
+    '<p class="note">Opens your phone or computer\'s email app with everything filled in. In the live version, you connect Gmail or Outlook once and it sends straight from here.</p>'+
+    '<div class="row"><button class="btn ghost" type="button" id="mClose">Close</button></div>';
+  var subj=document.getElementById("mSubj"), txt=document.getElementById("mText");
+  subj.value=subjectFor(l); txt.value=followUp(l)+signature();
+  var mail=document.getElementById("mMail"), sms=document.getElementById("mSms");
+  var upd=function(){
+    mail.href="mailto:"+encodeURIComponent(l.email)+"?subject="+encodeURIComponent(subj.value)+"&body="+encodeURIComponent(txt.value);
+    if(sms) sms.href="sms:"+digits(l.phone)+"?&body="+encodeURIComponent(txt.value.split("\n\n")[0]);
+  };
+  subj.addEventListener("input",upd); txt.addEventListener("input",upd); upd();
+  var mark=function(){ l.contacted=true; store("rtb.leads.v2",leads); };
+  mail.addEventListener("click",function(){ document.getElementById("mDone").checked=true; mark(); });
+  if(sms) sms.addEventListener("click",function(){ document.getElementById("mDone").checked=true; mark(); });
+  document.getElementById("mDone").checked=!!l.contacted;
+  document.getElementById("mDone").addEventListener("change",function(e){ l.contacted=e.target.checked; store("rtb.leads.v2",leads); });
+  document.getElementById("mCopy").addEventListener("click",function(){ copyText(txt.value,"Message copied"); });
+  document.getElementById("mClose").addEventListener("click",function(){ closeMsg(); renderLeads(); });
+  modal.classList.add("open");
+}
+function copyText(text,okMsg){
+  try{ navigator.clipboard.writeText(text).then(function(){toast(okMsg);},function(){ toast("Copy blocked here. Press and hold the text to copy it."); }); }
+  catch(e){ toast("Copy blocked here. Press and hold the text to copy it."); }
+}
+function copyCsv(){
+  var head="name,email,phone,address,type,score,stage,timeline,buys_up_to,best_loan,net_low,net_high,language,contacted";
+  var rows=leads.map(function(l){ return [l.name,l.email,l.phone||"",l.addr||"",TYPEL[l.type],leadScore(l),TIERL[leadTier(l)],WHENL[l.when],l.b?Math.round(l.b.high):"",l.b?LOANL[l.b.best]:"",l.s?Math.round(l.s.netLo):"",l.s?Math.round(l.s.netHi):"",l.lang,l.contacted?"yes":"no"]
+    .map(function(v){v=String(v);return /[",]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(","); });
+  copyText([head].concat(rows).join("\n"),"Copied. Paste into Google Sheets.");
+}
+
+/* ================= MY PAGE ================= */
+var hsv=[0,0,0];
+function renderPage(){
+  var pane=document.getElementById("pane-page");
+  var lays=[["classic","Classic","Clean and simple. Your name up top."],["bold","Bold","Your brand color front and center."],["profile","Profile","Your photo and contact card lead the page."]];
+  var mini={classic:'<div class="mini"><i class="hb"></i><i class="ln"></i><i class="ln s"></i><i style="flex:1;background:var(--card);border:1px solid var(--line)"></i></div>',
+    bold:'<div class="mini"><i class="hb br"></i><i class="bd2"></i><i class="ln s"></i><i style="flex:1;background:var(--card);border:1px solid var(--line)"></i></div>',
+    profile:'<div class="mini"><i class="hb"></i><div class="row"><div class="sd"><u></u><i class="ln" style="width:70%;height:6px"></i></div><div class="mn"><i class="ln"></i><i class="ln s"></i><i style="flex:1;background:var(--card);border:1px solid var(--line)"></i></div></div></div>'};
+  pane.innerHTML='<div class="pg">'+
+   '<section class="card"><h2>Your info</h2><p class="sub">Shows on your page, your messages and your marketing posts.</p><div class="grid2">'+
+     fld("sName","Name",settings.name)+fld("sCity","City or area you serve",settings.city,null,"shows in your headline and posts")+fld("sBroker","Brokerage name","",settings.broker,"Texas requires it on your ads")+
+     fld("sEmail","Email (follow-ups come from here)",settings.email,null,null,"email")+fld("sPhone","Phone",settings.phone,null,null,"tel")+
+     fld("sLink","Your page link",settings.link)+fld("sComm","Default agent fee for seller estimates (%)",settings.comm,null,null,"number")+
+   '</div><div style="margin-top:14px"><label class="f" for="sTag">Short intro <span class="opt-l">(one or two sentences)</span></label><textarea class="t" id="sTag" rows="2">'+esc(settings.tagline)+'</textarea></div>'+
+     '<div style="margin-top:14px"><span class="f">Languages you speak</span><details class="ms" id="langMs"><summary id="langSum"></summary><div class="ms-panel"><input class="t" id="langFind" type="search" placeholder="Search languages" style="margin-bottom:8px"><div id="langOpts"></div>'+
+       '<label class="f" for="langOther" style="margin-top:10px">Other languages <span class="opt-l">(separate with commas)</span></label><input class="t" id="langOther" type="text" value="'+esc(settings.langsOther)+'" placeholder="e.g. Igbo, Haitian Creole"></div></details>'+
+       '<div class="lang-chips" id="langChips"></div><small class="opt-l" style="font-size:13px;display:block;margin-top:6px">Shown on your page, your profile card, the lead form and your “Meet me” post. Picking Español also turns on the Spanish version of your page.</small></div></section>'+
+   '<section class="card"><h2>License, memberships and required notices</h2><p class="sub">These show in the footer of your page. Texas requires the two TREC links on your homepage.</p>'+
+     '<ul class="checklist" id="chk"></ul>'+
+     '<div class="grid2" style="margin-top:16px">'+
+       fld("sLic","TREC license number",settings.license,null,"optional")+
+       '<div><label class="f" for="sIabs">Link to your completed IABS form <span class="opt-l">(required)</span></label><input class="t" id="sIabs" type="url" placeholder="https://… your filled-out IABS PDF" value="'+esc(settings.iabs)+'"></div>'+
+       '<div><label class="f" for="sAssoc">Local association or board</label><input class="t" id="sAssoc" type="text" list="assocList" value="'+esc(settings.assoc)+'">'+
+         '<datalist id="assocList"><option value="San Antonio Board of REALTORS®"><option value="Four Rivers Association of REALTORS®"><option value="Houston Association of REALTORS® (HAR)"><option value="Austin Board of REALTORS®"><option value="MetroTex Association of REALTORS®"><option value="Greater El Paso Association of REALTORS®"><option value="Texas REALTORS®"></datalist></div>'+
+       '<div style="align-self:end"><label class="cbx" for="sRealtor"><input type="checkbox" id="sRealtor"'+(settings.realtor?" checked":"")+'> I\'m a REALTOR® (member of NAR)</label><small class="opt-l" style="font-size:13px;display:block;margin-top:4px">Only members may use the REALTOR® name.</small></div>'+
+     '</div>'+
+     '<h3 style="font-size:16px;margin:18px 0 8px">Your profiles <span class="opt-l" style="font-weight:400">(optional, shown as links)</span></h3><div class="grid2">'+
+       PROFILE_SITES.map(function(x){ return '<div><label class="f" for="pf-'+x[0]+'">'+x[1]+(x[0]==="har"?' profile':'')+'</label><input class="t" id="pf-'+x[0]+'" type="url" placeholder="'+(x[0]==="har"?"https://www.har.com/…":"https://…")+'" value="'+esc(settings[x[0]])+'"></div>'; }).join("")+
+     '</div></section>'+
+   '<section class="card"><h2>Photo and logo</h2><p class="sub">Your headshot and your brokerage or team logo.</p><div class="uploads">'+
+     upBox("photo","Your photo",settings.photo)+upBox("logo","Your logo",settings.logo)+
+   '</div></section>'+
+   '<section class="card"><h2>Home page photo</h2><p class="sub">The picture behind the top of your page. Warm, sunny photos feel the most welcoming.</p><div class="thumbs" id="heroThumbs"></div></section>'+
+   '<section class="card"><h2>Brand color</h2><p class="sub">Drag around the circle to pick any color. Use the slider for lighter or darker.</p><div class="colorbox">'+
+     '<div class="wheel" id="wheel"><canvas id="wheelCv" width="240" height="240" aria-label="Color wheel"></canvas><div class="mk" id="wheelMk"></div></div>'+
+     '<div class="ctrls"><div><label class="f" for="valR">Lighter / darker</label><input type="range" id="valR" min="15" max="100"></div>'+
+     '<div><label class="f" for="hexIn">Color code</label><input class="t" id="hexIn" type="text" maxlength="7" style="max-width:160px;font-family:monospace"></div>'+
+     '<div class="prevrow"><span class="prevbtn">Sample button</span><span class="contrast" id="cMsg"></span></div>'+
+     '<div><span class="f">Quick picks</span><div class="swatches" id="sws">'+PRESETS.map(function(p){ return '<button type="button" class="sw" style="background:'+p[0]+'" data-c="'+p[0]+'" aria-label="'+p[1]+'" title="'+p[1]+'"></button>'; }).join("")+'</div></div>'+
+     '</div></div>'+
+     '<div style="margin-top:18px"><span class="f">Saved themes</span><div class="themes" id="themeList"></div>'+
+     '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><input class="t" id="themeName" type="text" placeholder="Name this theme, like Spring listing" style="flex:1;min-width:180px"><button class="btn small" type="button" id="themeSave">Save theme</button></div></div></section>'+
+   '<section class="card"><h2>Page layout</h2><p class="sub">Pick how your page looks to buyers and sellers. Saved themes remember this too.</p><div class="layouts">'+
+     lays.map(function(x){ return '<button type="button" class="lay" data-l="'+x[0]+'" aria-pressed="'+(settings.layout===x[0])+'">'+mini[x[0]]+'<b>'+x[1]+'</b><small>'+x[2]+'</small></button>'; }).join("")+
+   '</div><p style="margin:14px 0 0"><a href="#tool">See your page →</a></p></section></div>';
+
+  [["sCity","city"],["sName","name"],["sBroker","broker"],["sEmail","email"],["sPhone","phone"],["sLink","link"],["sTag","tagline"]].forEach(function(p){
+    document.getElementById(p[0]).addEventListener("input",function(e){ settings[p[1]]=e.target.value; saveSettings(); applyBrand(); kitDirty=true; });
+  });
+  document.getElementById("sBroker").value=settings.broker;
+  [["sLic","license"],["sIabs","iabs"],["sAssoc","assoc"]].concat(PROFILE_SITES.map(function(x){return ["pf-"+x[0],x[0]];})).forEach(function(p){
+    document.getElementById(p[0]).addEventListener("input",function(e){ settings[p[1]]=e.target.value; saveSettings(); renderChecklist(); });
+  });
+  document.getElementById("sRealtor").addEventListener("change",function(e){ settings.realtor=e.target.checked; saveSettings(); });
+  renderChecklist(); renderHeroThumbs(); renderLangPicker();
+  document.getElementById("langFind").addEventListener("input",renderLangPicker);
+  document.getElementById("langOther").addEventListener("input",function(e){ settings.langsOther=e.target.value; saveSettings(); applyBrand(); kitDirty=true; updateLangSummary(); });
+
+  document.getElementById("sComm").addEventListener("input",function(e){ var v=parseFloat(e.target.value); if(isFinite(v)){ settings.comm=v; st.comm=v; saveSettings(); } });
+  ["photo","logo"].forEach(function(kind){
+    document.getElementById("up-"+kind).addEventListener("change",function(e){ var f=e.target.files&&e.target.files[0]; if(f) readImage(f,kind); });
+    var rm=document.getElementById("rm-"+kind); if(rm) rm.addEventListener("click",function(){ settings[kind]=""; saveSettings(); applyBrand(); kitDirty=true; renderPage(); });
+  });
+  pane.querySelectorAll(".lay").forEach(function(b){ b.addEventListener("click",function(){ settings.layout=b.getAttribute("data-l"); saveSettings(); applyBrand(); pane.querySelectorAll(".lay").forEach(function(x){x.setAttribute("aria-pressed",x===b);}); }); });
+  setupWheel();
+  renderThemes();
+}
+function renderHeroThumbs(){
+  var el=document.getElementById("heroThumbs"); if(!el) return; var cur=settings.hero||"p12";
+  var h='<button type="button" class="th'+(cur==="none"?" on":"")+'" data-hero="none" title="No photo" style="display:grid;place-items:center;font-size:13px;font-weight:700;color:var(--muted)">None</button>';
+  if(settings.heroCustom) h+='<button type="button" class="th'+(cur==="custom"?" on":"")+'" data-hero="custom" title="Your photo"><img src="'+settings.heroCustom+'" alt="Your uploaded photo"></button>';
+  PHOTOS.forEach(function(p){ h+='<button type="button" class="th'+(cur===p.id?" on":"")+'" data-hero="'+p.id+'" title="'+esc(p.label)+'"><img src="/photos/'+p.id+'.jpg" alt="'+esc(p.label)+'" loading="lazy"></button>'; });
+  h+='<label class="th up-th" for="heroOwn" title="Upload your own">+ Own<input type="file" id="heroOwn" accept="image/*"></label>';
+  el.innerHTML=h;
+  el.querySelectorAll("[data-hero]").forEach(function(b){ b.addEventListener("click",function(){ settings.hero=b.getAttribute("data-hero"); saveSettings(); renderHeroThumbs(); toast("Home page photo updated"); }); });
+  document.getElementById("heroOwn").addEventListener("change",function(e){
+    var f=e.target.files&&e.target.files[0]; if(!f) return; var r=new FileReader();
+    r.onload=function(){ var img=new Image(); img.onload=function(){ var sc=Math.min(1,1600/Math.max(img.width,img.height)), cv=document.createElement("canvas"); cv.width=Math.round(img.width*sc); cv.height=Math.round(img.height*sc); cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height);
+      settings.heroCustom=cv.toDataURL("image/jpeg",0.82); settings.hero="custom"; saveSettings(); renderHeroThumbs(); toast("Your photo is now on your home page"); };
+      img.onerror=function(){ toast("That file didn't open as an image. Try a JPG or PNG."); }; img.src=r.result; };
+    r.readAsDataURL(f);
+  });
+}
+function renderLangPicker(){
+  var opts=document.getElementById("langOpts"); if(!opts) return;
+  var q=(document.getElementById("langFind").value||"").toLowerCase(), sel=settings.langs||[];
+  opts.innerHTML=LANGS.filter(function(L){ return !q || (L[1]+" "+L[2]).toLowerCase().indexOf(q)>=0; }).map(function(L){
+    return '<label class="ms-opt"><input type="checkbox" value="'+L[0]+'"'+(sel.indexOf(L[0])>=0?" checked":"")+'><span>'+esc(L[2])+(L[1]!==L[2]?' <span class="opt-l">'+esc(L[1])+'</span>':'')+'</span></label>';
+  }).join("")||'<p class="opt-l" style="font-size:14px;margin:4px 0">No match. Add it under “Other languages”.</p>';
+  opts.querySelectorAll("input").forEach(function(c){ c.addEventListener("change",function(){
+    var list=(settings.langs||[]).filter(function(x){return x!==c.value;}); if(c.checked) list.push(c.value);
+    settings.langs=LANGS.map(function(L){return L[0];}).filter(function(k){return list.indexOf(k)>=0;});
+    saveSettings(); applyBrand(); kitDirty=true; updateLangSummary();
+  }); });
+  updateLangSummary();
+}
+function updateLangSummary(){
+  var a=agentLangs(), sum=document.getElementById("langSum"), chips=document.getElementById("langChips");
+  if(sum) sum.textContent=a.length+" selected: "+a.map(function(x){return x.en;}).join(", ");
+  if(chips) chips.innerHTML=a.map(function(x){ return '<span class="lchip">'+esc(x.en)+(x.native!==x.en?' · '+esc(x.native):'')+'</span>'; }).join("");
+}
+function renderChecklist(){
+  var el=document.getElementById("chk"); if(!el) return;
+  var items=[
+    [!!(settings.broker||"").trim(),"Brokerage name","Required on your page and ads."],
+    [!!safeUrl(settings.iabs),"Information About Brokerage Services (IABS) link", safeUrl(settings.iabs)?"Linked from your footer.":"Required. Fill out TREC's current IABS form (effective Jan. 1, 2026) with your info, upload it, and paste the link here."],
+    [true,"TREC Consumer Protection Notice","Linked automatically to TREC's official notice."],
+    [true,"Privacy policy and disclaimers","Included on your page. Have a Texas attorney review the template before going live."],
+    [true,"Equal Housing Opportunity","Shown in your footer and disclaimers."],
+    [!!(settings.email||"").trim(),"Email for privacy requests","Your email is listed as the contact for people who want their info changed or deleted."]
+  ];
+  el.innerHTML=items.map(function(x){ return '<li class="'+(x[0]?"ok":"no")+'"><span class="ic">'+(x[0]?"✓":"!")+'</span><span><b>'+esc(x[1])+'</b><small>'+esc(x[2])+'</small></span></li>'; }).join("");
+}
+function fld(id,label,val,val2,hint,type){
+  return '<div><label class="f" for="'+id+'">'+esc(label)+(hint?' <span class="opt-l">('+esc(hint)+')</span>':'')+'</label><input class="t" id="'+id+'" type="'+(type||"text")+'" value="'+esc(val2!=null?val2:val)+'"></div>';
+}
+function upBox(kind,label,src){
+  return '<div class="up"><div class="prev '+kind+'">'+(src?'<img src="'+src+'" alt="">':'No '+kind+' yet')+'</div><div><b style="display:block;margin-bottom:8px">'+label+'</b>'+
+    '<label class="btn small" for="up-'+kind+'">'+(src?"Change":"Upload")+'</label><input type="file" id="up-'+kind+'" accept="image/*"> '+
+    (src?'<button type="button" class="linkbtn" id="rm-'+kind+'">Remove</button>':'')+'</div></div>';
+}
+function readImage(file,kind){
+  var r=new FileReader();
+  r.onload=function(){ var img=new Image(); img.onload=function(){
+      var cv=document.createElement("canvas"), ctx=cv.getContext("2d"), out;
+      if(kind==="photo"){ var s=Math.min(img.width,img.height), D=360; cv.width=D; cv.height=D; ctx.drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,D,D); out=cv.toDataURL("image/jpeg",0.86); }
+      else { var sc=Math.min(1,520/img.width,200/img.height); cv.width=Math.round(img.width*sc); cv.height=Math.round(img.height*sc); ctx.drawImage(img,0,0,cv.width,cv.height); out=cv.toDataURL("image/png"); }
+      settings[kind]=out; saveSettings(); applyBrand(); kitDirty=true; loadKitImages(); renderPage(); toast(kind==="photo"?"Photo added":"Logo added");
+    }; img.onerror=function(){ toast("That file didn't open as an image. Try a JPG or PNG."); }; img.src=r.result; };
+  r.readAsDataURL(file);
+}
+function setupWheel(){
+  var cv=document.getElementById("wheelCv"), ctx=cv.getContext("2d"), mk=document.getElementById("wheelMk"), R=120;
+  var valR=document.getElementById("valR"), hexIn=document.getElementById("hexIn");
+  var rgb=hexToRgb(settings.color); hsv=rgbToHsv(rgb[0],rgb[1],rgb[2]);
+  function draw(){
+    var img=ctx.createImageData(240,240), d=img.data;
+    for(var y=0;y<240;y++) for(var x=0;x<240;x++){
+      var dx=x-R+0.5, dy=y-R+0.5, dist=Math.sqrt(dx*dx+dy*dy), i=(y*240+x)*4;
+      if(dist>R){ d[i+3]=0; continue; }
+      var h=(Math.atan2(dy,dx)*180/Math.PI+360)%360, c=hsvToRgb(h,dist/R,hsv[2]);
+      d[i]=c[0]; d[i+1]=c[1]; d[i+2]=c[2]; d[i+3]= dist>R-1 ? Math.round((R-dist)*255) : 255;
+    }
+    ctx.putImageData(img,0,0);
+  }
+  function place(){ var a=hsv[0]*Math.PI/180; mk.style.left=(R+Math.cos(a)*hsv[1]*R)+"px"; mk.style.top=(R+Math.sin(a)*hsv[1]*R)+"px"; mk.style.background=settings.color; }
+  function sync(fromHex){
+    if(!fromHex) settings.color=rgbToHex.apply(null,hsvToRgb(hsv[0],hsv[1],hsv[2]));
+    hexIn.value=settings.color.toUpperCase(); valR.value=Math.round(hsv[2]*100);
+    applyBrand(); place();
+    var cr=contrastWhite(settings.color);
+    document.getElementById("cMsg").textContent = cr>=4.5 ? "Easy to read with white text." : "This color is light, so buttons will use dark text.";
+    document.querySelectorAll("#sws .sw").forEach(function(b){ b.setAttribute("aria-pressed", b.getAttribute("data-c").toLowerCase()===settings.color.toLowerCase()); });
+  }
+  function pick(e){ var r=cv.getBoundingClientRect(), dx=e.clientX-r.left-R, dy=e.clientY-r.top-R;
+    hsv[0]=(Math.atan2(dy,dx)*180/Math.PI+360)%360; hsv[1]=Math.min(1,Math.sqrt(dx*dx+dy*dy)/R); if(hsv[2]<0.15) hsv[2]=0.6; sync(); }
+  var dragging=false;
+  cv.addEventListener("pointerdown",function(e){ dragging=true; try{cv.setPointerCapture(e.pointerId);}catch(_){} pick(e); });
+  cv.addEventListener("pointermove",function(e){ if(dragging) pick(e); });
+  var end=function(){ if(dragging){ dragging=false; saveSettings(); kitDirty=true; } };
+  cv.addEventListener("pointerup",end); cv.addEventListener("pointercancel",end);
+  valR.addEventListener("input",function(){ hsv[2]=valR.value/100; draw(); sync(); });
+  valR.addEventListener("change",function(){ saveSettings(); kitDirty=true; });
+  hexIn.addEventListener("change",function(){ var v=hexIn.value.trim(); if(v.charAt(0)!=="#") v="#"+v;
+    if(validHex(v)){ settings.color=v.toLowerCase(); var c=hexToRgb(v); hsv=rgbToHsv(c[0],c[1],c[2]); draw(); sync(true); saveSettings(); kitDirty=true; } else { toast("Use a 6-digit color code, like #1E3A5F"); sync(true); } });
+  document.querySelectorAll("#sws .sw").forEach(function(b){ b.addEventListener("click",function(){ settings.color=b.getAttribute("data-c"); var c=hexToRgb(settings.color); hsv=rgbToHsv(c[0],c[1],c[2]); draw(); sync(true); saveSettings(); kitDirty=true; }); });
+  document.getElementById("themeSave").addEventListener("click",function(){
+    var n=document.getElementById("themeName").value.trim()||("Theme "+(settings.themes.length+1));
+    settings.themes=settings.themes.filter(function(x){return x.name!==n;});
+    settings.themes.unshift({name:n,color:settings.color,layout:settings.layout}); settings.themes=settings.themes.slice(0,8);
+    saveSettings(); document.getElementById("themeName").value=""; renderThemes(); toast("Theme saved");
+  });
+  draw(); sync(true);
+}
+function renderThemes(){
+  var box=document.getElementById("themeList"); if(!box) return;
+  box.innerHTML = settings.themes.length ? settings.themes.map(function(t,i){ return '<span class="theme"><button type="button" class="apply" data-i="'+i+'"><i style="background:'+esc(t.color)+'"></i>'+esc(t.name)+'</button><button type="button" class="del" data-d="'+i+'" aria-label="Delete '+esc(t.name)+'">×</button></span>'; }).join("") : '<span class="opt-l" style="font-size:14px">No saved themes yet.</span>';
+  box.querySelectorAll(".apply").forEach(function(b){ b.addEventListener("click",function(){ var t=settings.themes[+b.getAttribute("data-i")]; settings.color=t.color; if(t.layout) settings.layout=t.layout; saveSettings(); applyBrand(); kitDirty=true; renderPage(); toast("Theme applied"); }); });
+  box.querySelectorAll(".del").forEach(function(b){ b.addEventListener("click",function(){ settings.themes.splice(+b.getAttribute("data-d"),1); saveSettings(); renderThemes(); }); });
+}
+
+/* ================= MARKETING KIT ================= */
+var POSTS=[
+ {en:{k:"Free 2-minute check",h:"Are you ready to buy a home?",s:"See your readiness score, price range and loan options. No credit check.",hook:"Wondering if you can actually buy a home this year?",body:"I have a free 2-minute check that shows your readiness score, a realistic price range and which loans you may fit. There's no credit check, and it won't touch your score.",beats:["Most people guess whether they can buy.","This free check shows your score, price range and loan options in 2 minutes.","No credit check and no pressure. Just your numbers."],cta:"Take the free check",pin:"Am I Ready to Buy a Home? Free 2-Minute Check",tags:"#FirstTimeHomeBuyer #{cityTag}RealEstate #HomeBuyingTips"},
+  es:{k:"Prueba gratis de 2 minutos",h:"¿Estás listo para comprar casa?",s:"Ve tu puntaje, tu rango de precio y tus opciones de préstamo. Sin revisión de crédito.",hook:"¿Te preguntas si de verdad puedes comprar casa este año?",body:"Tengo una prueba gratis de 2 minutos que te muestra tu puntaje de preparación, un rango de precio realista y los préstamos que podrías calificar. No revisa tu crédito y no afecta tu puntaje.",beats:["Mucha gente solo adivina si puede comprar.","Esta prueba gratis te muestra tu puntaje, tu rango de precio y tus préstamos en 2 minutos.","Sin revisión de crédito y sin presión. Solo tus números."],cta:"Haz la prueba gratis",pin:"¿Estoy listo para comprar casa? Prueba gratis de 2 minutos",tags:"#CompradoresDeCasa #BienesRaices{cityTag}"}},
+ {en:{k:"For homeowners",h:"What would you walk away with if you sold?",s:"See your home's value range, equity and estimated net. Free.",hook:"Ever wonder what you'd actually walk away with if you sold your home?",body:"My free seller check estimates your home's value range, your equity, and what you could net after selling costs and payoff. Then I'll send a real value report based on recent sales near you.",beats:["Your home's value isn't what you'd walk away with.","Fees, closing costs and your payoff all come out first.","This free check shows your real estimated net in 2 minutes."],cta:"See your number",pin:"What Would I Net If I Sold My Home? Free Seller Check",tags:"#HomeSellers #{cityTag}Homes #HomeValue"},
+  es:{k:"Para dueños de casa",h:"¿Cuánto te quedaría si vendes tu casa?",s:"Ve el rango de valor de tu casa, tu plusvalía y tu ganancia aproximada. Gratis.",hook:"¿Te has preguntado cuánto te quedaría de verdad si vendes tu casa?",body:"Mi prueba gratis para vendedores calcula el rango de valor de tu casa, tu plusvalía y cuánto te podría quedar después de los gastos y de pagar la hipoteca. Luego te mando un reporte real basado en ventas recientes cerca de ti.",beats:["El valor de tu casa no es lo que te queda.","Comisiones, gastos de cierre y tu hipoteca salen primero.","Esta prueba gratis te muestra tu ganancia aproximada en 2 minutos."],cta:"Ve tu número",pin:"¿Cuánto me quedaría si vendo mi casa? Prueba gratis",tags:"#VenderCasa #Casas{cityTag}"}},
+ {en:{k:"Renting?",h:"Could your rent be a mortgage payment?",s:"See what a monthly payment could look like for you.",hook:"Paying rent and wondering if owning could cost about the same?",body:"Every situation is different, but you can find out in 2 minutes. My free check estimates a monthly payment at your price and shows what you'd need to get started.",beats:["Rent goes up. A fixed-rate mortgage payment doesn't.","But owning has costs too, like taxes and insurance.","This free check puts your real numbers side by side."],cta:"Check your numbers",pin:"Rent vs. Buy: See Your Monthly Payment in 2 Minutes",tags:"#RentVsBuy #FirstTimeHomeBuyer #{cityTag}"},
+  es:{k:"¿Rentas?",h:"¿Tu renta podría ser un pago de casa?",s:"Ve cómo podría ser un pago mensual para ti.",hook:"¿Pagas renta y te preguntas si ser dueño costaría casi lo mismo?",body:"Cada caso es diferente, pero lo puedes saber en 2 minutos. Mi prueba gratis calcula un pago mensual a tu precio y te muestra lo que necesitas para empezar.",beats:["La renta sube. Un pago de hipoteca con tasa fija no.","Pero ser dueño también tiene gastos, como impuestos y seguro.","Esta prueba gratis pone tus números lado a lado."],cta:"Revisa tus números",pin:"¿Rentar o comprar? Ve tu pago mensual en 2 minutos",tags:"#RentarOComprar #CompradoresDeCasa #{cityTag}"}},
+ {en:{k:"Veterans and service members",h:"You may qualify for $0 down",s:"VA loans have no down payment for eligible buyers. See where you stand.",hook:"Veterans: you may be able to buy a home with $0 down.",body:"VA loans have no down payment requirement for eligible veterans and service members. My free check shows which loans you may fit and your next steps, including getting your Certificate of Eligibility.",beats:["Most people think they need 20% down.","Eligible veterans and service members may need $0 down with a VA loan.","Step one: get your free Certificate of Eligibility."],cta:"See if you're ready",pin:"VA Loan: Buy a Home With $0 Down in {city}",tags:"#VALoan #VeteranHomeBuyer"},
+  es:{k:"Veteranos y militares",h:"Podrías calificar con $0 de enganche",s:"Los préstamos VA no piden enganche a compradores elegibles. Ve dónde estás.",hook:"Veteranos: podrían comprar casa con $0 de enganche.",body:"Los préstamos VA no requieren enganche para veteranos y militares elegibles. Mi prueba gratis te muestra los préstamos que podrías calificar y tus siguientes pasos, incluyendo tu Certificado de Elegibilidad.",beats:["Mucha gente cree que necesita 20% de enganche.","Veteranos y militares elegibles podrían necesitar $0 con un préstamo VA.","Primer paso: pide tu Certificado de Elegibilidad gratis."],cta:"Ve si estás listo",pin:"Préstamo VA: compra casa con $0 de enganche en {city}",tags:"#PrestamoVA #Veteranos"}},
+ {en:{k:"Credit myth",h:"You may not need perfect credit to buy",s:"FHA loans allow 3.5% down with a 580 score. Lender rules vary.",hook:"Think you need a 740 credit score to buy a home? Not always.",body:"FHA loans allow 3.5% down with a 580 credit score, though some lenders set higher minimums. My free check shows which loans you may fit, with no credit check.",beats:["Myth: you need perfect credit to buy.","FHA allows 3.5% down with a 580 score. Some lenders want more.","Find out which loans fit you, with no credit check."],cta:"See your loan options",pin:"What Credit Score Do I Need to Buy a House?",tags:"#CreditScore #FHALoan #HomeBuyingTips"},
+  es:{k:"Mito del crédito",h:"Quizá no necesitas crédito perfecto para comprar",s:"Los préstamos FHA permiten 3.5% de enganche con 580. Cada prestamista varía.",hook:"¿Crees que necesitas 740 de crédito para comprar casa? No siempre.",body:"Los préstamos FHA permiten 3.5% de enganche con un puntaje de 580, aunque algunos prestamistas piden más. Mi prueba gratis te muestra los préstamos que podrías calificar, sin revisar tu crédito.",beats:["Mito: necesitas crédito perfecto para comprar.","FHA permite 3.5% de enganche con 580. Algunos prestamistas piden más.","Ve qué préstamos te quedan, sin revisión de crédito."],cta:"Ve tus opciones",pin:"¿Qué puntaje de crédito necesito para comprar casa?",tags:"#Credito #PrestamoFHA #CompradoresDeCasa"}},
+ {en:{k:"Moving up or down?",h:"Selling and buying at the same time?",s:"Plan both moves together so the timing works.",hook:"Need to sell your home to buy the next one?",body:"Doing both at once is all about timing. My free check shows what your home could net and what you could afford next, all in one plan.",beats:["Selling and buying at once feels like juggling.","Step one: know what your home could net.","Step two: see what that means for your next home."],cta:"Plan both moves",pin:"How to Sell and Buy a Home at the Same Time",tags:"#MovingUp #Downsizing #{cityTag}RealEstate"},
+  es:{k:"¿Te cambias de casa?",h:"¿Vas a vender y comprar al mismo tiempo?",s:"Planea las dos mudanzas juntas para que los tiempos funcionen.",hook:"¿Necesitas vender tu casa para comprar la siguiente?",body:"Hacer las dos cosas a la vez es cuestión de tiempos. Mi prueba gratis te muestra cuánto te podría dejar tu casa y cuánto podrías pagar por la siguiente, en un solo plan.",beats:["Vender y comprar a la vez se siente como hacer malabares.","Paso uno: saber cuánto te podría dejar tu casa.","Paso dos: ver qué significa eso para tu próxima casa."],cta:"Planea las dos",pin:"Cómo vender y comprar casa al mismo tiempo",tags:"#CambioDeCasa #BienesRaices{cityTag}"}},
+ {en:{k:"Seller tip",h:"3 updates that help a home sell",s:"Fresh paint. Better lighting. Curb appeal.",hook:"Getting ready to sell? Start with these 3 things.",body:"You don't need a big remodel to make a strong first impression. Fresh neutral paint, brighter lighting and a tidy front yard go a long way in photos and showings.",beats:["Fresh, neutral paint.","Brighter bulbs and clean fixtures.","A tidy front yard and a clean front door."],cta:"Get your free home value report",pin:"3 Easy Updates That Help a House Sell",tags:"#SellingYourHome #HomePrep #CurbAppeal"},
+  es:{k:"Consejo para vender",h:"3 mejoras que ayudan a vender",s:"Pintura fresca. Mejor iluminación. Buena fachada.",hook:"¿Te preparas para vender? Empieza con estas 3 cosas.",body:"No necesitas una gran remodelación para dar una buena primera impresión. Pintura neutral, mejor iluminación y un jardín al frente bien cuidado ayudan mucho en fotos y visitas.",beats:["Pintura fresca y neutral.","Focos más brillantes y lámparas limpias.","Un jardín al frente ordenado y una puerta limpia."],cta:"Pide tu reporte de valor gratis",pin:"3 mejoras fáciles que ayudan a vender una casa",tags:"#VenderCasa #ConsejosDeCasa"}},
+ {en:{k:"Buyer basics",h:"What is debt-to-income?",s:"It's your monthly debts divided by your income, and it shapes your price range.",hook:"Lenders keep asking about your debt-to-income. Here's what it means.",body:"Debt-to-income is your monthly debt payments, including the new house payment, divided by your monthly income before taxes. Lower is better, and it's a big part of what you can afford.",beats:["Add up your monthly debts plus the new house payment.","Divide by your monthly income before taxes.","Many loans look for about 43% or less. My free check does the math."],cta:"See your number",pin:"Debt-to-Income Ratio Explained for Home Buyers",tags:"#HomeBuyingTips #DebtToIncome #FirstTimeHomeBuyer"},
+  es:{k:"Lo básico",h:"¿Qué es la relación deuda-ingreso?",s:"Son tus deudas mensuales entre tu ingreso, y define tu rango de precio.",hook:"Los prestamistas siempre preguntan por tu deuda vs. ingreso. Esto significa.",body:"Es la suma de tus pagos mensuales de deudas, incluyendo el nuevo pago de casa, dividida entre tu ingreso mensual antes de impuestos. Mientras más baja, mejor, y define mucho cuánto puedes pagar.",beats:["Suma tus deudas mensuales más el nuevo pago de casa.","Divídelo entre tu ingreso mensual antes de impuestos.","Muchos préstamos buscan 43% o menos. Mi prueba gratis hace la cuenta."],cta:"Ve tu número",pin:"La relación deuda-ingreso explicada para compradores",tags:"#ConsejosDeCasa #CompradoresDeCasa"}},
+ {en:{k:"First-time buyers",h:"Ask about down payment help",s:"Texas has programs that may help with your down payment and closing costs.",hook:"Saving for a down payment feels impossible? You may not have to do it alone.",body:"Texas has programs that may help eligible buyers with down payment and closing costs. Rules and income limits vary, so start with my free check and we'll look at what fits you.",beats:["The down payment is the biggest hurdle for most buyers.","Texas has programs that may help eligible buyers.","Start with your numbers, then we'll find what fits."],cta:"Start with the free check",pin:"Down Payment Help for First-Time Buyers in Texas",tags:"#DownPaymentAssistance #FirstTimeHomeBuyer #Texas"},
+  es:{k:"Compradores primerizos",h:"Pregunta por ayuda para el enganche",s:"En Texas hay programas que podrían ayudarte con el enganche y el cierre.",hook:"¿Ahorrar para el enganche se siente imposible? Quizá no tengas que hacerlo solo.",body:"En Texas hay programas que podrían ayudar a compradores elegibles con el enganche y los gastos de cierre. Las reglas y los límites de ingreso varían, así que empieza con mi prueba gratis y vemos qué te queda.",beats:["El enganche es el obstáculo más grande para muchos.","En Texas hay programas que podrían ayudar a compradores elegibles.","Empieza con tus números y buscamos lo que te queda."],cta:"Empieza con la prueba gratis",pin:"Ayuda para el enganche para compradores primerizos en Texas",tags:"#AyudaParaElEnganche #CompradoresDeCasa #Texas"}},
+ {en:{k:"Your local agent",h:"Meet {name}",s:"{tagline}",hook:"Hi, I'm {name}!",body:"{tagline} {speak} Buying or selling, I start every client with a clear plan. Try my free 2-minute check to see where you stand.",beats:["Hi, I'm {name}, a real estate agent with {broker}.","I help buyers and sellers start with a clear plan.","Try my free 2-minute check to see where you stand."],cta:"Say hi",pin:"Meet {name}, {city} Real Estate Agent",tags:"#{cityTag}Realtor #MeetYourAgent"},
+  es:{k:"Tu agente local",h:"Conoce a {name}",s:"{tagline}",hook:"¡Hola, soy {name}!",body:"{tagline} {speak} Ya sea que compres o vendas, empiezo con un plan claro. Prueba mi herramienta gratis de 2 minutos para ver dónde estás.",beats:["Hola, soy {name}, agente de bienes raíces con {broker}.","Ayudo a compradores y vendedores a empezar con un plan claro.","Prueba mi herramienta gratis de 2 minutos para ver dónde estás."],cta:"Escríbeme",pin:"Conoce a {name}, agente de bienes raíces en {city}",tags:"#AgenteDeBienesRaices #{cityTag}"}}
+];
+var PLATS={ig:["Instagram",1080,1350],fb:["Facebook",1080,1080],pin:["Pinterest",1000,1500],tt:["TikTok",1080,1920]};
+/* Photo library: fx/fy = where the subject sits (0–1), used to crop around it */
+var PHOTOS=[
+ {id:"p12",fx:.42,fy:.72,label:"Couple looking at their house"},
+ {id:"p16",ads:1,fx:.5,fy:.5,label:"House with For Sale sign"},
+ {id:"p14",fx:.62,fy:.45,label:"Couple dreaming of a home"},
+ {id:"p17",ads:1,fx:.62,fy:.5,label:"Keys to a new home"},
+ {id:"p05",ads:1,fx:.6,fy:.5,label:"One house stands out"},
+ {id:"p03",ads:1,fx:.52,fy:.7,label:"Two houses side by side"},
+ {id:"p15",ads:1,fx:.45,fy:.45,label:"For Sale sign"},
+ {id:"p13",ads:1,fx:.5,fy:.42,label:"Floor plan, cash and keys"},
+ {id:"p04",ads:1,fx:.3,fy:.3,label:"First Time Buyers"},
+ {id:"p01",ads:1,fx:.55,fy:.6,label:"Picking the right house"},
+ {id:"p02",fx:.45,fy:.62,label:"Couple in front of their home"},
+ {id:"p06",fx:.4,fy:.4,label:"New homeowners with keys"},
+ {id:"p07",fx:.52,fy:.38,label:"Couple holding new keys"},
+ {id:"p08",fx:.58,fy:.4,label:"Keys handed over at a SOLD sign"},
+ {id:"p09",fx:.5,fy:.45,label:"Touring a home"},
+ {id:"p10",fx:.47,fy:.45,label:"Home sweet home sign"},
+ {id:"p11",fx:.5,fy:.5,label:"Home sweet home close-up"}
+];
+function photoById(id){ for(var i=0;i<PHOTOS.length;i++) if(PHOTOS[i].id===id) return PHOTOS[i]; return PHOTOS[0]; }
+/* Default photo and style for each of the 10 posts */
+var KIT_DEFAULT=[["p12","split"],["p16","split"],["p14","overlay"],["p17","overlay"],["p05","overlay"],["p03","split"],["p15","split"],["p13","overlay"],["p04","overlay"],["agent","split"]];
+var kitSaved={};
+var kitPhoto=kitSaved.photo||{}, kitStyle=kitSaved.style||{}, kitCustom={}, kitOpen={};
+function saveKit(){ store("rtb.kit",{photo:kitPhoto,style:kitStyle}); }
+function postPhoto(i){ var p=kitPhoto[i]||KIT_DEFAULT[i][0]; if(p==="agent" && !settings.photo) p="p01"; if(p==="custom" && !kitCustom[i]) p=KIT_DEFAULT[i][0]==="agent"?"p01":KIT_DEFAULT[i][0]; return p; }
+function postStyle(i){ return kitStyle[i]||KIT_DEFAULT[i][1]; }
+
+var kitLang="en", kitPlat={}, kitDirty=true, photoImg=null, logoImg=null, downloadsApi=null, dlChecked=false, imgCache={};
+function loadKitImages(){
+  photoImg=null; logoImg=null;
+  if(settings.photo){ var p=new Image(); p.onload=function(){ photoImg=p; if(curTab==="kit") renderKit(); }; p.src=settings.photo; }
+  if(settings.logo){ var g=new Image(); g.onload=function(){ logoImg=g; if(curTab==="kit") renderKit(); }; g.src=settings.logo; }
+}
+/* Load a library photo as a blob URL so the canvas stays exportable */
+function loadPhoto(id){
+  if(imgCache[id]) return imgCache[id];
+  var url="/photos/"+id+".jpg";
+  imgCache[id]=fetch(url).then(function(r){ if(!r.ok) throw new Error("http"); return r.blob(); }).then(function(b){
+    return new Promise(function(res,rej){ var im=new Image(); im.onload=function(){res(im);}; im.onerror=rej; im.src=URL.createObjectURL(b); });
+  }).catch(function(){
+    return new Promise(function(res,rej){ var im=new Image(); im.crossOrigin="anonymous"; im.onload=function(){res(im);}; im.onerror=rej; im.src=url; });
+  });
+  return imgCache[id];
+}
+function getPostImage(i){
+  var p=postPhoto(i);
+  if(p==="agent") return Promise.resolve({img:photoImg,fx:.5,fy:.4});
+  if(p==="custom") return Promise.resolve({img:kitCustom[i],fx:.5,fy:.45});
+  var meta=photoById(p);
+  return loadPhoto(p).then(function(im){ return {img:im,fx:meta.fx,fy:meta.fy}; });
+}
+function pv(s){ return fill(s,{speak:speakSentence(kitLang),name:agentName(),broker:settings.broker||"",tagline:(settings.tagline||"").trim(),city:cityName(),cityTag:cityTag()}); }
+function caption(post,plat){
+  var c=post[kitLang], es=kitLang==="es", n=agentName(), br=settings.broker||"", link=settings.link||"";
+  if(plat==="ig") return pv(c.hook)+"\n\n"+pv(c.body)+"\n\n→ "+pv(c.cta)+(es?": link en mi perfil.":": link in bio.")+"\n\n"+n+" · "+br+"\n\n"+pv(c.tags);
+  if(plat==="fb") return pv(c.hook)+"\n\n"+pv(c.body)+"\n\n"+pv(c.cta)+": "+link+"\n\n"+n+" | "+br;
+  if(plat==="pin") return (es?"Título: ":"Title: ")+pv(c.pin)+"\n\n"+(es?"Descripción: ":"Description: ")+pv(c.body)+" "+pv(c.cta)+": "+link+". "+n+", "+br+".\n\nLink: "+link;
+  return (es?"GANCHO (0–3 seg): ":"HOOK (0–3 sec): ")+pv(c.hook)+"\n\n1. "+pv(c.beats[0])+"\n2. "+pv(c.beats[1])+"\n3. "+pv(c.beats[2])+"\n\n"+(es?"CIERRE: ":"CALL TO ACTION: ")+pv(c.cta)+(es?". Link en mi perfil.":". Link in bio.")+
+    "\n\n"+(es?"Fondo del video: usa la foto de esta publicación.":"Video background: use this post's photo.")+
+    "\n"+(es?"Texto en pantalla al final: ":"On-screen text at the end: ")+n+" · "+br+"\n\n"+(es?"Descripción: ":"Caption: ")+pv(c.h)+" "+pv(c.tags);
+}
+function wrapLines(ctx,text,maxW){
+  var words=String(text).split(/\s+/), lines=[], line="";
+  words.forEach(function(w){ var t=line?line+" "+w:w; if(ctx.measureText(t).width>maxW && line){ lines.push(line); line=w; } else line=t; });
+  if(line) lines.push(line); return lines;
+}
+function rr(ctx,x,y,w,h,r){ ctx.beginPath(); if(ctx.roundRect) ctx.roundRect(x,y,w,h,r); else ctx.rect(x,y,w,h); }
+function fitText(ctx,t,maxW){ t=String(t); if(ctx.measureText(t).width<=maxW) return t; while(t.length>3 && ctx.measureText(t+"…").width>maxW) t=t.slice(0,-1); return t+"…"; }
+function rgba(hex,a){ var c=hexToRgb(hex); return "rgba("+c[0]+","+c[1]+","+c[2]+","+a+")"; }
+function drawCover(ctx,img,x,y,w,h,fx,fy){
+  var iw=img.naturalWidth||img.width, ih=img.naturalHeight||img.height, sc=Math.max(w/iw,h/ih), sw=w/sc, sh=h/sc;
+  var sx=Math.max(0,Math.min(iw-sw,fx*iw-sw/2)), sy=Math.max(0,Math.min(ih-sh,fy*ih-sh/2));
+  ctx.drawImage(img,sx,sy,sw,sh,x,y,w,h);
+}
+/* Measure the text block (kicker, headline, sub, CTA) at a headline size */
+function measureBlock(ctx,c,maxW,s,hs){
+  ctx.font="800 "+hs+"px 'Bricolage Grotesque', sans-serif"; var hl=wrapLines(ctx,pv(c.h),maxW).slice(0,4);
+  var ss=Math.round(hs*0.42); ctx.font="400 "+ss+"px 'Source Sans 3', sans-serif"; var sl=wrapLines(ctx,pv(c.s),maxW).slice(0,3);
+  var kh=34*s, ch=76*s, h=kh+16*s + hl.length*hs*1.06 + 18*s + sl.length*ss*1.3 + 26*s + ch;
+  return {hl:hl,sl:sl,hs:hs,ss:ss,kh:kh,ch:ch,h:h};
+}
+function drawBlock(ctx,c,x,y,B,s,fg,kickCol,pillBg,pillFg){
+  ctx.textBaseline="alphabetic"; ctx.textAlign="left";
+  ctx.fillStyle=kickCol; ctx.font="700 "+Math.round(30*s)+"px 'Source Sans 3', sans-serif";
+  ctx.fillText(pv(c.k).toUpperCase(),x,y+B.kh*0.8); y+=B.kh+16*s;
+  ctx.fillStyle=fg; ctx.font="800 "+B.hs+"px 'Bricolage Grotesque', sans-serif";
+  B.hl.forEach(function(t){ y+=B.hs*0.92; ctx.fillText(t,x,y); y+=B.hs*0.14; });
+  y+=18*s; ctx.font="400 "+B.ss+"px 'Source Sans 3', sans-serif"; ctx.globalAlpha=0.92;
+  B.sl.forEach(function(t){ y+=B.ss; ctx.fillText(t,x,y); y+=B.ss*0.3; }); ctx.globalAlpha=1;
+  y+=26*s; ctx.font="700 "+Math.round(34*s)+"px 'Source Sans 3', sans-serif";
+  var ct=pv(c.cta)+"  →", cw=ctx.measureText(ct).width+56*s;
+  ctx.fillStyle=pillBg; rr(ctx,x,y,cw,B.ch,B.ch/2); ctx.fill();
+  ctx.fillStyle=pillFg; ctx.fillText(ct,x+28*s,y+B.ch*0.63);
+}
+function drawFooter(ctx,W,H,s,brand,onB){
+  var m=56*s, fh=176*s, fy=H-m-fh, fx=m, fw=W-2*m;
+  ctx.save(); ctx.shadowColor="rgba(0,0,0,0.18)"; ctx.shadowBlur=24*s; ctx.shadowOffsetY=6*s;
+  ctx.fillStyle="#ffffff"; rr(ctx,fx,fy,fw,fh,26*s); ctx.fill(); ctx.restore();
+  var pr=54*s, px=fx+28*s+pr, py=fy+fh/2;
+  ctx.save(); ctx.beginPath(); ctx.arc(px,py,pr,0,Math.PI*2); ctx.closePath(); ctx.clip();
+  if(photoImg) drawCover(ctx,photoImg,px-pr,py-pr,pr*2,pr*2,.5,.45); else { ctx.fillStyle=brand; ctx.fillRect(px-pr,py-pr,pr*2,pr*2); ctx.fillStyle=onB; ctx.font="800 "+Math.round(54*s)+"px 'Bricolage Grotesque', sans-serif"; ctx.textAlign="center"; ctx.fillText(agentName().charAt(0).toUpperCase(),px,py+19*s); ctx.textAlign="left"; }
+  ctx.restore();
+  var tx=px+pr+24*s, logoW=0;
+  if(logoImg){ var lh=64*s, lw=Math.min(200*s, logoImg.width*(lh/logoImg.height)); lh=logoImg.height*(lw/logoImg.width); logoW=lw+24*s; ctx.drawImage(logoImg,fx+fw-28*s-lw,py-lh/2,lw,lh); }
+  var maxT=fx+fw-28*s-logoW-tx;
+  ctx.fillStyle="#16202a"; ctx.font="800 "+Math.round(40*s)+"px 'Bricolage Grotesque', sans-serif"; ctx.fillText(fitText(ctx,agentName(),maxT),tx,py-14*s);
+  ctx.fillStyle="#5d6874"; ctx.font="400 "+Math.round(28*s)+"px 'Source Sans 3', sans-serif"; ctx.fillText(fitText(ctx,settings.broker||"",maxT),tx,py+22*s);
+  if(settings.link){ ctx.fillStyle=brand; ctx.font="700 "+Math.round(26*s)+"px 'Source Sans 3', sans-serif"; ctx.fillText(fitText(ctx,settings.link,maxT),tx,py+56*s); }
+  return fy;
+}
+function drawPost(cv,idx,plat,scale,photo){
+  var P=PLATS[plat], W=Math.round(P[1]*scale), H=Math.round(P[2]*scale), s=W/1080, c=POSTS[idx][kitLang];
+  cv.width=W; cv.height=H; var ctx=cv.getContext("2d");
+  var brand=settings.color, onB=contrastWhite(brand)>=4.5?"#ffffff":"#111418", style=postStyle(idx), m=72*s, maxW=W-2*m;
+  var gold="#f1c45a";
+  ctx.fillStyle=brand; ctx.fillRect(0,0,W,H);
+  var footTop=H-56*s-176*s;
+  if(style==="split"){
+    var ph=Math.round(H*(H/W>1.5?0.5:H/W>1.1?0.46:0.42));
+    if(photo&&photo.img) drawCover(ctx,photo.img,0,0,W,ph,photo.fx,photo.fy);
+    ctx.fillStyle=gold; ctx.fillRect(0,ph,W,10*s);
+    var avail=footTop-(ph+10*s)-2*40*s, hs=Math.round((H/W>1.5?96:84)*s), B=measureBlock(ctx,c,maxW,s,hs);
+    while(B.h>avail && hs>40*s){ hs=Math.round(hs*0.92); B=measureBlock(ctx,c,maxW,s,hs); }
+    var y0=ph+10*s+Math.max(30*s,(footTop-(ph+10*s)-B.h)/2);
+    drawBlock(ctx,c,m,y0,B,s,onB,onB==="#ffffff"?gold:"#111418",gold,"#1a1406");
+  }else{
+    if(photo&&photo.img) drawCover(ctx,photo.img,0,0,W,H,photo.fx,photo.fy);
+    var hs2=Math.round((H/W>1.5?100:88)*s), B2=measureBlock(ctx,c,maxW,s,hs2), maxBlock=footTop-40*s-H*0.34;
+    while(B2.h>maxBlock && hs2>40*s){ hs2=Math.round(hs2*0.92); B2=measureBlock(ctx,c,maxW,s,hs2); }
+    var top=footTop-36*s-B2.h, g=ctx.createLinearGradient(0,top-H*0.22,0,H);
+    g.addColorStop(0,rgba(brand,0)); g.addColorStop(0.35,rgba(brand,0.82)); g.addColorStop(1,rgba(brand,0.97));
+    ctx.fillStyle=g; ctx.fillRect(0,top-H*0.22,W,H-(top-H*0.22));
+    drawBlock(ctx,c,m,top,B2,s,onB,onB==="#ffffff"?gold:"#111418",gold,"#1a1406");
+  }
+  drawFooter(ctx,W,H,s,brand,onB);
+}
+function adNote(i){
+  var p=postPhoto(i), meta=(p==="agent"||p==="custom")?null:photoById(p);
+  if(p==="agent") return '<p class="adnote ok">✓ Your own photo. Fine for posts and paid ads.</p>';
+  if(p==="custom") return '<p class="adnote">Your own upload. Only use photos you have the rights to.</p>';
+  return meta.ads ? '<p class="adnote ok">✓ No faces in this photo. Good for paid ads.</p>' : '<p class="adnote warn">Has people in it. Great for regular posts; for paid ads, pick a photo marked ADS.</p>';
+}
+function thumbHTML(i){
+  var cur=postPhoto(i), h='<div class="thumbs" role="group" aria-label="Choose a photo">';
+  if(settings.photo) h+='<button type="button" class="th'+(cur==="agent"?" on":"")+'" data-ph="agent" data-i="'+i+'" title="Your photo"><img src="'+settings.photo+'" alt="Your photo"></button>';
+  PHOTOS.forEach(function(p){ if(i===9 && p.id==="p08") return; h+='<button type="button" class="th'+(cur===p.id?" on":"")+'" data-ph="'+p.id+'" data-i="'+i+'" title="'+esc(p.label)+(p.ads?" · OK for paid ads":"")+'"><img src="/photos/'+p.id+'.jpg" alt="'+esc(p.label)+'" loading="lazy">'+(p.ads?'<span class="adtag">ADS</span>':'')+'</button>'; });
+  h+='<label class="th up-th" for="own'+i+'" title="Use my own photo">+ Own<input type="file" id="own'+i+'" accept="image/*" data-own="'+i+'"></label></div>';
+  return h;
+}
+function renderKit(){
+  var pane=document.getElementById("pane-kit");
+  var h='<div class="kit-intro"><div><h2 style="font-size:22px">10 ready-to-post ideas</h2><p><b>Every post also comes as a video.</b> Tap <b>▶ Make video</b> for a 15-second clip with moving photos and pop-in words, made for TikTok and Reels. Each post uses a real photo plus your name, brokerage, photo, logo and colors. Texas requires your broker\'s name in ads, so it\'s on every post. Tap <b>Change photo</b> to swap the picture or use your own. Photos marked <b>ADS</b> have no faces, so they are the safest pick for paid Facebook and Instagram ads.</p></div>'+
+    '<div class="chips" role="group" aria-label="Caption language"><button type="button" class="chip" data-kl="en" aria-pressed="'+(kitLang==="en")+'">English</button><button type="button" class="chip" data-kl="es" aria-pressed="'+(kitLang==="es")+'">Español</button></div></div><div class="posts">';
+  POSTS.forEach(function(p,i){
+    var plat=kitPlat[i]||"ig", sty=postStyle(i);
+    h+='<article class="post"><div class="num">Post '+(i+1)+'</div><h3>'+esc(pv(p[kitLang].h))+'</h3>'+
+      '<div class="chips" role="group" aria-label="Platform">'+Object.keys(PLATS).map(function(k){ return '<button type="button" class="chip" data-p="'+k+'" data-i="'+i+'" aria-pressed="'+(plat===k)+'">'+PLATS[k][0]+'</button>'; }).join("")+'</div>'+
+      '<div class="imgwrap" id="wrap'+i+'"><span class="opt-l" style="font-size:13px">Loading…</span></div>'+
+      adNote(i)+'<div class="acts"><button type="button" class="btn ghost small" data-tog="'+i+'" aria-expanded="'+(!!kitOpen[i])+'">Change photo</button>'+
+      '<div class="chips" role="group" aria-label="Layout"><button type="button" class="chip" data-st="split" data-i="'+i+'" aria-pressed="'+(sty==="split")+'">Photo + panel</button><button type="button" class="chip" data-st="overlay" data-i="'+i+'" aria-pressed="'+(sty==="overlay")+'">Full photo</button></div></div>'+
+      (kitOpen[i]?thumbHTML(i):'')+
+      '<div class="cap">'+esc(caption(p,plat))+'</div>'+
+      '<div class="acts"><button type="button" class="btn small vidbtn" data-vid="'+i+'">▶ Make video</button><button type="button" class="btn small" data-copy="'+i+'">Copy '+(plat==="tt"?"script":"caption")+'</button>'+
+      '<button type="button" class="btn ghost small" data-save="'+i+'"'+(downloadsApi?'':' hidden')+'>Save image</button>'+
+      '<span class="opt-l" style="font-size:13px;align-self:center"'+(downloadsApi?' hidden':'')+'>Press and hold the image to save it.</span></div></article>';
+  });
+  pane.innerHTML=h+'</div>';
+  pane.querySelectorAll("[data-kl]").forEach(function(b){ b.addEventListener("click",function(){ kitLang=b.getAttribute("data-kl"); renderKit(); }); });
+  pane.querySelectorAll("[data-p]").forEach(function(b){ b.addEventListener("click",function(){ kitPlat[+b.getAttribute("data-i")]=b.getAttribute("data-p"); renderKit(); }); });
+  pane.querySelectorAll("[data-st]").forEach(function(b){ b.addEventListener("click",function(){ kitStyle[+b.getAttribute("data-i")]=b.getAttribute("data-st"); saveKit(); renderKit(); }); });
+  pane.querySelectorAll("[data-tog]").forEach(function(b){ b.addEventListener("click",function(){ var i=+b.getAttribute("data-tog"); kitOpen[i]=!kitOpen[i]; renderKit(); }); });
+  pane.querySelectorAll("[data-ph]").forEach(function(b){ b.addEventListener("click",function(){ var i=+b.getAttribute("data-i"); kitPhoto[i]=b.getAttribute("data-ph"); saveKit(); renderKit(); }); });
+  pane.querySelectorAll("[data-own]").forEach(function(inp){ inp.addEventListener("change",function(e){
+    var i=+inp.getAttribute("data-own"), f=e.target.files&&e.target.files[0]; if(!f) return;
+    var r=new FileReader(); r.onload=function(){ var im=new Image(); im.onload=function(){ kitCustom[i]=im; kitPhoto[i]="custom"; renderKit(); toast("Photo added to post "+(i+1)); }; im.onerror=function(){ toast("That file didn't open as an image. Try a JPG or PNG."); }; im.src=r.result; }; r.readAsDataURL(f);
+  }); });
+  pane.querySelectorAll("[data-copy]").forEach(function(b){ b.addEventListener("click",function(){ var i=+b.getAttribute("data-copy"); copyText(caption(POSTS[i],kitPlat[i]||"ig"),"Copied. Paste it into the app."); }); });
+  pane.querySelectorAll("[data-vid]").forEach(function(b){ b.addEventListener("click",function(){ makeVideo(+b.getAttribute("data-vid")); }); });
+  pane.querySelectorAll("[data-save]").forEach(function(b){ b.addEventListener("click",function(){ saveImage(+b.getAttribute("data-save")); }); });
+  var fontsReady=(document.fonts&&document.fonts.load)?Promise.all([document.fonts.load("800 40px 'Bricolage Grotesque'"),document.fonts.load("700 20px 'Source Sans 3'"),document.fonts.load("400 20px 'Source Sans 3'")]).catch(function(){}):Promise.resolve();
+  var gen=(renderKit.gen=(renderKit.gen||0)+1);
+  POSTS.forEach(function(p,i){
+    Promise.all([fontsReady,getPostImage(i).catch(function(){return null;})]).then(function(r){
+      if(gen!==renderKit.gen) return;
+      var wrap=document.getElementById("wrap"+i); if(!wrap) return;
+      var cv=document.createElement("canvas"); drawPost(cv,i,kitPlat[i]||"ig",0.42,r[1]);
+      var img=document.createElement("img"); img.className="pv"; img.alt="Preview of post "+(i+1);
+      try{ img.src=cv.toDataURL("image/jpeg",0.88); wrap.innerHTML=""; wrap.appendChild(img); }
+      catch(e){ cv.className="pv"; wrap.innerHTML=""; wrap.appendChild(cv); }
+    });
+  });
+  kitDirty=false;
+  if(!dlChecked){ dlChecked=true; try{ if(window.claude&&window.claude.use) window.claude.use("downloads").then(function(api){ if(api){ downloadsApi=api; if(curTab==="kit") renderKit(); } }).catch(function(){}); }catch(e){} }
+}
+function saveImage(i){
+  if(!downloadsApi) return;
+  var plat=kitPlat[i]||"ig";
+  getPostImage(i).catch(function(){return null;}).then(function(photo){
+    var cv=document.createElement("canvas"); drawPost(cv,i,plat,1,photo);
+    try{
+      cv.toBlob(function(blob){
+        if(!blob){ toast("Couldn't make the image. Try again."); return; }
+        downloadsApi.save({filename:"post-"+(i+1)+"-"+PLATS[plat][0].toLowerCase()+".png",data:blob}).then(function(){ toast("Image saved"); }).catch(function(e){
+          var code=e&&e.code; if(code==="declined") return;
+          if(code==="rate_limited") toast("One moment, then try again."); else toast("Saving isn't available here. Press and hold the image instead.");
+        });
+      },"image/png");
+    }catch(e){ toast("Saving isn't available here. Press and hold the image instead."); }
+  });
+}
+
+/* ================= VIDEO MAKER =================
+   Turns each post into a 15-second vertical video (1080x1920) for
+   TikTok, Instagram Reels, Facebook Reels and Pinterest. Drawn on a
+   canvas and recorded in the browser, so nothing leaves the phone. */
+var VID_W=1080, VID_H=1920, VSEG=[0,3,5.8,8.6,11.4,15], VID_LEN=15;
+/* Extra photos for scenes 2 and 4 of each video, so the video moves between shots */
+var BROLL=[["p02","p06"],["p15","p08"],["p10","p13"],["p07","p06"],["p09","p01"],["p16","p08"],["p11","p15"],["p13","p09"],["p04","p17"],["p12","p17"]];
+var vid={raf:0,rec:null,url:"",cancel:false};
+function clamp01(x){ return x<0?0:x>1?1:x; }
+function eOut(p){ return 1-Math.pow(1-p,3); }
+function eBack(p){ var c1=1.70158,c3=c1+1; return 1+c3*Math.pow(p-1,3)+c1*Math.pow(p-1,2); }
+function drawCoverZ(ctx,img,W,H,fx,fy,z){
+  var iw=img.naturalWidth||img.width, ih=img.naturalHeight||img.height, sc=Math.max(W/iw,H/ih)*z, sw=W/sc, sh=H/sc;
+  var sx=Math.max(0,Math.min(iw-sw,fx*iw-sw/2)), sy=Math.max(0,Math.min(ih-sh,fy*ih-sh/2));
+  ctx.drawImage(img,sx,sy,sw,sh,0,0,W,H);
+}
+function vidScene(t){ for(var k=VSEG.length-2;k>=0;k--) if(t>=VSEG[k]) return k; return 0; }
+function layoutWords(ctx,text,maxW,lh){
+  var words=String(text).split(/\s+/).filter(Boolean), out=[], x=0, y=0, sp=ctx.measureText(" ").width;
+  words.forEach(function(w){ var ww=ctx.measureText(w).width; if(x>0 && x+ww>maxW){ x=0; y+=lh; } out.push({t:w,x:x,y:y,w:ww}); x+=ww+sp; });
+  return {words:out,h:y+lh,lines:Math.round(y/lh)+1};
+}
+/* The word that gets the gold highlighter: a number if there is one, else the longest word */
+function keyWord(words){
+  var best=-1, bl=0;
+  for(var i=0;i<words.length;i++){ var w=words[i].t.replace(/[^\wÀ-ÿ$%]/g,""); if(/[\d$%]/.test(w)) return i; if(i>0 && w.length>=bl){ bl=w.length; best=i; } }
+  return bl>=5?best:-1;
+}
+function fitWords(ctx,text,maxW,fs,maxLines){
+  var L;
+  while(true){ ctx.font="800 "+fs+"px 'Bricolage Grotesque', sans-serif"; L=layoutWords(ctx,text,maxW,fs*1.12); if(L.lines<=maxLines || fs<=56) break; fs=Math.round(fs*0.92); }
+  L.fs=fs; L.key=keyWord(L.words); return L;
+}
+function drawWords(ctx,L,x0,y0,lt,start,stagger){
+  var fs=L.fs, gold="#f1c45a";
+  ctx.font="800 "+fs+"px 'Bricolage Grotesque', sans-serif"; ctx.textAlign="left"; ctx.textBaseline="alphabetic";
+  L.words.forEach(function(wd,i){
+    var ta=start+i*stagger, p=(lt-ta)/0.3; if(p<=0) return; p=Math.min(1,p);
+    var sc=0.45+0.55*eBack(p), cx=x0+wd.x+wd.w/2, by=y0+wd.y+fs*0.92, cy=by-fs*0.35;
+    ctx.save(); ctx.globalAlpha=Math.min(1,p*2.5); ctx.translate(cx,cy); ctx.scale(sc,sc); ctx.translate(-cx,-cy);
+    var hp=0;
+    if(i===L.key){
+      hp=clamp01((lt-ta-0.2)/0.3);
+      if(hp>0){ ctx.fillStyle=gold; rr(ctx,x0+wd.x-14,y0+wd.y+fs*0.1,(wd.w+28)*eOut(hp),fs*1.02,14); ctx.fill(); }
+    }
+    ctx.fillStyle=hp>0.55?"#1a1406":"#ffffff";
+    if(hp<=0.55){ ctx.shadowColor="rgba(0,0,0,.55)"; ctx.shadowBlur=16; ctx.shadowOffsetY=3; }
+    ctx.fillText(wd.t,x0+wd.x,by);
+    ctx.restore();
+  });
+}
+function drawAgentDot(ctx,cx,cy,r,brand){
+  ctx.save(); ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.closePath(); ctx.clip();
+  if(photoImg) drawCover(ctx,photoImg,cx-r,cy-r,r*2,r*2,.5,.42);
+  else { ctx.fillStyle=brand; ctx.fillRect(cx-r,cy-r,r*2,r*2); ctx.fillStyle=contrastWhite(brand)>=4.5?"#fff":"#111418"; ctx.font="800 "+Math.round(r*1.05)+"px 'Bricolage Grotesque', sans-serif"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(agentName().charAt(0).toUpperCase(),cx,cy+r*0.06); }
+  ctx.restore();
+}
+function drawVideoFrame(ctx,A,t){
+  var W=VID_W, H=VID_H, k=vidScene(t), lt=t-VSEG[k], u=clamp01(lt/(VSEG[k+1]-VSEG[k])), brand=settings.color, gold="#f1c45a", c=A.c, es=kitLang==="es";
+  ctx.save(); ctx.textBaseline="alphabetic"; ctx.textAlign="left";
+  ctx.fillStyle=brand; ctx.fillRect(0,0,W,H);
+  /* Photo with a slow push-in or pull-out (the "Ken Burns" move) */
+  var shot=[A.main,A.b1,A.main,A.b2,A.main][k]||A.main;
+  if(shot&&shot.img){
+    var z=(k%2===0)?1.05+0.13*u:1.18-0.13*u, dx=(k===2?-1:1)*0.06*(u-0.5);
+    drawCoverZ(ctx,shot.img,W,H,clamp01(shot.fx+dx),shot.fy+(k===2?0.04:0),z);
+  }
+  if(k<4){
+    var g=ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,"rgba(0,0,0,.62)"); g.addColorStop(.16,"rgba(0,0,0,.12)"); g.addColorStop(.36,"rgba(0,0,0,.30)");
+    g.addColorStop(.62,"rgba(0,0,0,.62)"); g.addColorStop(1,"rgba(0,0,0,.82)");
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  }
+  var x0=80, maxW=W-80-170;
+  if(k===0){
+    var L=A.hookL, top=Math.round(H*0.53-L.h/2);
+    /* Kicker pill slides in */
+    var kp=eOut(clamp01((lt-0.05)/0.35)), kt=pv(c.k).toUpperCase();
+    ctx.font="800 34px 'Source Sans 3', sans-serif"; var kw=ctx.measureText(kt).width+48;
+    ctx.save(); ctx.globalAlpha=kp; ctx.translate(-(1-kp)*260,0);
+    ctx.fillStyle=gold; rr(ctx,x0,top-98,kw,64,32); ctx.fill(); ctx.fillStyle="#1a1406"; ctx.fillText(kt,x0+24,top-54); ctx.restore();
+    drawWords(ctx,L,x0,top,lt,0.25,0.11);
+  }else if(k<4){
+    var B=A.beatL[k-1], btop=Math.round(H*0.55-B.h/2);
+    /* Big number badge pops in */
+    var np=clamp01((lt-0.05)/0.4), ns=eBack(np);
+    if(np>0){ ctx.save(); ctx.translate(x0+58,btop-92); ctx.scale(ns,ns); ctx.rotate((1-np)*-0.6);
+      ctx.fillStyle=gold; ctx.beginPath(); ctx.arc(0,0,58,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle="#1a1406"; ctx.font="800 66px 'Bricolage Grotesque', sans-serif"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(String(k),0,4); ctx.restore(); }
+    drawWords(ctx,B,x0,btop,lt,0.22,0.085);
+  }else{
+    /* End card: brand color, spinning rays, the agent, and the button */
+    ctx.fillStyle=rgba(brand,0.88); ctx.fillRect(0,0,W,H);
+    var cy=Math.round(H*0.34);
+    ctx.save(); ctx.translate(W/2,cy); ctx.rotate(lt*0.22); ctx.fillStyle="rgba(255,255,255,.07)";
+    for(var r=0;r<18;r+=2){ var a0=r*Math.PI/9, a1=(r+1)*Math.PI/9; ctx.beginPath(); ctx.moveTo(0,0); ctx.arc(0,0,H,a0,a1); ctx.closePath(); ctx.fill(); }
+    ctx.restore();
+    var onB=contrastWhite(brand)>=4.5?"#ffffff":"#111418";
+    if(logoImg){ var lp=clamp01((lt-0.2)/0.4), lw=Math.min(380,logoImg.width*(120/logoImg.height)), lh=logoImg.height*(lw/logoImg.width);
+      ctx.save(); ctx.globalAlpha=lp; ctx.fillStyle="#ffffff"; rr(ctx,W/2-lw/2-26,150,lw+52,lh+36,20); ctx.fill(); ctx.drawImage(logoImg,W/2-lw/2,168,lw,lh); ctx.restore(); }
+    var pp=clamp01((lt-0.05)/0.5), pr=180*eBack(pp);
+    if(pr>1){ ctx.fillStyle="#ffffff"; ctx.beginPath(); ctx.arc(W/2,cy,pr+12,0,Math.PI*2); ctx.fill(); drawAgentDot(ctx,W/2,cy,pr,brand); }
+    ctx.textAlign="center";
+    var p2=eOut(clamp01((lt-0.35)/0.4));
+    ctx.save(); ctx.globalAlpha=p2; ctx.fillStyle=onB; ctx.font="800 86px 'Bricolage Grotesque', sans-serif"; ctx.fillText(fitText(ctx,agentName(),W-120),W/2,cy+300+(1-p2)*40); ctx.restore();
+    var p3=eOut(clamp01((lt-0.5)/0.4));
+    ctx.save(); ctx.globalAlpha=p3*0.92; ctx.fillStyle=onB; ctx.font="400 42px 'Source Sans 3', sans-serif"; ctx.fillText(fitText(ctx,settings.broker||"",W-120),W/2,cy+366+(1-p3)*30); ctx.restore();
+    var p4=clamp01((lt-0.8)/0.45);
+    if(p4>0){ var ct=pv(c.cta)+"  →"; ctx.font="800 54px 'Source Sans 3', sans-serif"; var cw=Math.min(W-100,ctx.measureText(ct).width+110), chh=124, ccy=cy+520;
+      var sc=eBack(p4)*(lt>1.3?1+0.04*Math.sin((lt-1.3)*6.5):1);
+      ctx.save(); ctx.translate(W/2,ccy); ctx.scale(sc,sc); ctx.shadowColor="rgba(0,0,0,.25)"; ctx.shadowBlur=30; ctx.shadowOffsetY=8;
+      ctx.fillStyle=gold; rr(ctx,-cw/2,-chh/2,cw,chh,chh/2); ctx.fill(); ctx.shadowColor="transparent";
+      ctx.fillStyle="#1a1406"; ctx.textBaseline="middle"; ctx.fillText(fitText(ctx,ct,cw-60),0,4); ctx.restore(); ctx.textBaseline="alphabetic"; }
+    var p5=clamp01((lt-1.2)/0.4);
+    ctx.save(); ctx.globalAlpha=p5; ctx.fillStyle=onB; ctx.font="700 40px 'Source Sans 3', sans-serif";
+    if(settings.link) ctx.fillText(fitText(ctx,settings.link,W-120),W/2,cy+668);
+    ctx.globalAlpha=p5*0.85; ctx.font="600 36px 'Source Sans 3', sans-serif"; ctx.fillText(es?"Link en mi perfil":"Link in bio",W/2,cy+(settings.link?728:668)); ctx.restore();
+    ctx.textAlign="left";
+  }
+  /* Story-style progress bar and the agent's name up top (Texas wants the broker shown) */
+  for(var s=0;s<5;s++){ var sx=40+s*((W-80+12)/5), sw=(W-80+12)/5-12, f=t>=VSEG[s+1]?1:t<VSEG[s]?0:(t-VSEG[s])/(VSEG[s+1]-VSEG[s]);
+    ctx.fillStyle="rgba(255,255,255,.35)"; rr(ctx,sx,52,sw,8,4); ctx.fill(); if(f>0){ ctx.fillStyle="#ffffff"; rr(ctx,sx,52,sw*f,8,4); ctx.fill(); } }
+  if(k<4){
+    drawAgentDot(ctx,74,124,32,brand);
+    ctx.fillStyle="#ffffff"; ctx.font="700 32px 'Source Sans 3', sans-serif"; ctx.shadowColor="rgba(0,0,0,.6)"; ctx.shadowBlur=10;
+    ctx.fillText(fitText(ctx,agentName()+(settings.broker?" · "+settings.broker:""),W-200),122,135); ctx.shadowColor="transparent";
+  }
+  /* Fast slanted wipe in the brand color between scenes */
+  for(var b=1;b<5;b++){ var p=(t-(VSEG[b]-0.2))/0.4; if(p<0||p>1) continue;
+    var Lx=-1.7*W+p*2.9*W, bw=1.6*W, sk=0.16*W;
+    ctx.fillStyle=brand; ctx.beginPath(); ctx.moveTo(Lx+sk,0); ctx.lineTo(Lx+bw+sk,0); ctx.lineTo(Lx+bw-sk,H); ctx.lineTo(Lx-sk,H); ctx.closePath(); ctx.fill();
+    ctx.fillStyle=gold; ctx.beginPath(); ctx.moveTo(Lx+bw+sk,0); ctx.lineTo(Lx+bw+sk+40,0); ctx.lineTo(Lx+bw-sk+40,H); ctx.lineTo(Lx+bw-sk,H); ctx.closePath(); ctx.fill();
+  }
+  ctx.restore();
+}
+function pickMime(){
+  if(!window.MediaRecorder||!HTMLCanvasElement.prototype.captureStream) return null;
+  var list=["video/mp4;codecs=avc1.42E01F","video/mp4;codecs=avc1","video/mp4","video/webm;codecs=vp9","video/webm;codecs=vp8","video/webm"];
+  for(var i=0;i<list.length;i++){ try{ if(MediaRecorder.isTypeSupported(list[i])) return list[i]; }catch(e){} }
+  return null;
+}
+function stopVideo(){
+  vid.cancel=true; cancelAnimationFrame(vid.raf);
+  try{ if(vid.rec&&vid.rec.state!=="inactive") vid.rec.stop(); }catch(e){}
+  vid.rec=null;
+  if(vid.url){ URL.revokeObjectURL(vid.url); vid.url=""; }
+}
+function videoAssets(i){
+  var fontsReady=(document.fonts&&document.fonts.load)?Promise.all([document.fonts.load("800 40px 'Bricolage Grotesque'"),document.fonts.load("800 20px 'Source Sans 3'"),document.fonts.load("700 20px 'Source Sans 3'"),document.fonts.load("400 20px 'Source Sans 3'")]).catch(function(){}):Promise.resolve();
+  var br=BROLL[i]||["p02","p06"];
+  var lib=function(id){ var m=photoById(id); return loadPhoto(id).then(function(im){ return {img:im,fx:m.fx,fy:m.fy}; }).catch(function(){ return null; }); };
+  return Promise.all([fontsReady,getPostImage(i).catch(function(){return null;}),lib(br[0]),lib(br[1])]).then(function(r){
+    var c=POSTS[i][kitLang], tmp=document.createElement("canvas").getContext("2d"), maxW=VID_W-80-170;
+    return {c:c,main:r[1],b1:r[2]||r[1],b2:r[3]||r[1],
+      hookL:fitWords(tmp,pv(c.hook),maxW,112,5),
+      beatL:c.beats.map(function(b){ return fitWords(tmp,pv(b),maxW,94,6); })};
+  });
+}
+function makeVideo(i){
+  stopVideo(); vid.cancel=false;
+  var es=kitLang==="es", mime=pickMime();
+  document.getElementById("modalTitle").textContent="Video for post "+(i+1);
+  mBody.innerHTML='<p class="to">15 seconds, tall format. Fits TikTok, Instagram Reels, Facebook Reels and Pinterest.</p>'+
+    '<div id="vStage"><canvas id="vCv" class="vidcv" width="'+VID_W+'" height="'+VID_H+'"></canvas></div>'+
+    '<div class="vbar" aria-hidden="true"><i id="vFill"></i></div>'+
+    '<p class="note" id="vStatus" role="status">Getting your photos ready…</p>'+
+    '<div class="row" id="vActs"></div>'+
+    (function(){ var ids=[postPhoto(i)].concat(BROLL[i]||[]), faces=ids.some(function(id){ return id!=="agent"&&id!=="custom"&&!photoById(id).ads; }); return faces?'<p class="note">This video shows people from the photo library, so use it as a regular post, not a paid ad.</p>':''; })()+
+    '<p class="note"><b>Add music in the app.</b> Before you post, pick a trending sound inside TikTok or Instagram. Their built-in music is licensed for posts; songs from anywhere else can get your video muted.</p>'+
+    '<div class="row"><button class="btn ghost" type="button" id="vClose">Close</button></div>';
+  closeMsg.onClose=stopVideo;
+  document.getElementById("vClose").addEventListener("click",function(){ closeMsg(); });
+  modal.classList.add("open");
+  var cv=document.getElementById("vCv"), ctx=cv.getContext("2d"), status=document.getElementById("vStatus"), fillEl=document.getElementById("vFill"), acts=document.getElementById("vActs");
+  videoAssets(i).then(function(A){
+    if(vid.cancel) return;
+    drawVideoFrame(ctx,A,0);
+    var chunks=[], rec=null;
+    if(mime){
+      try{
+        var stream=cv.captureStream(30);
+        rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:7000000});
+        rec.ondataavailable=function(e){ if(e.data&&e.data.size) chunks.push(e.data); };
+        rec.onstop=function(){ if(vid.cancel) return; finishVideo(i,new Blob(chunks,{type:mime.split(";")[0]}),mime); };
+        rec.start(500); vid.rec=rec;
+      }catch(e){ rec=null; }
+    }
+    status.textContent=rec?"Making your video. Keep this screen open for 15 seconds…":"This browser can't save videos, so this is a preview. Open the page in Safari or Chrome to save it.";
+    var start=performance.now();
+    var frame=function(now){
+      if(vid.cancel) return;
+      var t=(now-start)/1000;
+      drawVideoFrame(ctx,A,Math.min(t,VID_LEN));
+      fillEl.style.width=Math.min(100,t/VID_LEN*100)+"%";
+      if(t<VID_LEN) vid.raf=requestAnimationFrame(frame);
+      else if(rec){ setTimeout(function(){ try{ rec.stop(); }catch(e){} },200); status.textContent="Finishing up…"; }
+      else { start=performance.now(); vid.raf=requestAnimationFrame(frame); }
+    };
+    vid.raf=requestAnimationFrame(frame);
+  });
+}
+function finishVideo(i,blob,mime){
+  var mp4=/mp4/.test(mime), ext=mp4?"mp4":"webm";
+  vid.url=URL.createObjectURL(blob);
+  document.getElementById("vStage").innerHTML='<video class="vidcv" src="'+vid.url+'" autoplay loop muted playsinline controls></video>';
+  document.getElementById("vFill").style.width="100%";
+  document.getElementById("vStatus").innerHTML="Your video is ready ("+(blob.size/1048576).toFixed(1)+" MB)."+(mp4?"":" <b>Heads up:</b> this browser made a WebM file, which Instagram and TikTok may not take. For an MP4, open this page in Safari or the newest Chrome.");
+  var acts=document.getElementById("vActs"), name="post-"+(i+1)+"-video."+ext;
+  acts.innerHTML='<button class="btn" type="button" id="vSave">Save video</button><button class="btn ghost" type="button" id="vCap">Copy caption</button><button class="btn ghost" type="button" id="vAgain">Make it again</button>';
+  document.getElementById("vSave").addEventListener("click",function(){
+    if(downloadsApi){ downloadsApi.save({filename:name,data:blob}).then(function(){ toast("Video saved"); }).catch(function(e){ var code=e&&e.code; if(code==="declined") return; toast(code==="rate_limited"?"One moment, then try again.":"Saving isn't available here."); }); }
+    else { var a=document.createElement("a"); a.href=vid.url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); }
+  });
+  document.getElementById("vCap").addEventListener("click",function(){ copyText(caption(POSTS[i],"ig"),"Caption copied. Paste it when you post."); });
+  document.getElementById("vAgain").addEventListener("click",function(){ makeVideo(i); });
+}
+
+/* ================= TABS & ROUTING ================= */
+var curTab="leads";
+function showTab(t){
+  curTab=t;
+  ["leads","page","kit"].forEach(function(k){ document.getElementById("pane-"+k).hidden=(k!==t); document.getElementById("tab-"+k).setAttribute("aria-selected",k===t); });
+  if(t==="leads") renderLeads(); else if(t==="page") renderPage(); else renderKit();
+}
+["leads","page","kit"].forEach(function(k){ document.getElementById("tab-"+k).addEventListener("click",function(){ showTab(k); }); });
+function route(){
+  var h=location.hash, agent=(MODE==="dash")||(MODE!=="public"&&h==="#agent"), doc=(h==="#privacy"||h==="#terms");
+  document.getElementById("view-tool").hidden=agent;
+  document.getElementById("view-agent").hidden=!agent;
+  document.getElementById("langBox").style.visibility=agent?"hidden":"visible";
+  document.getElementById("nav-tool").setAttribute("aria-current",agent?"false":"page");
+  document.getElementById("nav-agent").setAttribute("aria-current",agent?"page":"false");
+  if(agent){ navbar.hidden=true; document.body.classList.remove("has-nav"); showTab(curTab); } else if(doc) renderDoc(h.slice(1)); else render();
+}
+window.addEventListener("hashchange",route);
+
+/* ================= LIVE MODE (Supabase) ================= */
+var SITE_HOST="2buyandsell.com", sb=null, agentId=null, agentSlug="", saveT=null, lastContacted={};
+function __start(){ applyBrand(); loadKitImages(); route(); }
+function timeAgo(iso){ var s=(Date.now()-new Date(iso).getTime())/1000;
+  if(s<90) return "Just now"; if(s<3600) return Math.round(s/60)+" min ago";
+  if(s<86400){ var hr=Math.round(s/3600); return hr+(hr===1?" hr ago":" hrs ago"); }
+  var d=Math.round(s/86400); return d===1?"Yesterday":d<7?d+" days ago":new Date(iso).toLocaleDateString("en-US",{month:"short",day:"numeric"}); }
+function rowToLead(r){ var l=Object.assign({},r.data||{}); l.id=r.id; l.contacted=!!r.contacted; l.example=false; l.ago=timeAgo(r.created_at); lastContacted[r.id]=l.contacted; return l; }
+function normalizeSettings(){ if(OLDKEYS[settings.color]) settings.color=OLDKEYS[settings.color]; if(!validHex(settings.color)) settings.color="#1e3a5f"; if(!Array.isArray(settings.themes)) settings.themes=[]; if(!Array.isArray(settings.langs)) settings.langs=["en","es"]; settings.link=SITE_HOST+"/"+agentSlug; }
+function fatal(title,msg){ document.body.innerHTML='<main style="max-width:560px;margin:80px auto;padding:24px;font-family:system-ui,sans-serif;text-align:center;color:#16202a"><h1 style="font-size:28px;margin:0 0 10px">'+title+'</h1><p style="color:#56616d;font-size:18px">'+(msg||"")+'</p><p style="margin-top:24px"><a href="/" style="color:#1e3a5f;font-weight:700">Go to 2buyandsell.com</a></p></main>'; }
+function shareCard(){ var u=settings.link;
+  return '<section class="card" style="margin-top:26px;padding:22px"><h2 style="font-size:21px">Your page is live</h2>'+
+    '<p style="margin:6px 0 14px;color:var(--muted)">Share this link in your Instagram bio, email signature and text replies. Every check people take there lands in your list above.</p>'+
+    '<p style="font-size:19px;font-weight:700;word-break:break-all;margin:0 0 14px">'+esc(u)+'</p>'+
+    '<div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn small" href="/'+esc(agentSlug)+'" target="_blank" rel="noopener">Open my page</a><button type="button" class="btn ghost small" id="copyMyLink">Copy my link</button></div></section>'; }
+function pushSettings(){ settings.link=SITE_HOST+"/"+agentSlug;
+  sb.from("agents").update({settings:settings,updated_at:new Date().toISOString()}).eq("id",agentId).then(function(r){ if(r.error) toast("Couldn't save. Check your connection and try again."); }); }
+function pushKit(v){ sb.from("agents").update({kit:v,updated_at:new Date().toISOString()}).eq("id",agentId).then(function(r){ if(r.error) toast("Couldn't save. Check your connection."); }); }
+function pushContacted(){ leads.forEach(function(l){ if(l.id && lastContacted[l.id]!==l.contacted){ lastContacted[l.id]=l.contacted;
+  sb.from("leads").update({contacted:l.contacted}).eq("id",l.id).then(function(r){ if(r.error) toast("Couldn't save. Check your connection."); }); } }); }
+function sendLead(lead,t,n){
+  var btn=document.querySelector('#leadForm button[type="submit"]'); if(btn) btn.disabled=true;
+  var data=Object.assign({},lead); delete data.ago; delete data.example; delete data.contacted;
+  sb.from("leads").insert({agent_id:agentId,data:data}).then(function(r){
+    if(r.error){ if(btn) btn.disabled=false; var e=document.getElementById("lerr"); if(e) e.textContent= lang==="es"?"No se pudo enviar. Revisa tu conexión e inténtalo otra vez.":"That didn't go through. Check your connection and try again."; return; }
+    st.submitted=fill(t.thanks,{name:n.split(" ")[0],agent:agentName()}); var y=window.scrollY; renderResults(); window.scrollTo(0,y); });
+}
+function slugFromUrl(){ var q=new URLSearchParams(location.search).get("a"); if(q) return q.trim().toLowerCase();
+  var p=location.pathname.replace(/^\/+|\/+$/g,"").split("/")[0]; return decodeURIComponent(p||"").toLowerCase(); }
+function bootPublic(){
+  var slug=slugFromUrl();
+  if(!slug||/\.html$/.test(slug)){ fatal("Page not found","This agent page doesn't exist."); return; }
+  sb.from("agents").select("id,slug,settings").eq("slug",slug).maybeSingle().then(function(r){
+    if(r.error){ fatal("Something went wrong","Please refresh the page to try again."); return; }
+    if(!r.data){ fatal("Page not found","We couldn't find an agent at 2buyandsell.com/"+esc(slug)+"."); return; }
+    agentId=r.data.id; agentSlug=r.data.slug; Object.assign(settings,r.data.settings||{}); normalizeSettings();
+    document.title=(agentName()!=="your agent"?agentName()+" · ":"")+"Buy and sell readiness check";
+    if(location.hash==="#agent") history.replaceState(null,"",location.pathname+location.search);
+    __start(); });
+}
+function bootDash(){
+  sb.auth.getSession().then(function(r){
+    var ses=r.data&&r.data.session; if(!ses){ location.replace("/login.html"); return; }
+    var uid=ses.user.id;
+    Promise.all([sb.from("agents").select("*").eq("id",uid).maybeSingle(), sb.from("leads").select("*").eq("agent_id",uid).order("created_at",{ascending:false}).limit(1000)]).then(function(rs){
+      if(rs[0].error){ fatal("Couldn't load your account","Please refresh the page to try again."); return; }
+      if(rs[0].data){ finishDash(rs[0].data, rs[1].data||[], ses.user); return; }
+      var base=(ses.user.email||"agent").split("@")[0].toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,30); if(base.length<3) base="agent";
+      sb.from("agents").insert({id:uid,slug:base+"-"+Math.floor(1000+Math.random()*9000),settings:{email:ses.user.email}}).select().single().then(function(c){
+        if(c.error){ fatal("Couldn't set up your page","Please refresh the page to try again."); return; }
+        finishDash(c.data,[],ses.user); }); });
+  });
+}
+function finishDash(row,rows,user){
+  agentId=row.id; agentSlug=row.slug; Object.assign(settings,row.settings||{}); normalizeSettings();
+  var k=row.kit||{}; kitPhoto=k.photo||{}; kitStyle=k.style||{};
+  leads=rows.map(rowToLead);
+  var top=document.querySelector(".dash-top");
+  if(top){ top.innerHTML='<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap"><div><h1>Your dashboard</h1><p>Signed in as '+esc(user.email)+'</p></div>'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn small" href="/'+esc(agentSlug)+'" target="_blank" rel="noopener">Open my page</a><button type="button" class="btn ghost small" id="signOut">Sign out</button></div></div>';
+    document.getElementById("signOut").addEventListener("click",function(){ sb.auth.signOut().then(function(){ location.href="/"; }); }); }
+  document.title="Dashboard · 2BuyAndSell";
+  __start();
+}
+function liveBoot(){
+  if(MODE==="demo"){ __start(); return; }
+  var nd=document.querySelector("nav.demo"); if(nd) nd.style.display="none";
+  saveSettings=function(){ clearTimeout(saveT); saveT=setTimeout(pushSettings,700); };
+  store=function(k,v){ if(k==="rtb.leads.v2") pushContacted(); else if(k==="rtb.kit") pushKit(v); return true; };
+  downloadsApi={save:function(o){ return new Promise(function(res){ var u=URL.createObjectURL(o.data), a=document.createElement("a"); a.href=u; a.download=o.filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(u); },5000); res(); }); }}; dlChecked=true;
+  document.addEventListener("focusin",function(e){ if(e.target&&e.target.id==="sLink"){ e.target.readOnly=true; e.target.title="Your link is set when you create your account."; } });
+  if(!window.supabase||!window.SB_URL||/PASTE/.test(window.SB_URL)){ fatal("Almost ready","This page isn't connected to its database yet."); return; }
+  sb=window.supabase.createClient(window.SB_URL,window.SB_KEY);
+  if(MODE==="public") bootPublic(); else bootDash();
+}
+liveBoot();
+})();
+</script>
+</body>
+</html>

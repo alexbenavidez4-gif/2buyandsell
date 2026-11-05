@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact 2BuyAndSell</title>
+<meta name="description" content="Contact 2BuyAndSell with questions, team pricing, loan officer accounts or privacy requests.">
+<link rel="canonical" href="https://www.2buyandsell.com/contact.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="2BuyAndSell">
+<meta property="og:title" content="Contact 2BuyAndSell">
+<meta property="og:description" content="Contact 2BuyAndSell with questions, team pricing, loan officer accounts or privacy requests.">
+<meta property="og:url" content="https://www.2buyandsell.com/contact.html">
+<meta property="og:image" content="https://www.2buyandsell.com/img/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#1a467c">
+<link rel="icon" type="image/png" sizes="192x192" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<script src="config.js"></script>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="index.html" aria-label="2BuyAndSell home"><img src="img/logo-icon-128.png" width="44" height="37" alt=""><span><b class="m2">2</b>BuyAnd<b class="ms">Sell</b></span></a>
+    <div style="display:flex;align-items:center;gap:14px"><a href="login.html" style="font-weight:700;color:var(--navy);text-decoration:none">Log in</a><a class="btn" href="index.html#join">Claim a spot</a></div>
+  </div>
+</header>
+
+<main class="doc">
+  <div class="wrap">
+    <span class="eyebrow">Contact</span>
+    <h1>Contact us</h1>
+    
+
+    <p style="font-size:20px;margin-top:18px">Real people read every message. We usually reply within two business days.</p>
+    <div class="contact-grid">
+      <div class="ccard"><h2>Email</h2><p><a href="mailto:hello@2buyandsell.com">hello@2buyandsell.com</a></p><p style="color:var(--muted);margin:0">For questions, partnership ideas, or privacy requests.</p></div>
+      <div class="ccard"><h2>Want a founding spot?</h2><p style="margin:0">Use the <a href="index.html#join">founding sign-up form</a> on the home page.</p></div>
+    </div>
+    <div class="form-card">
+      <form name="contact" data-table="contact_messages" data-done="c-done" novalidate>
+        <input type="hidden" name="form-name" value="contact">
+        <p class="hp"><label>Leave this empty <input name="company_site" tabindex="-1" autocomplete="off"></label></p>
+        <div class="fields">
+          <div class="two">
+            <div class="field"><label for="c-name">Your name</label><input id="c-name" name="name" type="text" autocomplete="name" required data-name="name"></div>
+            <div class="field"><label for="c-email">Email</label><input id="c-email" name="email" type="email" autocomplete="email" inputmode="email" required data-name="email"></div>
+          </div>
+          <div class="field"><label for="c-topic">What's this about?</label>
+            <select id="c-topic" name="topic" required data-name="topic">
+              <option value="">Pick one</option>
+              <option>A question about 2BuyAndSell</option>
+              <option>I'm a loan officer</option>
+              <option>Team or brokerage pricing</option>
+              <option>A privacy request</option>
+              <option>Something else</option>
+            </select></div>
+          <div class="field"><label for="c-msg">Message</label><textarea id="c-msg" name="message" required data-name="message"></textarea></div>
+        </div>
+        <button class="btn" type="submit">Send message</button>
+        <div class="msg" role="alert"></div>
+        <p class="fine">We'll only use your info to answer you. See our <a href="privacy.html">Privacy Policy</a>.</p>
+      </form>
+      <div class="done" id="c-done" role="status" tabindex="-1">
+        <div class="big"><svg width="36" height="36" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Message sent</h3>
+        <p>Thanks for reaching out. We'll get back to you soon.</p>
+      </div>
+    </div>
+
+<script>
+(function(){
+  /* Shared form handler: saves to the 2BuyAndSell database (Supabase). */
+  var live=!!window.SB_URL;
+  function sbInsert(table,row){ return fetch(window.SB_URL+"/rest/v1/"+table,{method:"POST",headers:{"apikey":window.SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify(row)}).then(function(r){ if(!r.ok) throw new Error("bad"); }); }
+  function formRow(form){ var o={}; new FormData(form).forEach(function(v,k){ if(k!=="form-name"&&k!=="company_site"&&String(v).trim()) o[k]=String(v).trim(); }); return o; }
+  function isBot(form){ var h=form.querySelector('[name="company_site"]'); return h&&h.value; }
+  document.querySelectorAll("form[data-table]").forEach(function(form){
+    var msg=form.querySelector(".msg"), go=form.querySelector("button[type=submit]"), label=go.textContent, done=document.getElementById(form.getAttribute("data-done"));
+    function show(cls,t){ msg.className="msg "+cls; msg.textContent=t; }
+    form.addEventListener("submit",function(e){
+      e.preventDefault(); msg.className="msg";
+      var bad=null;
+      form.querySelectorAll("[required]").forEach(function(el){ el.removeAttribute("aria-invalid"); if(!bad && !el.value.trim()) bad=el; });
+      var em=form.querySelector("input[type=email]");
+      if(!bad && em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value.trim())) bad=em;
+      if(bad){ bad.setAttribute("aria-invalid","true"); bad.focus(); show("err", bad===em&&em.value.trim() ? "That email doesn't look right. Check it and try again." : "Please fill in your "+(bad.getAttribute("data-name")||"answer")+"."); return; }
+      if(!live){ show("info","This is a preview. Forms start working once this page is live on 2buyandsell.com."); return; }
+      go.disabled=true; go.textContent="Sending…";
+      (isBot(form)?Promise.resolve():sbInsert(form.getAttribute("data-table"),formRow(form)))
+        .then(function(){ form.style.display="none"; done.style.display="block"; done.focus(); })
+        .catch(function(){ go.disabled=false; go.textContent=label; show("err","That didn't go through. Check your connection and try again."); });
+    });
+  });
+})();
+</script>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="mark" href="index.html"><img src="img/logo-icon-128.png" width="44" height="37" alt=""><span><b class="m2">2</b>BuyAnd<b class="ms">Sell</b></span></a>
+    <p>A San Antonio software company for real estate agents and loan officers.</p>
+    <ul class="flinks">
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="privacy.html">Privacy Policy</a></li>
+      <li><a href="terms.html">Terms of Use</a></li>
+      <li><a href="login.html">Agent log in</a></li>
+    </ul>
+    <p>2BuyAndSell is software. It is not a lender, mortgage broker, real estate brokerage, appraiser or credit bureau. It does not pull credit or make loan decisions. Readiness scores, price ranges and net estimates are estimates to help start a conversation. They are not loan approvals, appraisals or offers.</p>
+    <p>We support Fair Housing and equal opportunity for everyone.</p>
+    <p>© 2026 2BuyAndSell. Photos used under the Pexels license. Contact: <a href="mailto:hello@2buyandsell.com" style="color:#fff">hello@2buyandsell.com</a></p>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Log in · 2BuyAndSell</title>
+<meta name="description" content="Log in to your 2BuyAndSell agent dashboard, or create your account.">
+<link rel="canonical" href="https://www.2buyandsell.com/login.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="2BuyAndSell">
+<meta property="og:title" content="Log in · 2BuyAndSell">
+<meta property="og:description" content="Log in to your 2BuyAndSell agent dashboard, or create your account.">
+<meta property="og:url" content="https://www.2buyandsell.com/login.html">
+<meta property="og:image" content="https://www.2buyandsell.com/img/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#1a467c">
+<link rel="icon" type="image/png" sizes="192x192" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<meta name="robots" content="noindex">
+<script src="config.js"></script>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="index.html" aria-label="2BuyAndSell home"><img src="img/logo-icon-128.png" width="44" height="37" alt=""><span><b class="m2">2</b>BuyAnd<b class="ms">Sell</b></span></a>
+    <div style="display:flex;align-items:center;gap:14px"><a href="login.html" style="font-weight:700;color:var(--navy);text-decoration:none">Log in</a><a class="btn" href="index.html#join">Claim a spot</a></div>
+  </div>
+</header>
+
+<main class="doc">
+  <div class="wrap">
+    <span class="eyebrow">For agents</span>
+    <h1>Agent log in</h1>
+    
+
+    <p style="font-size:19px;margin-top:10px;color:var(--muted)">Founding agents use 2BuyAndSell free while we're in early access. No card needed.</p>
+    <div class="form-card" style="max-width:520px">
+      <div class="chips" role="tablist" aria-label="Log in or create an account" style="display:flex;gap:8px;margin-bottom:20px">
+        <button type="button" class="btn" id="tabIn" role="tab" aria-selected="true" style="flex:1;min-height:46px">Log in</button>
+        <button type="button" class="btn navy" id="tabUp" role="tab" aria-selected="false" style="flex:1;min-height:46px;background:#eef3f9;color:var(--navy)">Create account</button>
+      </div>
+
+      <form id="fIn" novalidate>
+        <div class="fields">
+          <div class="field"><label for="inEmail">Email</label><input id="inEmail" type="email" autocomplete="email" inputmode="email"></div>
+          <div class="field"><label for="inPass">Password</label><input id="inPass" type="password" autocomplete="current-password"></div>
+        </div>
+        <button class="btn" type="submit" id="inGo">Log in</button>
+        <div class="msg" id="inMsg" role="alert"></div>
+        <p class="fine"><a href="#" id="forgot">Forgot your password?</a></p>
+        <p class="fine" id="forgotMsg" hidden>Email <a href="mailto:hello@2buyandsell.com">hello@2buyandsell.com</a> from the address you signed up with, and we'll reset it for you.</p>
+      </form>
+
+      <form id="fUp" novalidate hidden>
+        <div class="fields">
+          <div class="field"><label for="upName">Your name</label><input id="upName" type="text" autocomplete="name" placeholder="Like it appears on your page"></div>
+          <div class="field"><label for="upBroker">Brokerage</label><input id="upBroker" type="text" autocomplete="organization"></div>
+          <div class="field"><label for="upSlug">Your page link</label>
+            <div style="display:flex;align-items:center;border:1.5px solid #cfd6de;border-radius:14px;background:#fff;overflow:hidden">
+              <span style="padding:0 4px 0 14px;color:var(--muted);white-space:nowrap">2buyandsell.com/</span>
+              <input id="upSlug" type="text" autocapitalize="none" autocomplete="off" spellcheck="false" style="border:0;padding-left:0;min-width:0" placeholder="yourname">
+            </div>
+            <p class="fine" style="margin-top:6px">Letters, numbers and dashes. This is the link you'll share with clients.</p></div>
+          <div class="field"><label for="upEmail">Email</label><input id="upEmail" type="email" autocomplete="email" inputmode="email"></div>
+          <div class="field"><label for="upPass">Create a password <small>(8 or more characters)</small></label><input id="upPass" type="password" autocomplete="new-password"></div>
+          <label style="display:flex;gap:10px;align-items:flex-start;font-size:16px"><input type="checkbox" id="upAgree" style="width:22px;height:22px;margin-top:2px;flex:none"> <span>I agree to the <a href="terms.html" target="_blank">Terms of Use</a> and <a href="privacy.html" target="_blank">Privacy Policy</a>, and I'm a licensed real estate agent or loan officer.</span></label>
+        </div>
+        <button class="btn" type="submit" id="upGo">Create my account</button>
+        <div class="msg" id="upMsg" role="alert"></div>
+      </form>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  var RESERVED=["dashboard","login","about","contact","privacy","terms","index","agent","admin","app","api","img","photos","www","help","support","pricing","blog","signup","logout","account","settings"];
+  var $=function(id){ return document.getElementById(id); };
+  function show(el,cls,t){ el.className="msg "+cls; el.textContent=t; }
+  function busy(btn,on,label){ btn.disabled=on; btn.textContent=on?"One moment…":label; }
+  var ready=window.supabase && window.SB_URL && !/PASTE/.test(window.SB_URL);
+  var sb=ready?window.supabase.createClient(window.SB_URL,window.SB_KEY):null;
+  if(!ready){ show($("inMsg"),"info","Logins open very soon. Check back shortly."); }
+  else sb.auth.getSession().then(function(r){ if(r.data&&r.data.session) location.replace("/dashboard.html"); });
+
+  function tab(up){ $("fIn").hidden=up; $("fUp").hidden=!up;
+    $("tabIn").setAttribute("aria-selected",!up); $("tabUp").setAttribute("aria-selected",up);
+    $("tabIn").style.background=up?"#eef3f9":""; $("tabIn").style.color=up?"var(--navy)":"";
+    $("tabUp").style.background=up?"var(--gold)":"#eef3f9"; $("tabUp").style.color=up?"var(--gold-ink)":"var(--navy)"; }
+  $("tabIn").addEventListener("click",function(){ tab(false); });
+  $("tabUp").addEventListener("click",function(){ tab(true); });
+  if(location.hash==="#signup") tab(true);
+  $("forgot").addEventListener("click",function(e){ e.preventDefault(); $("forgotMsg").hidden=false; });
+
+  function toSlug(v){ return String(v||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,40); }
+  var slugTouched=false;
+  $("upSlug").addEventListener("input",function(){ slugTouched=true; });
+  $("upSlug").addEventListener("blur",function(){ $("upSlug").value=toSlug($("upSlug").value); });
+  $("upName").addEventListener("input",function(){ if(!slugTouched) $("upSlug").value=toSlug($("upName").value); });
+
+  $("fIn").addEventListener("submit",function(e){ e.preventDefault(); var m=$("inMsg"), b=$("inGo");
+    if(!sb){ show(m,"info","Logins open very soon. Check back shortly."); return; }
+    var em=$("inEmail").value.trim(), pw=$("inPass").value;
+    if(!em||!pw){ show(m,"err","Enter your email and password."); return; }
+    busy(b,true,"Log in");
+    sb.auth.signInWithPassword({email:em,password:pw}).then(function(r){
+      if(r.error){ busy(b,false,"Log in"); show(m,"err",/invalid/i.test(r.error.message)?"That email and password don't match. Try again.":r.error.message); return; }
+      location.href="/dashboard.html"; }); });
+
+  $("fUp").addEventListener("submit",function(e){ e.preventDefault(); var m=$("upMsg"), b=$("upGo");
+    if(!sb){ show(m,"info","Sign-ups open very soon. Check back shortly."); return; }
+    var name=$("upName").value.trim(), broker=$("upBroker").value.trim(), slug=toSlug($("upSlug").value), em=$("upEmail").value.trim(), pw=$("upPass").value;
+    $("upSlug").value=slug;
+    if(!name){ show(m,"err","Please add your name."); $("upName").focus(); return; }
+    if(slug.length<3){ show(m,"err","Your page link needs at least 3 letters or numbers."); $("upSlug").focus(); return; }
+    if(RESERVED.indexOf(slug)>-1){ show(m,"err","That link is reserved. Try another, like your first and last name."); $("upSlug").focus(); return; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ show(m,"err","That email doesn't look right."); $("upEmail").focus(); return; }
+    if(pw.length<8){ show(m,"err","Your password needs at least 8 characters."); $("upPass").focus(); return; }
+    if(!$("upAgree").checked){ show(m,"err","Please check the box to agree to the terms."); return; }
+    busy(b,true,"Create my account");
+    var fail=function(t){ busy(b,false,"Create my account"); show(m,"err",t); };
+    sb.from("agents").select("slug").eq("slug",slug).maybeSingle().then(function(r){
+      if(r.data){ fail("2buyandsell.com/"+slug+" is taken. Try adding your last name or city."); $("upSlug").focus(); return; }
+      sb.auth.getSession().then(function(ss){
+        var have=ss.data&&ss.data.session;
+        var step=have?Promise.resolve({data:{user:have.user,session:have}}):sb.auth.signUp({email:em,password:pw});
+        step.then(function(u){
+          if(u.error){ fail(/registered|exists/i.test(u.error.message)?"You already have an account with that email. Use Log in instead.":u.error.message); return; }
+          if(!u.data.session){ busy(b,false,"Create my account"); show(m,"info","Check your email to confirm your account, then log in."); return; }
+          sb.from("agents").insert({id:u.data.user.id,slug:slug,settings:{name:name,broker:broker,email:em}}).then(function(ins){
+            if(ins.error){ if(/duplicate|unique/i.test(ins.error.message)) fail("2buyandsell.com/"+slug+" was just taken. Pick another link and try again."); else fail("Something went wrong saving your page. Try again."); return; }
+            location.href="/dashboard.html"; }); }); }); }); });
+})();
+</script>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="mark" href="index.html"><img src="img/logo-icon-128.png" width="44" height="37" alt=""><span><b class="m2">2</b>BuyAnd<b class="ms">Sell</b></span></a>
+    <p>A San Antonio software company for real estate agents and loan officers.</p>
+    <ul class="flinks">
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="privacy.html">Privacy Policy</a></li>
+      <li><a href="terms.html">Terms of Use</a></li>
+      <li><a href="login.html">Agent log in</a></li>
+    </ul>
+    <p>2BuyAndSell is software. It is not a lender, mortgage broker, real estate brokerage, appraiser or credit bureau. It does not pull credit or make loan decisions. Readiness scores, price ranges and net estimates are estimates to help start a conversation. They are not loan approvals, appraisals or offers.</p>
+    <p>We support Fair Housing and equal opportunity for everyone.</p>
+    <p>© 2026 2BuyAndSell. Photos used under the Pexels license. Contact: <a href="mailto:hello@2buyandsell.com" style="color:#fff">hello@2buyandsell.com</a></p>
+  </div>
+</footer>
+</body>
+</html>
