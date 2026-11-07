@@ -1,0 +1,64 @@
+{
+  "name": "2BuyAndSell",
+  "short_name": "2BuyAndSell",
+  "description": "Your leads, people, hounds and marketing in one place.",
+  "id": "/dashboard",
+  "start_url": "/dashboard?source=app",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#faf7f2",
+  "theme_color": "#1a467c",
+  "icons": [
+    {
+      "src": "/img/app-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/app-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/app-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "People",
+      "url": "/people",
+      "icons": [
+        {
+          "src": "/img/app-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Hounds",
+      "url": "/hounds",
+      "icons": [
+        {
+          "src": "/img/app-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Social Logins",
+      "url": "/social",
+      "icons": [
+        {
+          "src": "/img/app-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
