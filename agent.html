@@ -1831,7 +1831,10 @@ function shareCard(){ var u=settings.link;
     '<div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn small" href="/'+esc(agentSlug)+'" target="_blank" rel="noopener">Open my page</a><button type="button" class="btn ghost small" id="copyMyLink">Copy my link</button></div></section>'+
     '<section class="card" style="margin-top:18px;padding:22px"><h2 style="font-size:21px">Release the Hounds 🐾</h2>'+
     '<p style="margin:6px 0 14px;color:var(--muted)">Find people around San Antonio who are asking about buying, selling or moving, on Reddit, Facebook, Nextdoor and more. One tap builds the searches.</p>'+
-    '<a class="btn small" href="/hounds">Go hunting</a></section>'; }
+    '<a class="btn small" href="/hounds">Go hunting</a></section>'+
+    '<section class="card" style="margin-top:18px;padding:22px"><h2 style="font-size:21px">People</h2>'+
+    '<p style="margin:6px 0 14px;color:var(--muted)">Every lead in one place, with stages, notes, a timeline and tasks so no one slips through.</p>'+
+    '<a class="btn small" href="/people">Open People</a></section>'; }
 function pushSettings(){ settings.link=SITE_HOST+"/"+agentSlug;
   sb.from("agents").update({settings:settings,updated_at:new Date().toISOString()}).eq("id",agentId).then(function(r){ if(r.error) toast("Couldn't save. Check your connection and try again."); }); }
 function pushKit(v){ sb.from("agents").update({kit:v,updated_at:new Date().toISOString()}).eq("id",agentId).then(function(r){ if(r.error) toast("Couldn't save. Check your connection."); }); }
