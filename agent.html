@@ -1828,7 +1828,10 @@ function shareCard(){ var u=settings.link;
   return '<section class="card" style="margin-top:26px;padding:22px"><h2 style="font-size:21px">Your page is live</h2>'+
     '<p style="margin:6px 0 14px;color:var(--muted)">Share this link in your Instagram bio, email signature and text replies. Every check people take there lands in your list above.</p>'+
     '<p style="font-size:19px;font-weight:700;word-break:break-all;margin:0 0 14px">'+esc(u)+'</p>'+
-    '<div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn small" href="/'+esc(agentSlug)+'" target="_blank" rel="noopener">Open my page</a><button type="button" class="btn ghost small" id="copyMyLink">Copy my link</button></div></section>'; }
+    '<div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn small" href="/'+esc(agentSlug)+'" target="_blank" rel="noopener">Open my page</a><button type="button" class="btn ghost small" id="copyMyLink">Copy my link</button></div></section>'+
+    '<section class="card" style="margin-top:18px;padding:22px"><h2 style="font-size:21px">Release the Hounds 🐾</h2>'+
+    '<p style="margin:6px 0 14px;color:var(--muted)">Find people around San Antonio who are asking about buying, selling or moving, on Reddit, Facebook, Nextdoor and more. One tap builds the searches.</p>'+
+    '<a class="btn small" href="/hounds">Go hunting</a></section>'; }
 function pushSettings(){ settings.link=SITE_HOST+"/"+agentSlug;
   sb.from("agents").update({settings:settings,updated_at:new Date().toISOString()}).eq("id",agentId).then(function(r){ if(r.error) toast("Couldn't save. Check your connection and try again."); }); }
 function pushKit(v){ sb.from("agents").update({kit:v,updated_at:new Date().toISOString()}).eq("id",agentId).then(function(r){ if(r.error) toast("Couldn't save. Check your connection."); }); }

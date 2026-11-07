@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Release the Hounds · 2BuyAndSell</title>
+<meta name="description" content="Find people around San Antonio who are asking about buying, selling or moving.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://www.2buyandsell.com/hounds.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="2BuyAndSell">
+<meta property="og:title" content="Release the Hounds · 2BuyAndSell">
+<meta property="og:description" content="Find people around San Antonio who are asking about buying, selling or moving.">
+<meta property="og:url" content="https://www.2buyandsell.com/hounds.html">
+<meta property="og:image" content="https://www.2buyandsell.com/img/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#1a467c">
+<link rel="icon" type="image/png" sizes="192x192" href="/img/favicon.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/site.css">
+<script src="/config.js"></script>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="/dashboard" aria-label="Back to my dashboard"><img src="/img/logo-icon-128.png" width="44" height="37" alt=""><span><b class="m2">2</b>BuyAnd<b class="ms">Sell</b></span></a>
+    <a href="/dashboard" style="font-weight:700;color:var(--navy);text-decoration:none">← My dashboard</a>
+  </div>
+</header>
+
+<main class="doc hounds">
+  <div class="wrap">
+    <span class="eyebrow">Find people who are asking</span>
+    <h1>Release the Hounds</h1>
+    <p class="lead">One button builds fresh searches for people around San Antonio who are asking about buying, selling or moving, on Reddit, Facebook, Nextdoor, X, Craigslist and the open web. You read the posts and reply yourself, logged in as you.</p>
+
+    <div id="gate" class="hcard" style="text-align:center">Checking your login…</div>
+
+    <div id="app" hidden>
+      <section class="hcard release">
+        <div class="when">
+          <span>Look back:</span>
+          <label><input type="radio" name="when" value="d"> 24 hours</label>
+          <label><input type="radio" name="when" value="w" checked> 7 days</label>
+          <label><input type="radio" name="when" value="m"> 30 days</label>
+        </div>
+        <button type="button" class="btn big" id="release">🐾 Release the Hounds</button>
+        <p class="fine" id="packInfo"></p>
+      </section>
+
+      <section id="pack" hidden>
+        <div class="hcard sniff">
+          <div>
+            <b id="progTxt">0 of 0 searched</b>
+            <div class="bar"><i id="progBar"></i></div>
+          </div>
+          <button type="button" class="btn navy" id="next">Sniff the next one →</button>
+        </div>
+        <p class="fine" style="margin:0 0 14px">Each button opens one search in a new tab. Gray means you already opened it today.</p>
+        <div id="cards"></div>
+      </section>
+
+      <details class="hcard" id="setup">
+        <summary><b>What the hounds hunt for</b> <span class="fine">(tap to change)</span></summary>
+        <div class="two">
+          <div class="field"><label for="kw">Phrases, one per line</label><textarea id="kw" rows="9"></textarea></div>
+          <div class="field"><label for="towns">Towns, one per line</label><textarea id="towns" rows="9"></textarea></div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button type="button" class="btn small" id="save">Save</button>
+          <button type="button" class="btn ghost small" id="reset">Use the starter list</button>
+          <span class="msg" id="saveMsg" role="status"></span>
+        </div>
+      </details>
+
+      <details class="hcard">
+        <summary><b>How to reply without getting banned or in trouble</b></summary>
+        <ul class="tips">
+          <li><b>Help first.</b> Answer their actual question. Mention you're a local agent once, at the end. No copy-paste blasts. Groups and subreddits ban that fast.</li>
+          <li><b>Follow each group's rules.</b> Many San Antonio groups and r/sanantonio don't allow ads. If so, just be helpful and let people ask you.</li>
+          <li><b>Say who you are.</b> When you offer your services, include your name and your brokerage's name, like Texas advertising rules ask.</li>
+          <li><b>Fair Housing.</b> Talk about homes, prices, commutes and schools' published info. Never describe an area by who lives there.</li>
+          <li><b>No cold texts or calls.</b> Don't copy someone's phone number from a post and text them. Reply where they posted, or let them message you.</li>
+        </ul>
+        <p style="margin:16px 0 6px"><b>Starter replies</b> (make them your own):</p>
+        <div class="reply" id="r1">Welcome to San Antonio! Happy to help. A few things worth knowing: [answer their question]. If you want, I can send you a quick list of areas that fit your commute and budget. No pressure. I'm a local agent with [Brokerage].</div>
+        <button type="button" class="btn ghost small" data-copy="r1">Copy</button>
+        <div class="reply" id="r2">¡Bienvenidos a San Antonio! Con gusto les ayudo. [Respuesta a su pregunta]. Si quieren, les mando una lista de zonas que encajen con su presupuesto y su trayecto al trabajo. Sin compromiso. Soy agente local con [Brokerage].</div>
+        <button type="button" class="btn ghost small" data-copy="r2">Copy</button>
+      </details>
+    </div>
+  </div>
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<style>
+.hounds h1{margin-bottom:6px}
+.hcard{background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px;margin:18px 0;box-shadow:0 2px 10px rgba(22,32,42,.04)}
+.hcard summary{cursor:pointer;font-size:18px;list-style:revert}
+.release{text-align:center;padding:28px 20px}
+.btn.big{min-height:66px;font-size:22px;padding:0 34px}
+.btn.small{min-height:42px;font-size:16px;padding:0 18px}
+.btn.ghost{background:#eef3f9;color:var(--navy);box-shadow:none}
+.when{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:18px;font-size:17px}
+.when label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.when input{width:20px;height:20px;accent-color:var(--navy)}
+.sniff{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;position:sticky;top:8px;z-index:5}
+.sniff>div{flex:1;min-width:180px}
+.bar{height:10px;background:#eef3f9;border-radius:9px;margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--gold);transition:width .3s}
+.kcard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin:0 0 12px}
+.kcard h3{font-size:19px;margin:0 0 10px}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.links a{display:inline-flex;align-items:center;min-height:42px;padding:0 15px;border-radius:999px;background:var(--navy);color:#fff;font-weight:700;font-size:15px;text-decoration:none}
+.links a.done{background:#d9dee4;color:#56616d}
+.links a.done::after{content:" ✓"}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0}
+@media (max-width:640px){ .two{grid-template-columns:1fr} }
+.hounds textarea{width:100%;font:17px/1.4 var(--body);border:1.5px solid #cfd6de;border-radius:14px;padding:10px 12px}
+.tips{padding-left:20px;margin:14px 0 0} .tips li{margin:0 0 10px}
+.reply{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:6px 0 8px;font-size:16px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+"use strict";
+var STARTER_KW=["moving to San Antonio","relocating to San Antonio","PCS to JBSA","PCS to Fort Sam Houston","PCS to Lackland","need a realtor","realtor recommendation","first time home buyer","selling my house","house hunting","best neighborhoods","VA loan"];
+var STARTER_TOWNS=["San Antonio","Converse","Schertz","Cibolo","New Braunfels","Boerne","Helotes","Universal City","Live Oak","Selma"];
+var $=function(id){ return document.getElementById(id); };
+var sb=null, uid=null, cfg={kw:STARTER_KW.slice(),towns:STARTER_TOWNS.slice()}, links=[];
+
+function toast(t){ var e=$("toast"); e.textContent=t; e.classList.add("on"); clearTimeout(toast.t); toast.t=setTimeout(function(){ e.classList.remove("on"); },2600); }
+function lines(v){ return v.split(/\n|,/).map(function(s){ return s.trim(); }).filter(Boolean).slice(0,30); }
+function esc(s){ return String(s).replace(/[&<>"']/g,function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]; }); }
+function today(){ var d=new Date(); return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate(); }
+function seenKey(){ return "hounds.seen."+today(); }
+function getSeen(){ try{ return JSON.parse(localStorage.getItem(seenKey())||"[]"); }catch(e){ return []; } }
+function addSeen(id){ try{ var s=getSeen(); if(s.indexOf(id)<0){ s.push(id); localStorage.setItem(seenKey(),JSON.stringify(s)); } }catch(e){} }
+
+/* ---------- search builders ---------- */
+function mentionsTown(k){ var lk=k.toLowerCase(); return cfg.towns.some(function(t){ return lk.indexOf(t.toLowerCase())>-1; }) || /jbsa|fort sam|lackland|randolph|texas/.test(lk); }
+function areaOr(){ return "("+cfg.towns.map(function(t){ return /\s/.test(t)?'"'+t+'"':t; }).join(" OR ")+")"; }
+function enc(s){ return encodeURIComponent(s); }
+function sinceDate(w){ var d=new Date(Date.now()-({d:1,w:7,m:30}[w])*864e5); return d.toISOString().slice(0,10); }
+function google(q,w){ return "https://www.google.com/search?q="+enc(q)+"&tbs=qdr:"+w; }
+
+function buildPack(w){
+  var out=[];
+  cfg.kw.forEach(function(k,i){
+    var local=mentionsTown(k), phrase='"'+k+'"', area=local?"":" "+areaOr(), firstTown=local?"":" "+(cfg.towns[0]||"San Antonio");
+    out.push({title:k, items:[
+      {id:"rd"+i, label:"Reddit", url:google("site:reddit.com "+phrase+area,w)},
+      {id:"fg"+i, label:"Facebook groups", url:google("site:facebook.com/groups "+phrase+area,w)},
+      {id:"fb"+i, label:"Facebook", url:"https://www.facebook.com/search/posts/?q="+enc(k+firstTown)},
+      {id:"nd"+i, label:"Nextdoor", url:"https://nextdoor.com/search/posts/?query="+enc(k)},
+      {id:"x"+i,  label:"X", url:"https://x.com/search?q="+enc(phrase+area+" since:"+sinceDate(w))+"&f=live"},
+      {id:"wb"+i, label:"Whole web", url:google(phrase+area+" -site:zillow.com -site:realtor.com -site:redfin.com",w)}
+    ]});
+  });
+  out.push({title:"Always worth a sniff", items:[
+    {id:"rs", label:"r/sanantonio newest", url:"https://www.reddit.com/r/sanantonio/new/"},
+    {id:"cr", label:"Craigslist real estate wanted", url:"https://sanantonio.craigslist.org/search/rew"},
+    {id:"ch", label:"Craigslist housing wanted", url:"https://sanantonio.craigslist.org/search/hsw"},
+    {id:"pc", label:"PCS posts (JBSA)", url:google('JBSA (PCS OR "orders to") (house OR housing OR realtor OR "where to live")',w)}
+  ]});
+  return out;
+}
+
+function render(){
+  var w=(document.querySelector('input[name="when"]:checked')||{}).value||"w";
+  var pack=buildPack(w), seen=getSeen(); links=[];
+  $("cards").innerHTML=pack.map(function(c){
+    return '<div class="kcard"><h3>'+esc(c.title)+'</h3><div class="links">'+c.items.map(function(it){
+      links.push(it.id);
+      return '<a href="'+esc(it.url)+'" target="_blank" rel="noopener noreferrer" data-id="'+it.id+'"'+(seen.indexOf(it.id)>-1?' class="done"':'')+'>'+esc(it.label)+'</a>';
+    }).join("")+'</div></div>';
+  }).join("");
+  $("pack").hidden=false; progress();
+}
+function progress(){ var seen=getSeen(), n=links.filter(function(id){ return seen.indexOf(id)>-1; }).length;
+  $("progTxt").textContent=n+" of "+links.length+" searched"+(n===links.length&&n?" — the pack is fed 🐾":"");
+  $("progBar").style.width=(links.length?Math.round(n/links.length*100):0)+"%"; }
+function markDone(a){ addSeen(a.getAttribute("data-id")); a.classList.add("done"); progress(); }
+
+document.addEventListener("click",function(e){
+  var a=e.target.closest&&e.target.closest("#cards a[data-id]"); if(a) markDone(a);
+  var c=e.target.closest&&e.target.closest("[data-copy]");
+  if(c){ var t=$(c.getAttribute("data-copy")).textContent; (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){ toast("Copied. Fill in the [brackets] before posting."); },function(){ toast("Press and hold the text to copy it."); }); }
+});
+$("release").addEventListener("click",function(){ render(); $("packInfo").textContent=links.length+" searches ready. Start at the top, or tap “Sniff the next one.”"; $("pack").scrollIntoView({behavior:"smooth",block:"start"}); });
+document.querySelectorAll('input[name="when"]').forEach(function(r){ r.addEventListener("change",function(){ if(!$("pack").hidden) render(); }); });
+$("next").addEventListener("click",function(){
+  var seen=getSeen(), a=null;
+  for(var i=0;i<links.length;i++){ if(seen.indexOf(links[i])<0){ a=document.querySelector('#cards a[data-id="'+links[i]+'"]'); break; } }
+  if(!a){ toast("All searched for today. Nice work."); return; }
+  window.open(a.href,"_blank","noopener"); markDone(a); a.scrollIntoView({behavior:"smooth",block:"center"});
+});
+
+/* ---------- settings (saved to the agent's account) ---------- */
+function fillForm(){ $("kw").value=cfg.kw.join("\n"); $("towns").value=cfg.towns.join("\n"); }
+$("reset").addEventListener("click",function(){ cfg={kw:STARTER_KW.slice(),towns:STARTER_TOWNS.slice()}; fillForm(); $("saveMsg").textContent="Starter list loaded. Tap Save to keep it."; });
+$("save").addEventListener("click",function(){
+  var kw=lines($("kw").value), towns=lines($("towns").value);
+  if(!kw.length||!towns.length){ $("saveMsg").textContent="Add at least one phrase and one town."; return; }
+  cfg={kw:kw,towns:towns}; $("saveMsg").textContent="Saving…";
+  /* read the latest settings first so nothing else on the account gets overwritten */
+  sb.from("agents").select("settings").eq("id",uid).single().then(function(r){
+    if(r.error) throw r.error; var s=r.data.settings||{}; s.hounds=cfg;
+    return sb.from("agents").update({settings:s,updated_at:new Date().toISOString()}).eq("id",uid);
+  }).then(function(r){ if(r&&r.error) throw r.error; $("saveMsg").textContent="Saved."; if(!$("pack").hidden) render(); })
+    .catch(function(){ $("saveMsg").textContent="Couldn't save. Check your connection and try again."; });
+});
+
+/* ---------- boot ---------- */
+if(!(window.supabase&&window.SB_URL)){ $("gate").textContent="Logins aren't available right now. Try again soon."; return; }
+sb=window.supabase.createClient(window.SB_URL,window.SB_KEY);
+sb.auth.getSession().then(function(r){
+  var ses=r.data&&r.data.session; if(!ses){ location.replace("/login"); return; }
+  uid=ses.user.id;
+  return sb.from("agents").select("settings").eq("id",uid).maybeSingle().then(function(a){
+    var h=a.data&&a.data.settings&&a.data.settings.hounds;
+    if(h&&Array.isArray(h.kw)&&h.kw.length&&Array.isArray(h.towns)&&h.towns.length) cfg={kw:h.kw,towns:h.towns};
+    fillForm(); $("gate").hidden=true; $("app").hidden=false;
+  });
+}).catch(function(){ $("gate").textContent="Something went wrong loading your account. Refresh to try again."; });
+})();
+</script>
+
+<footer>
+  <div class="wrap">
+    <a class="mark" href="index.html"><img src="/img/logo-icon-128.png" width="44" height="37" alt=""><span><b class="m2">2</b>BuyAnd<b class="ms">Sell</b></span></a>
+    <p>A San Antonio software company for real estate agents and loan officers.</p>
+    <ul class="flinks">
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="privacy.html">Privacy Policy</a></li>
+      <li><a href="terms.html">Terms of Use</a></li>
+      <li><a href="login.html">Agent log in</a></li>
+    </ul>
+    <p>2BuyAndSell is software. It is not a lender, mortgage broker, real estate brokerage, appraiser or credit bureau. It does not pull credit or make loan decisions. Readiness scores, price ranges and net estimates are estimates to help start a conversation. They are not loan approvals, appraisals or offers.</p>
+    <p>We support Fair Housing and equal opportunity for everyone.</p>
+    <p>© 2026 2BuyAndSell. Photos used under the Pexels license. Contact: <a href="mailto:hello@2buyandsell.com" style="color:#fff">hello@2buyandsell.com</a></p>
+  </div>
+</footer>
+</body>
+</html>
