@@ -38,11 +38,46 @@
   <div class="wrap">
     <span class="eyebrow">Find people who are asking</span>
     <h1>Release the Hounds</h1>
-    <p class="lead">One button builds fresh searches for people around San Antonio who are asking about buying, selling or moving, on Reddit, Facebook, Nextdoor, X, Craigslist and the open web. You read the posts and reply yourself, logged in as you.</p>
+    <p class="lead">The hounds bring back public posts from people around San Antonio who are asking about buying, selling or moving. You read them and reply yourself, logged in as you.</p>
 
     <div id="gate" class="hcard" style="text-align:center">Checking your login…</div>
 
     <div id="app" hidden>
+      <section class="hcard" id="findsCard">
+        <div class="fhead">
+          <h2>Fresh finds <span class="cnt" id="newCnt"></span></h2>
+          <button type="button" class="btn small" id="sniffNow">🐾 Sniff now</button>
+        </div>
+        <p class="fine" style="margin:4px 0 10px">The hounds check your Google Alert feeds every 2 hours and bring back public posts. Only the link and a preview are saved.</p>
+        <div class="ftabs" id="ftabs" role="tablist">
+          <button type="button" data-f="new" aria-selected="true">New</button><button type="button" data-f="saved" aria-selected="false">Saved</button><button type="button" data-f="replied" aria-selected="false">Replied</button><button type="button" data-f="all" aria-selected="false">All</button>
+        </div>
+        <label class="lowtog"><input type="checkbox" id="showLow"> Show low matches (news, listings)</label>
+        <div id="finds"></div>
+      </section>
+
+      <details class="hcard" id="feedsCard">
+        <summary><b>Your alert feeds</b> <span class="fine" id="feedCount"></span></summary>
+        <div id="feedList" style="margin-top:12px"></div>
+        <div class="feedadd">
+          <input type="text" id="feedLabel" maxlength="80" placeholder="What it hunts for, like: moving to San Antonio" aria-label="Feed name">
+          <input type="url" id="feedUrl" placeholder="Paste the feed link (https://www.google.com/alerts/feeds/…)" aria-label="Feed link">
+          <button type="button" class="btn small" id="feedAdd">Add feed</button>
+          <span class="fine" id="feedMsg" role="status"></span>
+        </div>
+        <div class="howto">
+          <b>How to make a feed (2 minutes, free):</b>
+          <ol>
+            <li>Open <a href="https://www.google.com/alerts" target="_blank" rel="noopener">google.com/alerts</a> and sign in with your Google account.</li>
+            <li>Type a phrase, with quotes, like <span class="ph">"moving to San Antonio"</span>.</li>
+            <li>Tap <b>Show options</b> and set: How often <b>As-it-happens</b> · Sources <b>Automatic</b> · Region <b>United States</b> · How many <b>All results</b> · Deliver to <b>RSS feed</b>.</li>
+            <li>Tap <b>Create Alert</b>. Then tap the orange <b>RSS</b> icon next to it, copy the link from the address bar, and paste it above.</li>
+          </ol>
+          <p class="fine">Good phrases to start: <span class="ph">"moving to San Antonio"</span> <span class="ph">"relocating to San Antonio"</span> <span class="ph">"PCS to JBSA"</span> <span class="ph">"San Antonio realtor"</span> <span class="ph">"moving to New Braunfels"</span> <span class="ph">"first time home buyer San Antonio"</span></p>
+        </div>
+      </details>
+
+      <h2 style="margin:26px 0 6px;font-size:22px">Search by hand</h2>
       <section class="hcard release">
         <div class="when">
           <span>Look back:</span>
@@ -128,6 +163,35 @@
 .reply{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:6px 0 8px;font-size:16px}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center}
 .toast.on{opacity:1}
+.fhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.fhead h2{font-size:22px;margin:0}
+.cnt{display:inline-block;min-width:26px;padding:2px 9px;border-radius:999px;background:var(--gold);color:var(--gold-ink);font-size:15px;text-align:center;vertical-align:middle}
+.cnt:empty{display:none}
+.ftabs{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 8px}
+.ftabs button{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;font:700 15px var(--body);cursor:pointer;color:var(--ink)}
+.ftabs button[aria-selected=true]{background:var(--navy);border-color:var(--navy);color:#fff}
+.lowtog{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--muted);margin:0 0 10px}
+.lowtog input{width:18px;height:18px}
+.find{border:1px solid var(--line);border-radius:16px;padding:14px;margin:0 0 10px;background:#fff}
+.find .fmeta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.find .sc{display:inline-block;border-radius:999px;padding:2px 10px;font-weight:800;font-size:13px}
+.sc.hot{background:#fdebd8;color:#8a4a0f} .sc.warm{background:#fff4d6;color:#7a5a00} .sc.low{background:#f1f1ef;color:#77746c}
+.find h3{font-size:18px;margin:6px 0 4px;line-height:1.3} .find h3 a{color:var(--ink);text-decoration:none}
+.find p{margin:0 0 10px;color:var(--ink);font-size:16px}
+.find .acts{display:flex;gap:6px;flex-wrap:wrap}
+.find .acts a,.find .acts button{display:inline-flex;align-items:center;min-height:38px;padding:0 13px;border-radius:999px;font:700 14px var(--body);border:0;cursor:pointer;text-decoration:none;background:#eef3f9;color:var(--navy)}
+.find .acts a.go{background:var(--navy);color:#fff}
+.find .acts .add{background:var(--gold);color:var(--gold-ink)}
+.find.done{opacity:.6}
+.feedrow{display:flex;gap:10px;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding:9px 0;font-size:15px}
+.feedrow:first-child{border-top:0}
+.feedrow .ok{color:var(--green);font-size:13px} .feedrow .bad{color:#a12a1b;font-size:13px}
+.feedrow button{background:none;border:0;color:#8a939d;cursor:pointer;font-size:14px}
+.feedadd{display:grid;gap:8px;margin:12px 0}
+.feedadd input{font:16px var(--body);border:1.5px solid #cfd6de;border-radius:12px;padding:10px 12px;min-height:44px;width:100%}
+.howto{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:15px}
+.howto ol{padding-left:20px;margin:8px 0} .howto li{margin:0 0 6px}
+.ph{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:8px;padding:1px 7px;margin:2px 2px;font-size:14px;cursor:pointer}
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -137,7 +201,7 @@
 var STARTER_KW=["moving to San Antonio","relocating to San Antonio","PCS to JBSA","PCS to Fort Sam Houston","PCS to Lackland","need a realtor","realtor recommendation","first time home buyer","selling my house","house hunting","best neighborhoods","VA loan"];
 var STARTER_TOWNS=["San Antonio","Converse","Schertz","Cibolo","New Braunfels","Boerne","Helotes","Universal City","Live Oak","Selma"];
 var $=function(id){ return document.getElementById(id); };
-var sb=null, uid=null, cfg={kw:STARTER_KW.slice(),towns:STARTER_TOWNS.slice()}, links=[];
+var sb=null, uid=null, cfg={kw:STARTER_KW.slice(),towns:STARTER_TOWNS.slice()}, links=[], finds=[], feeds=[], fview="new";
 
 function toast(t){ var e=$("toast"); e.textContent=t; e.classList.add("on"); clearTimeout(toast.t); toast.t=setTimeout(function(){ e.classList.remove("on"); },2600); }
 function lines(v){ return v.split(/\n|,/).map(function(s){ return s.trim(); }).filter(Boolean).slice(0,30); }
@@ -221,6 +285,85 @@ $("save").addEventListener("click",function(){
     .catch(function(){ $("saveMsg").textContent="Couldn't save. Check your connection and try again."; });
 });
 
+/* ---------- fresh finds (the robot) ---------- */
+function ago(iso){ if(!iso) return ""; var s=(Date.now()-new Date(iso).getTime())/1000;
+  if(s<3600) return Math.max(1,Math.floor(s/60))+" min ago"; if(s<86400) return Math.floor(s/3600)+" hr ago"; var d=Math.floor(s/86400); return d===1?"yesterday":d+" days ago"; }
+function band(sc){ return sc>=60?["hot","Hot"]:sc>=30?["warm","Warm"]:["low","Low"]; }
+function loadFinds(){
+  return sb.from("hound_finds").select("id,url,title,snippet,site,feed_label,published_at,found_at,score,status").eq("agent_id",uid).neq("status","dismissed").order("found_at",{ascending:false}).limit(300)
+    .then(function(r){ if(r.error){ $("finds").innerHTML='<p class="fine">The hounds aren\'t set up in the database yet.</p>'; return; } finds=r.data||[]; renderFinds(); });
+}
+function renderFinds(){
+  var low=$("showLow").checked;
+  var list=finds.filter(function(f){ return (fview==="all"||f.status===fview) && (low||f.score>=30||f.status!=="new"); })
+    .sort(function(a,b){ return fview==="new"?(b.score-a.score)||(new Date(b.found_at)-new Date(a.found_at)):(new Date(b.found_at)-new Date(a.found_at)); });
+  var nNew=finds.filter(function(f){ return f.status==="new"&&(low||f.score>=30); }).length;
+  $("newCnt").textContent=nNew?String(nNew):"";
+  if(!feeds.length){ $("finds").innerHTML='<div class="empty" style="color:var(--muted);padding:14px 4px">Set up your first alert feed below, and the hounds will start bringing posts back here. 🐾</div>'; $("feedsCard").open=true; return; }
+  if(!list.length){ $("finds").innerHTML='<div class="empty" style="color:var(--muted);padding:14px 4px">'+(fview==="new"?"Nothing new right now. The hounds check every 2 hours, or tap Sniff now.":"Nothing here yet.")+'</div>'; return; }
+  $("finds").innerHTML=list.slice(0,100).map(function(f){ var b=band(f.score);
+    return '<div class="find'+(f.status==="replied"||f.status==="added"?' done':'')+'" data-id="'+f.id+'"><div class="fmeta"><span class="sc '+b[0]+'">'+b[1]+'</span><span>'+esc(f.site)+'</span><span>· '+esc(ago(f.published_at||f.found_at))+'</span>'+(f.feed_label?'<span>· '+esc(f.feed_label)+'</span>':'')+(f.status!=="new"?'<span>· '+esc({saved:"Saved",replied:"Replied",added:"Added to People"}[f.status]||f.status)+'</span>':'')+'</div>'+
+      '<h3><a href="'+esc(f.url)+'" target="_blank" rel="noopener noreferrer">'+esc(f.title||f.url)+'</a></h3>'+(f.snippet?'<p>'+esc(f.snippet)+'</p>':'')+
+      '<div class="acts"><a class="go" href="'+esc(f.url)+'" target="_blank" rel="noopener noreferrer">Open post</a>'+
+      (f.status!=="replied"?'<button type="button" data-st="replied">I replied</button>':'')+(f.status==="new"?'<button type="button" data-st="saved">Save</button>':'')+
+      (f.status!=="added"?'<button type="button" class="add" data-add="1">Add to People</button>':'')+'<button type="button" data-st="dismissed">Not useful</button></div></div>'; }).join("");
+}
+function setStatus(id,st){ var f=finds.filter(function(x){ return x.id===id; })[0]; if(!f) return; var old=f.status; f.status=st;
+  if(st==="dismissed") finds=finds.filter(function(x){ return x.id!==id; }); renderFinds();
+  sb.from("hound_finds").update({status:st}).eq("id",id).then(function(r){ if(r.error){ f.status=old; if(st==="dismissed") finds.push(f); renderFinds(); toast("Couldn't save. Try again."); } else if(st==="replied") toast("Nice. Marked as replied."); });
+}
+function addToPeople(id){ var f=finds.filter(function(x){ return x.id===id; })[0]; if(!f) return;
+  var data={name:"Post on "+(f.site||"the web"),type:"other",phone:"",email:"",addr:"",textOk:false,addedBy:"hounds",postUrl:f.url};
+  sb.from("leads").insert({agent_id:uid,data:data,source:"hounds",stage:"new"}).select("id").single().then(function(r){
+    if(r.error){ toast("Couldn't add. Try again."); return; }
+    var lid=r.data.id;
+    return sb.from("lead_events").insert({agent_id:uid,lead_id:lid,kind:"note",body:"Found by the Hounds: "+(f.title||"")+"\n"+f.url+(f.snippet?"\n\n“"+f.snippet+"”":"")}).then(function(){
+      return sb.from("hound_finds").update({status:"added"}).eq("id",id); }).then(function(){ location.href="/people#p/"+lid; });
+  });
+}
+document.addEventListener("click",function(e){
+  var t=e.target;
+  var tb=t.closest&&t.closest("#ftabs button"); if(tb){ fview=tb.getAttribute("data-f"); document.querySelectorAll("#ftabs button").forEach(function(b){ b.setAttribute("aria-selected",b===tb); }); renderFinds(); return; }
+  var card=t.closest&&t.closest(".find[data-id]"); if(card){ var id=card.getAttribute("data-id");
+    if(t.getAttribute("data-st")){ setStatus(id,t.getAttribute("data-st")); return; }
+    if(t.getAttribute("data-add")){ t.disabled=true; t.textContent="Adding…"; addToPeople(id); return; } }
+  var fd=t.closest&&t.closest("[data-feeddel]"); if(fd){ var fid=fd.getAttribute("data-feeddel");
+    if(fd.dataset.sure!=="1"){ fd.dataset.sure="1"; fd.textContent="Tap again to remove"; return; }
+    sb.from("hound_feeds").delete().eq("id",fid).then(function(r){ if(r.error){ toast("Couldn't remove. Try again."); return; } feeds=feeds.filter(function(x){ return x.id!==fid; }); renderFeeds(); renderFinds(); }); return; }
+  if(t.classList&&t.classList.contains("ph")){ var txt=t.textContent; (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){ toast("Copied "+txt+". Paste it into Google Alerts."); },function(){}); }
+});
+$("showLow").addEventListener("change",renderFinds);
+
+function loadFeeds(){ return sb.from("hound_feeds").select("id,url,label,last_ok_at,last_error").eq("agent_id",uid).order("created_at").then(function(r){ if(!r.error){ feeds=r.data||[]; renderFeeds(); } }); }
+function renderFeeds(){
+  $("feedCount").textContent=feeds.length?"("+feeds.length+")":"(none yet)";
+  $("feedList").innerHTML=feeds.length?feeds.map(function(f){ return '<div class="feedrow"><div><b>'+esc(f.label||"Alert feed")+'</b><br>'+
+    (f.last_error?'<span class="bad">Problem: '+esc(f.last_error)+'</span>':f.last_ok_at?'<span class="ok">✓ Checked '+esc(ago(f.last_ok_at))+'</span>':'<span class="fine">Waiting for the first check</span>')+
+    '</div><button type="button" data-feeddel="'+f.id+'">Remove</button></div>'; }).join(""):'<p class="fine" style="margin:0">No feeds yet. Follow the steps below to add your first one.</p>';
+}
+$("feedAdd").addEventListener("click",function(){
+  var url=$("feedUrl").value.trim().replace(/^http:/,"https:").replace(/[?#].*$/,""), label=$("feedLabel").value.trim().replace(/^"|"$/g,"");
+  if(!/^https:\/\/www\.google\.com\/alerts\/feeds\/\d+\/\d+$/.test(url)){ $("feedMsg").textContent="That doesn't look like a Google Alerts feed link. It should start with https://www.google.com/alerts/feeds/"; return; }
+  $("feedMsg").textContent="Adding…";
+  sb.from("hound_feeds").insert({agent_id:uid,url:url,label:label||"Google Alert"}).select("id,url,label,last_ok_at,last_error").single().then(function(r){
+    if(r.error){ $("feedMsg").textContent=/duplicate|unique/i.test(r.error.message)?"You already added that feed.":"Couldn't add it. Try again."; return; }
+    feeds.push(r.data); renderFeeds(); $("feedUrl").value=""; $("feedLabel").value=""; $("feedMsg").textContent="Added. Sniffing now…"; sniff(true);
+  });
+});
+function sniff(auto){
+  var b=$("sniffNow"); b.disabled=true; b.textContent="Sniffing…";
+  sb.rpc("hounds_sniff_now").then(function(r){
+    if(r.error){ throw r.error; }
+    if(r.data===-1){ if(!auto) toast("The hounds just went out. Give them a few minutes."); }
+    return new Promise(function(res){ setTimeout(res,6000); });
+  }).then(function(){ return sb.rpc("hounds_collect_mine"); }).then(function(r){
+    var n=(r&&r.data)||0; toast(n?"The hounds brought back "+n+" new post"+(n===1?"":"s")+".":"No new posts this time."); $("feedMsg").textContent="";
+    return Promise.all([loadFinds(),loadFeeds()]);
+  }).catch(function(){ toast("The hounds couldn't go out. Try again in a bit."); })
+    .then(function(){ b.disabled=false; b.textContent="🐾 Sniff now"; });
+}
+$("sniffNow").addEventListener("click",function(){ sniff(false); });
+
 /* ---------- boot ---------- */
 if(!(window.supabase&&window.SB_URL)){ $("gate").textContent="Logins aren't available right now. Try again soon."; return; }
 sb=window.supabase.createClient(window.SB_URL,window.SB_KEY);
@@ -231,6 +374,7 @@ sb.auth.getSession().then(function(r){
     var h=a.data&&a.data.settings&&a.data.settings.hounds;
     if(h&&Array.isArray(h.kw)&&h.kw.length&&Array.isArray(h.towns)&&h.towns.length) cfg={kw:h.kw,towns:h.towns};
     fillForm(); $("gate").hidden=true; $("app").hidden=false;
+    Promise.all([loadFeeds()]).then(loadFinds);
   });
 }).catch(function(){ $("gate").textContent="Something went wrong loading your account. Refresh to try again."; });
 })();

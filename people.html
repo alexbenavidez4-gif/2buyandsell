@@ -389,6 +389,7 @@ function openPerson(id){
 }
 function renderFacts(p){ var d=p.data||{};
   var facts=[];
+  if(d.postUrl) facts.push(["Found at",d.postUrl.replace(/^https?:\/\/(www\.)?/,"").slice(0,60)]);
   if(d.phone) facts.push(["Phone",d.phone]); if(d.email) facts.push(["Email",d.email]); if(d.addr) facts.push(["Area",d.addr]);
   if(d.b) facts.push(["Buyer check",(d.b.score!=null?d.b.score+"/100 · ":"")+({ready:"Ready",close:"Close",build:"Building",start:"Getting started"}[d.b.tier]||d.b.tier||"")+(d.b.high?" · up to $"+Number(d.b.high).toLocaleString():"")]);
   if(d.s) facts.push(["Seller check",(d.s.score!=null?d.s.score+"/100 · ":"")+({ready:"Ready",close:"Close",build:"Building",start:"Getting started"}[d.s.tier]||d.s.tier||"")+(d.s.netLo?" · nets ~$"+Number(d.s.netLo).toLocaleString()+"–"+Number(d.s.netHi).toLocaleString():"")]);
@@ -403,10 +404,11 @@ function loadEvents(p){
     if(cur!==p) return; if(r.error){ $("pTimeline").innerHTML='<li class="fine">Couldn\'t load the timeline. Refresh to try again.</li>'; return; }
     p._events=r.data||[]; renderTimeline(); });
 }
+function linkify(h){ return h.replace(/https?:\/\/[^\s<"]+/g,function(u){ return '<a href="'+u+'" target="_blank" rel="noopener noreferrer" style="color:var(--navy);font-weight:700;word-break:break-all">'+u+'</a>'; }); }
 function renderTimeline(){
   var p=cur, ev=(p._events||[]).slice(), d=p.data||{};
   var h=ev.map(function(e){ return '<li><span class="ic">'+(KICON[e.kind]||"•")+'</span><span class="k">'+esc(KIND[e.kind]||e.kind)+'</span><time>'+esc(stamp(e.created_at))+'</time>'+
-    (e.kind!=="stage"&&e.kind!=="task"&&e.kind!=="plan"?'<button type="button" class="del" data-del="'+e.id+'">delete</button>':'')+(e.body?'<p>'+esc(e.body)+'</p>':'')+'</li>'; }).join("");
+    (e.kind!=="stage"&&e.kind!=="task"&&e.kind!=="plan"?'<button type="button" class="del" data-del="'+e.id+'">delete</button>':'')+(e.body?'<p>'+linkify(esc(e.body))+'</p>':'')+'</li>'; }).join("");
   h+='<li><span class="ic">'+KICON.created+'</span><span class="k">'+(p.source==="readiness"?"Took the readiness check":"Added")+'</span><time>'+esc(stamp(p.created_at))+'</time>'+
     (p.source==="readiness"?'<p>'+esc(typeLabel(d.type))+(d.when?" · "+(WHEN[d.when]||d.when):"")+'. Gave consent to be contacted.</p>':'')+'</li>';
   $("pTimeline").innerHTML=h;
