@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reset password · 2BuyAndSell</title>
+<meta name="description" content="Pick a new password for your 2BuyAndSell account.">
+<link rel="canonical" href="https://www.2buyandsell.com/reset.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="2BuyAndSell">
+<meta property="og:title" content="Reset password · 2BuyAndSell">
+<meta property="og:description" content="Pick a new password for your 2BuyAndSell account.">
+<meta property="og:url" content="https://www.2buyandsell.com/reset.html">
+<meta property="og:image" content="https://www.2buyandsell.com/img/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#1a467c">
+<link rel="icon" type="image/png" sizes="192x192" href="img/favicon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="2BuyAndSell">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="/img/app-apple-180.png">
+<script src="/app.js" defer></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<meta name="robots" content="noindex">
+<script src="config.js"></script>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="index.html" aria-label="2BuyAndSell home"><img src="img/logo-icon-128.png" width="44" height="37" alt=""><span><b class="m2">2</b>BuyAnd<b class="ms">Sell</b></span></a>
+    <div style="display:flex;align-items:center;gap:14px"><a href="login.html" style="font-weight:700;color:var(--navy);text-decoration:none">Log in</a><a class="btn" href="index.html#join">Claim a spot</a></div>
+  </div>
+</header>
+
+<main class="doc">
+  <div class="wrap">
+    <span class="eyebrow">For agents</span>
+    <h1>New password</h1>
+    
+
+    <p style="font-size:19px;margin-top:10px;color:var(--muted)">Pick a new password for your 2BuyAndSell account.</p>
+    <div class="form-card" style="max-width:520px">
+      <div id="rsWait" class="msg info" style="display:block">Checking your reset link…</div>
+      <form id="rsForm" novalidate hidden>
+        <div class="fields">
+          <div class="field"><label for="rsPass">New password <small>(8 or more characters)</small></label><input id="rsPass" type="password" autocomplete="new-password"></div>
+          <div class="field"><label for="rsPass2">Type it again</label><input id="rsPass2" type="password" autocomplete="new-password"></div>
+        </div>
+        <button class="btn" type="submit" id="rsGo">Save my new password</button>
+        <div class="msg" id="rsMsg" role="alert"></div>
+      </form>
+      <div id="rsBad" hidden>
+        <p>This reset link has expired or was already used.</p>
+        <p><a class="btn navy" href="/login">Send a new link</a></p>
+        <p class="fine">On the login page, tap <b>Forgot your password?</b></p>
+      </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  var $=function(id){ return document.getElementById(id); };
+  function show(el,cls,t){ el.className="msg "+cls; el.textContent=t; el.style.display="block"; }
+  if(!(window.supabase&&window.SB_URL)){ $("rsWait").textContent="Logins open very soon. Check back shortly."; return; }
+  var sb=window.supabase.createClient(window.SB_URL,window.SB_KEY), ready=false;
+  var hash=location.hash||"", q=new URLSearchParams(location.search);
+  if(/error/.test(hash) || q.get("error")){ $("rsWait").hidden=true; $("rsWait").style.display="none"; $("rsBad").hidden=false; return; }
+  function go(){ if(ready) return; ready=true; $("rsWait").style.display="none"; $("rsForm").hidden=false; $("rsPass").focus(); }
+  sb.auth.onAuthStateChange(function(ev,ses){ if((ev==="PASSWORD_RECOVERY"||ev==="SIGNED_IN") && ses) go(); });
+  /* Newer links send a code instead of tokens */
+  var code=q.get("code");
+  (code ? sb.auth.exchangeCodeForSession(code) : Promise.resolve()).then(function(){ return sb.auth.getSession(); }).then(function(r){
+    if(r&&r.data&&r.data.session) go();
+    else setTimeout(function(){ if(!ready){ $("rsWait").style.display="none"; $("rsBad").hidden=false; } },2500);
+  }).catch(function(){ $("rsWait").style.display="none"; $("rsBad").hidden=false; });
+  $("rsForm").addEventListener("submit",function(e){
+    e.preventDefault(); var p1=$("rsPass").value, p2=$("rsPass2").value, m=$("rsMsg");
+    if(p1.length<8){ show(m,"err","Use at least 8 characters."); $("rsPass").focus(); return; }
+    if(p1!==p2){ show(m,"err","The two passwords don't match."); $("rsPass2").focus(); return; }
+    $("rsGo").disabled=true; $("rsGo").textContent="Saving…";
+    sb.auth.updateUser({password:p1}).then(function(r){
+      if(r.error){ $("rsGo").disabled=false; $("rsGo").textContent="Save my new password"; show(m,"err",/same|different/i.test(r.error.message)?"Pick a password you haven't used before.":"That didn't work. Your link may have expired. Send a new one from the login page."); return; }
+      show(m,"ok","Saved! Taking you to your dashboard…"); history.replaceState(null,"","/reset"); setTimeout(function(){ location.replace("/dashboard"); },1200);
+    });
+  });
+})();
+</script>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="mark" href="index.html"><img src="img/logo-icon-128.png" width="44" height="37" alt=""><span><b class="m2">2</b>BuyAnd<b class="ms">Sell</b></span></a>
+    <p>A San Antonio software company for real estate agents and loan officers.</p>
+    <ul class="flinks">
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="privacy.html">Privacy Policy</a></li>
+      <li><a href="terms.html">Terms of Use</a></li>
+      <li><a href="login.html">Agent log in</a></li>
+    </ul>
+    <p>2BuyAndSell is software. It is not a lender, mortgage broker, real estate brokerage, appraiser or credit bureau. It does not pull credit or make loan decisions. Readiness scores, price ranges and net estimates are estimates to help start a conversation. They are not loan approvals, appraisals or offers.</p>
+    <p>We support Fair Housing and equal opportunity for everyone.</p>
+    <p>© 2026 2BuyAndSell. Photos used under the Pexels license. Contact: <a href="mailto:hello@2buyandsell.com" style="color:#fff">hello@2buyandsell.com</a></p>
+  </div>
+</footer>
+</body>
+</html>

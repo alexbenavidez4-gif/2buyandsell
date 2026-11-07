@@ -61,7 +61,12 @@
         <button class="btn" type="submit" id="inGo">Log in</button>
         <div class="msg" id="inMsg" role="alert"></div>
         <p class="fine"><a href="#" id="forgot">Forgot your password?</a></p>
-        <p class="fine" id="forgotMsg" hidden>Email <a href="mailto:hello@2buyandsell.com">hello@2buyandsell.com</a> from the address you signed up with, and we'll reset it for you.</p>
+        <div id="forgotBox" hidden style="margin-top:10px;border-top:1px solid var(--line);padding-top:14px">
+          <p style="margin:0 0 8px"><b>Reset your password</b><br><span class="fine">We'll email you a link to pick a new one.</span></p>
+          <div class="field"><label for="fgEmail">Your email</label><input id="fgEmail" type="email" autocomplete="email" inputmode="email"></div>
+          <button class="btn navy" type="button" id="fgGo" style="margin-top:10px">Email me a reset link</button>
+          <div class="msg" id="fgMsg" role="alert"></div>
+        </div>
       </form>
 
       <form id="fUp" novalidate hidden>
@@ -86,7 +91,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function(){
-  var RESERVED=["dashboard","login","about","contact","privacy","terms","index","agent","admin","app","api","img","photos","www","help","support","pricing","blog","signup","logout","account","settings","hounds","people","social"];
+  var RESERVED=["dashboard","login","about","contact","privacy","terms","index","agent","admin","app","api","img","photos","www","help","support","pricing","blog","signup","logout","account","settings","hounds","people","social","reset","offline"];
   var $=function(id){ return document.getElementById(id); };
   function show(el,cls,t){ el.className="msg "+cls; el.textContent=t; }
   function busy(btn,on,label){ btn.disabled=on; btn.textContent=on?"One moment…":label; }
@@ -102,7 +107,19 @@
   $("tabIn").addEventListener("click",function(){ tab(false); });
   $("tabUp").addEventListener("click",function(){ tab(true); });
   if(location.hash==="#signup") tab(true);
-  $("forgot").addEventListener("click",function(e){ e.preventDefault(); $("forgotMsg").hidden=false; });
+  $("forgot").addEventListener("click",function(e){ e.preventDefault(); $("forgotBox").hidden=false; $("fgEmail").value=$("inEmail").value; $("fgEmail").focus(); });
+  $("fgGo").addEventListener("click",function(){
+    var em=$("fgEmail").value.trim(), m=$("fgMsg"), b=$("fgGo");
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ show(m,"err","Type the email you signed up with."); $("fgEmail").focus(); return; }
+    if(!sb){ show(m,"info","Logins open very soon. Check back shortly."); return; }
+    busy(b,true,"Email me a reset link");
+    sb.auth.resetPasswordForEmail(em,{redirectTo:"https://www.2buyandsell.com/reset"}).then(function(r){
+      busy(b,false,"Email me a reset link");
+      if(r.error && /rate|too many|seconds/i.test(r.error.message||"")){ show(m,"err","Please wait a minute, then try again."); return; }
+      /* Same message either way, so nobody can use this to check who has an account */
+      show(m,"ok","If that email has an account, a reset link is on its way. Check your inbox and spam folder. The link works for 1 hour.");
+    });
+  });
 
   function toSlug(v){ return String(v||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,40); }
   var slugTouched=false;
