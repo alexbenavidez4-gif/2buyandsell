@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Social hub · 2BuyAndSell</title>
+<meta name="description" content="Your social media accounts in one place.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://www.2buyandsell.com/social.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="2BuyAndSell">
+<meta property="og:title" content="Social hub · 2BuyAndSell">
+<meta property="og:description" content="Your social media accounts in one place.">
+<meta property="og:url" content="https://www.2buyandsell.com/social.html">
+<meta property="og:image" content="https://www.2buyandsell.com/img/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#1a467c">
+<link rel="icon" type="image/png" sizes="192x192" href="/img/favicon.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/site.css">
+<script src="/config.js"></script>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="/dashboard" aria-label="Back to my dashboard"><img src="/img/logo-icon-128.png" width="44" height="37" alt=""><span><b class="m2">2</b>BuyAnd<b class="ms">Sell</b></span></a>
+    <nav class="pnav"><a href="/dashboard">Dashboard</a><a href="/people">People</a></nav>
+  </div>
+</header>
+
+<main class="doc social">
+  <div class="wrap">
+    <span class="eyebrow">Your accounts, one tap away</span>
+    <h1>Social hub</h1>
+    <p class="lead">Add your accounts once. Then post, check messages or open your profile on any of them from here. Your passwords stay with each app. 2BuyAndSell never sees or stores them.</p>
+
+    <div id="gate" class="hcard" style="text-align:center">Loading…</div>
+
+    <div id="app" hidden>
+      <section class="hcard linkbox">
+        <div style="min-width:0">
+          <b>Your page link</b>
+          <div class="mylink" id="myLink"></div>
+          <p class="fine" style="margin:4px 0 0">Put this in every bio so people can take your free check.</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button type="button" class="btn small" id="copyLink">Copy link</button>
+          <button type="button" class="btn ghost small" id="copyBio">Copy a bio</button>
+          <a class="btn ghost small" href="/dashboard">Get today's post</a>
+        </div>
+      </section>
+
+      <div class="prog"><b id="progTxt"></b><div class="bar"><i id="progBar"></i></div></div>
+      <div id="grid" class="grid"></div>
+
+      <p style="text-align:right;margin:4px 0 18px"><button type="button" class="btn small" id="saveAll">Save my accounts</button> <span class="fine" id="saveMsg" role="status"></span></p>
+
+      <details class="hcard">
+        <summary><b>Why no "log in here" box?</b></summary>
+        <p style="margin-top:12px">Typing your Instagram or Facebook password into another website isn't safe, and it breaks those apps' rules. It's also how accounts get locked or hacked. Here, each button opens the real app or site. Your phone or browser keeps you logged in, so it's still one tap, and your accounts stay safe.</p>
+        <p>Want to post to all of them at once? That takes a scheduling service (like Buffer or Postiz) that each app has approved. We can add that later.</p>
+      </details>
+    </div>
+  </div>
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<style>
+.pnav{display:flex;gap:18px} .pnav a{font-weight:700;color:var(--navy);text-decoration:none}
+@media (max-width:520px){ .pnav{gap:12px} .pnav a{font-size:15px} .top .mark span{display:none} }
+.hcard{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;margin:16px 0;box-shadow:0 2px 10px rgba(22,32,42,.04)}
+.hcard summary{cursor:pointer;font-size:18px}
+.btn.small{min-height:42px;font-size:16px;padding:0 18px}
+.btn.ghost{background:#eef3f9;color:var(--navy);box-shadow:none}
+.linkbox{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.mylink{font-size:20px;font-weight:800;color:var(--navy);overflow-wrap:anywhere}
+.prog{margin:6px 0 12px} .bar{height:10px;background:#eef3f9;border-radius:9px;margin-top:6px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--gold);transition:width .3s}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.sc{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.sc.on{border-color:#b9d3c3}
+.sc .hd{display:flex;align-items:center;gap:10px}
+.sc .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff;font:800 15px var(--display);flex:none}
+.sc .nm{font-weight:800;font-size:18px;flex:1}
+.sc .ok{color:var(--green);font-weight:700;font-size:14px}
+.sc input[type=text]{width:100%;font:16px var(--body);border:1.5px solid #cfd6de;border-radius:12px;padding:10px 12px;min-height:44px}
+.sc .go{display:flex;gap:6px;flex-wrap:wrap}
+.sc .go a{flex:1;min-width:80px;display:flex;align-items:center;justify-content:center;min-height:42px;border-radius:12px;background:var(--navy);color:#fff;font-weight:700;text-decoration:none;font-size:15px}
+.sc .go a.alt{background:#eef3f9;color:var(--navy)}
+.sc .go a.off{opacity:.4;pointer-events:none}
+.sc label.bio{display:flex;gap:8px;align-items:center;font-size:15px;color:var(--muted)}
+.sc label.bio input{width:20px;height:20px;accent-color:var(--green)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center;z-index:50}
+.toast.on{opacity:1}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+"use strict";
+/* key, name, color, initials, profile URL from a handle, post URL, inbox URL, hint */
+var NETS=[
+ ["ig","Instagram","#c13584","IG","https://www.instagram.com/{h}/","https://www.instagram.com/","https://www.instagram.com/direct/inbox/","@yourname"],
+ ["fb","Facebook","#1877f2","f","https://www.facebook.com/{h}","https://business.facebook.com/latest/composer","https://www.facebook.com/messages/","Your page link or name"],
+ ["tt","TikTok","#111111","TT","https://www.tiktok.com/@{h}","https://www.tiktok.com/upload","https://www.tiktok.com/messages","@yourname"],
+ ["yt","YouTube","#ff0000","YT","https://www.youtube.com/@{h}","https://studio.youtube.com/","https://studio.youtube.com/","@yourchannel"],
+ ["li","LinkedIn","#0a66c2","in","https://www.linkedin.com/in/{h}/","https://www.linkedin.com/feed/?shareActive=true","https://www.linkedin.com/messaging/","Your profile link"],
+ ["pin","Pinterest","#e60023","P","https://www.pinterest.com/{h}/","https://www.pinterest.com/pin-creation-tool/","https://www.pinterest.com/","yourname"],
+ ["x","X","#000000","X","https://x.com/{h}","https://x.com/compose/post","https://x.com/messages","@yourname"],
+ ["th","Threads","#222222","@","https://www.threads.com/@{h}","https://www.threads.com/","https://www.threads.com/activity","@yourname"],
+ ["gbp","Google Business Profile","#34a853","G","{h}","https://business.google.com/","https://business.google.com/","Paste your Google profile link"],
+ ["nd","Nextdoor","#8ed500","N","{h}","https://nextdoor.com/news_feed/","https://nextdoor.com/inbox/","Paste your Nextdoor profile link"],
+ ["zil","Zillow agent profile","#006aff","Z","{h}","","","Paste your Zillow profile link"],
+ ["rdc","Realtor.com profile","#d92228","R","{h}","","","Paste your Realtor.com profile link"]
+];
+var $=function(id){ return document.getElementById(id); };
+var sb, uid, slug="", social={}, bio={}, agentName="", broker="";
+
+function toast(t){ var e=$("toast"); e.textContent=t; e.classList.add("on"); clearTimeout(toast.t); toast.t=setTimeout(function(){ e.classList.remove("on"); },2600); }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]; }); }
+function profileUrl(n,v){ v=String(v||"").trim(); if(!v) return "";
+  if(/^https?:\/\//i.test(v)) return v;
+  if(/^(www\.)?[a-z0-9-]+\.[a-z]{2,}\//i.test(v)) return "https://"+v;
+  if(n[4]==="{h}") return "";  /* needs a full link */
+  return n[4].replace("{h}",encodeURIComponent(v.replace(/^@/,"")));
+}
+function copy(t,msg){ (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){ toast(msg); },function(){ toast("Press and hold to copy: "+t); }); }
+
+function render(){
+  $("grid").innerHTML=NETS.map(function(n){ var v=social[n[0]]||"", url=profileUrl(n,v), on=!!url;
+    return '<div class="sc'+(on?' on':'')+'" data-k="'+n[0]+'"><div class="hd"><div class="ic" style="background:'+n[2]+'">'+esc(n[3])+'</div><div class="nm">'+esc(n[1])+'</div>'+(on?'<span class="ok">✓ Added</span>':'')+'</div>'+
+      '<input type="text" inputmode="url" autocapitalize="none" spellcheck="false" maxlength="300" data-in="'+n[0]+'" value="'+esc(v)+'" placeholder="'+esc(n[7])+'" aria-label="'+esc(n[1])+' account">'+
+      '<div class="go">'+(n[5]?'<a href="'+esc(n[5])+'" target="_blank" rel="noopener">Post</a>':'')+(n[6]?'<a class="alt" href="'+esc(n[6])+'" target="_blank" rel="noopener">Messages</a>':'')+
+      '<a class="alt'+(on?'':' off')+'" href="'+esc(url||"#")+'" target="_blank" rel="noopener">My profile</a></div>'+
+      (v&&!url?'<span class="fine" style="color:#a12a1b;font-weight:600">Paste the full link from your profile page (it starts with https://).</span>':'')+
+      '<label class="bio"><input type="checkbox" data-bio="'+n[0]+'"'+(bio[n[0]]?' checked':'')+'> My 2BuyAndSell link is in this bio</label></div>';
+  }).join("");
+  progress();
+}
+function progress(){ var added=NETS.filter(function(n){ return profileUrl(n,social[n[0]]); }).length, bios=NETS.filter(function(n){ return bio[n[0]]; }).length;
+  $("progTxt").textContent=added+" account"+(added===1?"":"s")+" added · your link is in "+bios+" bio"+(bios===1?"":"s");
+  $("progBar").style.width=(added?Math.round(Math.min(1,bios/added)*100):0)+"%"; }
+
+function collect(){ document.querySelectorAll("[data-in]").forEach(function(i){ var v=i.value.trim(); if(v) social[i.getAttribute("data-in")]=v; else delete social[i.getAttribute("data-in")]; }); }
+function save(quiet){
+  collect(); $("saveMsg").textContent=quiet?"":"Saving…";
+  return sb.from("agents").select("settings").eq("id",uid).single().then(function(r){
+    if(r.error) throw r.error; var s=r.data.settings||{}; s.social=social; s.socialBio=bio;
+    return sb.from("agents").update({settings:s,updated_at:new Date().toISOString()}).eq("id",uid);
+  }).then(function(r){ if(r&&r.error) throw r.error; $("saveMsg").textContent=quiet?"":"Saved."; render(); if(!quiet) toast("Your accounts are saved."); })
+    .catch(function(){ $("saveMsg").textContent="Couldn't save. Check your connection and try again."; });
+}
+$("saveAll").addEventListener("click",function(){ save(false); });
+document.addEventListener("change",function(e){
+  var t=e.target;
+  if(t.matches("[data-in]")){ save(true); }
+  if(t.matches("[data-bio]")){ bio[t.getAttribute("data-bio")]=t.checked; save(true); }
+});
+$("copyLink").addEventListener("click",function(){ copy("https://www.2buyandsell.com/"+slug,"Link copied. Paste it in your bio."); });
+$("copyBio").addEventListener("click",function(){
+  var t=(agentName||"Your local agent")+" | REALTOR®"+(broker?" with "+broker:"")+"\nHelping buyers and sellers start with a clear plan.\nFree 2-minute home readiness check 👇\nwww.2buyandsell.com/"+slug;
+  copy(t,"Bio copied. Paste it, then make it yours.");
+});
+
+if(!(window.supabase&&window.SB_URL)){ $("gate").textContent="Logins aren't available right now. Try again soon."; return; }
+sb=window.supabase.createClient(window.SB_URL,window.SB_KEY);
+sb.auth.getSession().then(function(r){
+  var ses=r.data&&r.data.session; if(!ses){ location.replace("/login"); return; }
+  uid=ses.user.id;
+  return sb.from("agents").select("slug,settings").eq("id",uid).maybeSingle().then(function(a){
+    if(!a.data){ $("gate").innerHTML='Open your <a href="/dashboard">dashboard</a> once to finish setting up, then come back.'; return; }
+    slug=a.data.slug; var st=a.data.settings||{}; social=st.social||{}; bio=st.socialBio||{}; agentName=st.name||""; broker=st.broker||"";
+    $("myLink").textContent="2buyandsell.com/"+slug; $("gate").hidden=true; $("app").hidden=false; render();
+  });
+}).catch(function(){ $("gate").textContent="Something went wrong. Refresh to try again."; });
+})();
+</script>
+
+<footer>
+  <div class="wrap">
+    <a class="mark" href="index.html"><img src="/img/logo-icon-128.png" width="44" height="37" alt=""><span><b class="m2">2</b>BuyAnd<b class="ms">Sell</b></span></a>
+    <p>A San Antonio software company for real estate agents and loan officers.</p>
+    <ul class="flinks">
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="privacy.html">Privacy Policy</a></li>
+      <li><a href="terms.html">Terms of Use</a></li>
+      <li><a href="login.html">Agent log in</a></li>
+    </ul>
+    <p>2BuyAndSell is software. It is not a lender, mortgage broker, real estate brokerage, appraiser or credit bureau. It does not pull credit or make loan decisions. Readiness scores, price ranges and net estimates are estimates to help start a conversation. They are not loan approvals, appraisals or offers.</p>
+    <p>We support Fair Housing and equal opportunity for everyone.</p>
+    <p>© 2026 2BuyAndSell. Photos used under the Pexels license. Contact: <a href="mailto:hello@2buyandsell.com" style="color:#fff">hello@2buyandsell.com</a></p>
+  </div>
+</footer>
+</body>
+</html>
