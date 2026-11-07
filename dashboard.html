@@ -427,6 +427,8 @@ select.t{appearance:auto}
       <h1>Agent dashboard <span class="exm">Demo</span></h1>
       <p>Your 2BuyAndSell account: your leads, your page's look, and ready-to-post marketing.</p>
     </div>
+    <nav class="quick" aria-label="Agent tools"><a href="/people"><b>👥 People</b><span>Leads, stages, tasks</span></a><a href="/social"><b>🔗 Social Logins</b><span>All your accounts</span></a><a href="/hounds"><b>🐾 Hounds</b><span>Find people asking</span></a></nav>
+    <style>.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0 4px}.quick a{display:flex;flex-direction:column;gap:2px;padding:14px 16px;border-radius:16px;background:var(--brand,#1a467c);color:#fff;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.08)}.quick b{font-size:17px}.quick span{font-size:14px;opacity:.85}@media (max-width:560px){.quick{grid-template-columns:1fr}.quick a{flex-direction:row;justify-content:space-between;align-items:center}}</style>
     <div class="tabs" role="tablist">
       <button type="button" role="tab" id="tab-leads" aria-selected="true">Leads</button>
       <button type="button" role="tab" id="tab-page" aria-selected="false">My page</button>
@@ -1846,9 +1848,9 @@ function shareCard(){ var u=settings.link;
     '<section class="card" style="margin-top:18px;padding:22px"><h2 style="font-size:21px">People</h2>'+
     '<p style="margin:6px 0 14px;color:var(--muted)">Every lead in one place, with stages, notes, a timeline and tasks so no one slips through.</p>'+
     '<a class="btn small" href="/people">Open People</a></section>'+
-    '<section class="card" style="margin-top:18px;padding:22px"><h2 style="font-size:21px">Social hub</h2>'+
+    '<section class="card" style="margin-top:18px;padding:22px"><h2 style="font-size:21px">Social Logins</h2>'+
     '<p style="margin:6px 0 14px;color:var(--muted)">All your social accounts in one place. One tap to post, check messages or open your profile.</p>'+
-    '<a class="btn small" href="/social">Open Social hub</a></section>'; }
+    '<a class="btn small" href="/social">Open Social Logins</a></section>'; }
 function pushSettings(){ settings.link=SITE_HOST+"/"+agentSlug;
   sb.from("agents").update({settings:settings,updated_at:new Date().toISOString()}).eq("id",agentId).then(function(r){ if(r.error) toast("Couldn't save. Check your connection and try again."); }); }
 function pushKit(v){ sb.from("agents").update({kit:v,updated_at:new Date().toISOString()}).eq("id",agentId).then(function(r){ if(r.error) toast("Couldn't save. Check your connection."); }); }
