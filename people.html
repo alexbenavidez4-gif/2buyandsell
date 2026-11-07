@@ -46,6 +46,7 @@
       </div>
 
       <div class="pc today" id="today"></div>
+      <label class="autoplan"><input type="checkbox" id="autoPlans"> Start a follow-up plan automatically for new leads from my page</label>
 
       <div class="lists" id="lists" role="tablist" aria-label="Smart lists"></div>
       <div class="filters">
@@ -71,6 +72,8 @@
             <div class="facts" id="pFacts"></div>
             <button type="button" class="btn ghost small" id="editBtn">Edit info</button>
           </div>
+
+          <div class="pc" id="planBox"></div>
 
           <div class="pc">
             <h2>Tasks</h2>
@@ -209,6 +212,21 @@
 @media (max-width:520px){ #pDlg .two{grid-template-columns:1fr} }
 .chk{display:flex;gap:10px;align-items:center} .chk input{width:22px;height:22px;min-height:0}
 .msg.err{color:#a12a1b;font-weight:600}
+.autoplan{display:flex;gap:10px;align-items:center;margin:-4px 0 14px;font-size:15px;color:var(--muted)}
+.autoplan input{width:20px;height:20px;accent-color:var(--green)}
+.plan-sel{width:100%;margin:6px 0 8px}
+.plan-desc{color:var(--muted);font-size:15px;margin:0 0 10px}
+.plan-on{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.plan-on b{font-size:17px}
+.mbtn{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.mbtn a,.mbtn button{display:inline-flex;align-items:center;min-height:36px;padding:0 12px;border-radius:999px;font:700 14px var(--body);text-decoration:none;border:0;cursor:pointer;background:var(--gold);color:var(--gold-ink)}
+.mbtn button{background:#eef3f9;color:var(--navy)}
+.mbtn a.off{opacity:.4;pointer-events:none}
+.mprev{font-size:14px;color:var(--muted);margin-top:6px;background:none;border:0;border-radius:0;padding:0}
+.mprev summary{cursor:pointer;font-size:14px;font-weight:700;color:var(--navy);padding:2px 0}
+.mprev summary::after{content:" ▾";position:static;font-size:14px}
+.mprev[open] summary::after{content:" ▴"}
+.mprev p{white-space:pre-wrap;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px 10px!important;margin:6px 0 0;color:var(--ink)}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center;z-index:50}
 .toast.on{opacity:1}
 </style>
@@ -222,11 +240,12 @@ var STAGES=[["new","New"],["trying","Trying to reach"],["talking","Talking"],["a
 var STAGE={}; STAGES.forEach(function(s){ STAGE[s[0]]=s[1]; });
 var SOURCES=[["readiness","Readiness check"],["hounds","Hounds"],["open_house","Open house"],["referral","Referral"],["sphere","Friends & family"],["sign_call","Sign call"],["social","Social media"],["website","Website"],["other","Other"]];
 var SOURCE={}; SOURCES.forEach(function(s){ SOURCE[s[0]]=s[1]; });
-var KIND={note:"Note",call:"Call",text:"Text",email:"Email",meeting:"Meeting",stage:"Stage",task:"Task done",showing:"Showing",todo:"To-do"};
-var KICON={note:"✎",call:"☎",text:"✉",email:"@",meeting:"◉",stage:"➜",task:"✓",created:"★"};
+var KIND={note:"Note",call:"Call",text:"Text",email:"Email",meeting:"Meeting",stage:"Stage",task:"Task done",showing:"Showing",todo:"To-do",plan:"Plan"};
+var PLANS=[{"key": "new_buyer", "name": "New buyer lead", "for": "buyer", "desc": "For someone who just took the buyer check. 8 touches over 30 days.", "steps": [{"d": 0, "k": "call", "t": "First call: go over their results"}, {"d": 0, "k": "text", "t": "Intro text", "en": "Hi {first}, this is {agent} with {broker}. Thanks for taking the home readiness check! I'd love to walk you through your results. Is now a good time for a quick call, or is later today better?", "es": "Hola {first}, soy {agent} de {broker}. ¡Gracias por hacer la prueba para comprar casa! Me encantaría explicarte tus resultados. ¿Tienes unos minutos para una llamada, o te queda mejor más tarde?"}, {"d": 1, "k": "call", "t": "Second call try"}, {"d": 2, "k": "email", "t": "Next steps email", "subj_en": "Your home buying next steps", "subj_es": "Tus siguientes pasos para comprar casa", "en": "Hi {first},\n\nThanks again for taking the readiness check. Here's what I'd suggest next:\n\n1. A quick call so I can understand what you're looking for.\n2. Talking with a lender to turn your estimate into a real pre-approval.\n3. Setting up a home search that matches your budget and must-haves.\n\nJust reply to this email or call me, and we'll take it one step at a time.\n\n{agent}\n{broker}", "es": "Hola {first},\n\nGracias de nuevo por hacer la prueba. Esto es lo que te sugiero:\n\n1. Una llamada rápida para entender lo que buscas.\n2. Hablar con un prestamista para convertir tu estimado en una preaprobación real.\n3. Preparar una búsqueda de casas que encaje con tu presupuesto y lo que necesitas.\n\nResponde este correo o llámame, y vamos paso a paso.\n\n{agent}\n{broker}"}, {"d": 4, "k": "text", "t": "Quick check-in", "en": "Hi {first}, it's {agent}. Any questions about your price range or loan options? Happy to help whenever you're ready.", "es": "Hola {first}, soy {agent}. ¿Tienes alguna pregunta sobre tu rango de precio o tus opciones de préstamo? Con gusto te ayudo cuando estés listo."}, {"d": 7, "k": "call", "t": "One-week call"}, {"d": 14, "k": "email", "t": "Helpful info email", "subj_en": "What to expect when buying a home", "subj_es": "Qué esperar al comprar casa", "en": "Hi {first},\n\nA quick overview of how buying usually goes: get pre-approved, tour homes, make an offer, then inspections and the option period, appraisal, and closing. I'll guide you through each step.\n\nWhenever you're ready to start, just reply here.\n\n{agent}\n{broker}", "es": "Hola {first},\n\nUn resumen de cómo suele ser comprar casa: preaprobación, visitar casas, hacer una oferta, luego inspección y periodo de opción, avalúo y cierre. Yo te acompaño en cada paso.\n\nCuando estés listo para empezar, solo responde aquí.\n\n{agent}\n{broker}"}, {"d": 30, "k": "text", "t": "One-month check-in", "en": "Hi {first}, {agent} here. Just checking in. Still thinking about buying this year? If your plans changed, no problem at all.", "es": "Hola {first}, soy {agent}. Solo para saludarte. ¿Sigues pensando en comprar este año? Si cambiaron tus planes, no hay problema."}]}, {"key": "new_seller", "name": "New seller lead", "for": "seller", "desc": "For a homeowner who checked their numbers. Includes preparing a value report.", "steps": [{"d": 0, "k": "call", "t": "First call: talk about their goals"}, {"d": 0, "k": "text", "t": "Intro text", "en": "Hi {first}, this is {agent} with {broker}. Thanks for checking your home's numbers! I can put together a free value report based on recent sales near you. When's a good time to chat?", "es": "Hola {first}, soy {agent} de {broker}. ¡Gracias por revisar los números de tu casa! Puedo prepararte un reporte de valor gratis basado en ventas recientes cerca de ti. ¿Cuándo te queda bien platicar?"}, {"d": 1, "k": "todo", "t": "Prepare their home value report (CMA)"}, {"d": 1, "k": "call", "t": "Second call try"}, {"d": 3, "k": "email", "t": "Value report email", "subj_en": "Your home value report", "subj_es": "Tu reporte de valor de casa", "en": "Hi {first},\n\nI put together a value report for your home based on recent sales nearby. I'd love to walk you through it, since a few details about your home can move the number. When's a good time for a 15-minute call?\n\n{agent}\n{broker}", "es": "Hola {first},\n\nPreparé un reporte de valor de tu casa basado en ventas recientes cercanas. Me gustaría explicártelo, porque algunos detalles de tu casa pueden cambiar el número. ¿Cuándo tienes 15 minutos para una llamada?\n\n{agent}\n{broker}"}, {"d": 7, "k": "call", "t": "One-week call"}, {"d": 14, "k": "text", "t": "Check-in text", "en": "Hi {first}, {agent} here. Any questions about your home's value or timing? Happy to help whenever you're ready.", "es": "Hola {first}, soy {agent}. ¿Alguna pregunta sobre el valor de tu casa o los tiempos? Con gusto te ayudo cuando estés listo."}, {"d": 30, "k": "call", "t": "One-month call"}]}, {"key": "online", "name": "Online find (Hounds)", "for": "other", "desc": "For someone you found posting online. You reply where they posted. No texting without their OK.", "steps": [{"d": 0, "k": "todo", "t": "Reply where they posted. Be helpful first."}, {"d": 2, "k": "todo", "t": "Check for a reply and answer any questions"}, {"d": 7, "k": "todo", "t": "Share one more helpful tip if they're still looking"}, {"d": 14, "k": "todo", "t": "If they reached out, move them to Talking. If not, mark Not a fit."}]}, {"key": "open_house", "name": "Open house visitor", "for": "buyer", "desc": "For someone who signed in at an open house.", "steps": [{"d": 0, "k": "email", "t": "Thanks for visiting email", "subj_en": "Thanks for stopping by the open house", "subj_es": "Gracias por visitar la casa abierta", "en": "Hi {first},\n\nThanks for stopping by the open house today! If you'd like more details on that home, or want me to send you others like it, just reply here.\n\n{agent}\n{broker}", "es": "Hola {first},\n\n¡Gracias por visitar la casa abierta hoy! Si quieres más detalles de esa casa, o que te mande otras parecidas, solo responde aquí.\n\n{agent}\n{broker}"}, {"d": 1, "k": "call", "t": "Follow-up call"}, {"d": 3, "k": "email", "t": "Similar homes email", "subj_en": "A few homes you might like", "subj_es": "Algunas casas que te pueden gustar", "en": "Hi {first},\n\nHere are a few homes similar to the one you saw: [add links]. Want to tour any of them? You can also take my free 2-minute readiness check here: {link}\n\n{agent}\n{broker}", "es": "Hola {first},\n\nTe comparto algunas casas parecidas a la que viste: [agrega enlaces]. ¿Quieres visitar alguna? También puedes hacer mi prueba gratis de 2 minutos aquí: {link}\n\n{agent}\n{broker}"}, {"d": 7, "k": "call", "t": "One-week call"}, {"d": 21, "k": "todo", "t": "Check in, or move to Nurture"}]}, {"key": "nurture", "name": "Nurture (6 months)", "for": "any", "desc": "A monthly check-in for people who aren't ready yet.", "steps": [{"d": 30, "k": "text", "t": "Monthly check-in", "en": "Hi {first}, {agent} here. Just checking in. Anything new with your home plans?", "es": "Hola {first}, soy {agent}. Solo para saludarte. ¿Algo nuevo con tus planes de casa?"}, {"d": 60, "k": "email", "t": "Helpful tip email", "subj_en": "A quick tip while you plan", "subj_es": "Un consejo rápido mientras planeas", "en": "Hi {first},\n\nA quick tip while you plan: you can re-check your numbers anytime with my free 2-minute check: {link}\n\nWhen you're ready, I'm here.\n\n{agent}\n{broker}", "es": "Hola {first},\n\nUn consejo mientras planeas: puedes revisar tus números cuando quieras con mi prueba gratis de 2 minutos: {link}\n\nCuando estés listo, aquí estoy.\n\n{agent}\n{broker}"}, {"d": 90, "k": "call", "t": "Quarterly call"}, {"d": 120, "k": "text", "t": "Monthly check-in", "en": "Hi {first}, it's {agent}. Hope all is well! Still thinking about a move this year?", "es": "Hola {first}, soy {agent}. ¡Espero que estés bien! ¿Sigues pensando en mudarte este año?"}, {"d": 150, "k": "email", "t": "Check-in email", "subj_en": "Checking in", "subj_es": "Saludos", "en": "Hi {first},\n\nJust checking in. If anything has changed with your plans, I'm happy to help you look at your options.\n\n{agent}\n{broker}", "es": "Hola {first},\n\nSolo para saludarte. Si algo cambió en tus planes, con gusto te ayudo a ver tus opciones.\n\n{agent}\n{broker}"}, {"d": 180, "k": "call", "t": "Six-month call"}]}, {"key": "past_client", "name": "Past client", "for": "any", "desc": "Stay in touch after closing so they send friends your way.", "steps": [{"d": 7, "k": "call", "t": "Settling-in call"}, {"d": 30, "k": "text", "t": "How's the new place?", "en": "Hi {first}, it's {agent}! How are you liking the new place? Let me know if you need any recommendations.", "es": "¡Hola {first}, soy {agent}! ¿Qué tal la casa nueva? Avísame si necesitas alguna recomendación."}, {"d": 60, "k": "todo", "t": "Remind them about the homestead exemption"}, {"d": 180, "k": "call", "t": "Six-month check-in"}, {"d": 365, "k": "todo", "t": "Home anniversary: send a card or note"}]}], PLAN={}; PLANS.forEach(function(x){ PLAN[x.key]=x; });
+var KICON={note:"✎",call:"☎",text:"✉",email:"@",meeting:"◉",stage:"➜",task:"✓",created:"★",plan:"▶"};
 var WHEN={"3":"Next 3 months","6":"3 to 6 months","12":"6 to 12 months","later":"12+ months"};
 var CLOSEDISH={closed:1,dead:1,nurture:1};
-var sb, uid, people=[], tasks=[], list="all", cur=null, logKind="note", editing=null;
+var sb, uid, people=[], tasks=[], list="all", cur=null, logKind="note", editing=null, me={name:"",broker:"",slug:"",settings:{}};
 
 function toast(t){ var e=$("toast"); e.textContent=t; e.classList.add("on"); clearTimeout(toast.t); toast.t=setTimeout(function(){ e.classList.remove("on"); },2600); }
 function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]; }); }
@@ -273,6 +292,69 @@ function renderRows(){
       '<span class="pill st-'+p.stage+'">'+esc(STAGE[p.stage]||p.stage)+'</span>'+(t?'<span class="pill'+(overdue(t)?' over':'')+'">'+esc(when(t.due_at))+'</span>':'')+'</div></button>';
   }).join("");
 }
+function canText(p){ var d=p.data||{}; return p.source==="readiness"||!!d.textOk; }
+function msgButtons(t,p){
+  if(!t.msg||!p) return "";
+  var d=p.data||{}, ph=tel(p), em=d.email||"", h='<div class="mbtn">';
+  if(t.kind==="text") h+='<a href="'+(ph?"sms:"+esc(ph)+"?&body="+encodeURIComponent(t.msg):"#")+'" class="'+(ph?"":"off")+'"'+(canText(p)?"":' data-warn="1"')+' data-sent="'+t.id+'">Send text</a>';
+  if(t.kind==="email") h+='<a href="'+(em?"mailto:"+esc(em)+"?subject="+encodeURIComponent(t.subj||"")+"&body="+encodeURIComponent(t.msg):"#")+'" class="'+(em?"":"off")+'" data-sent="'+t.id+'">Send email</a>';
+  h+='<button type="button" data-copymsg="'+t.id+'">Copy message</button></div>';
+  h+='<details class="mprev"><summary>See message</summary><p>'+(t.subj?'<b>'+esc(t.subj)+'</b>\n\n':'')+esc(t.msg)+'</p></details>';
+  return h;
+}
+function firstName(n){ return String(n||"").trim().split(/\s+/)[0]||"there"; }
+function fillMsg(tpl,p){ var d=p.data||{}; return String(tpl||"").replace(/\{first\}/g,firstName(d.name)).replace(/\{agent\}/g,me.name||"your agent").replace(/\{broker\}/g,me.broker||"").replace(/\{link\}/g,me.slug?"www.2buyandsell.com/"+me.slug:"").replace(/ de \.| with \./g,"."); }
+function planFor(p){ var t=(p.data||{}).type; return t==="seller"?"new_seller":"new_buyer"; }
+function startPlan(p,key,quiet){
+  var pl=PLAN[key]; if(!pl) return Promise.resolve();
+  var es=((p.data||{}).pref||(p.data||{}).lang)==="es";
+  var rows=pl.steps.map(function(st){ return {agent_id:uid,lead_id:p.id,kind:st.k,title:st.t,due_at:dayAt(st.d),plan:key,
+    subj:st.k==="email"?fillMsg(es?st.subj_es:st.subj_en,p):null, msg:(st.en?fillMsg(es?st.es:st.en,p):null)}; });
+  return sb.from("tasks").insert(rows).select("id,lead_id,kind,title,due_at,done_at,plan,subj,msg").then(function(r){
+    if(r.error) throw r.error;
+    (r.data||[]).forEach(function(t){ tasks.push(t); });
+    p.plan=key; return sb.from("leads").update({plan:key,updated_at:new Date().toISOString()}).eq("id",p.id);
+  }).then(function(){
+    return addEvent(p,"plan","Started “"+pl.name+"” ("+pl.steps.length+" steps)").catch(function(){});
+  }).then(function(){ if(!quiet) toast("Plan started. "+pl.steps.length+" steps are on the calendar."); if(cur===p){ renderPlan(p); renderPTasks(); renderTimeline(); } renderList(); })
+    .catch(function(){ if(!quiet) toast("Couldn't start the plan. Try again."); });
+}
+function stopPlan(p){
+  var key=p.plan, pl=PLAN[key];
+  sb.from("tasks").delete().eq("lead_id",p.id).eq("plan",key).is("done_at",null).then(function(r){
+    if(r.error){ toast("Couldn't stop the plan. Try again."); return; }
+    tasks=tasks.filter(function(t){ return !(t.lead_id===p.id&&t.plan===key&&!t.done_at); });
+    p.plan="none"; sb.from("leads").update({plan:"none",updated_at:new Date().toISOString()}).eq("id",p.id).then(function(){});
+    addEvent(p,"plan","Stopped “"+(pl?pl.name:key)+"”").then(function(){ if(cur===p) renderTimeline(); }).catch(function(){});
+    toast("Plan stopped. Its remaining tasks were removed."); if(cur===p){ renderPlan(p); renderPTasks(); } renderList();
+  });
+}
+function renderPlan(p){
+  var pl=PLAN[p.plan], left=pl?openTasks(p.id).filter(function(t){ return t.plan===p.plan; }).length:0, h='<h2>Follow-up plan</h2>';
+  if(pl && left){
+    h+='<div class="plan-on"><div><b>'+esc(pl.name)+'</b><div class="fine">'+left+' of '+pl.steps.length+' steps left</div></div><button type="button" class="btn ghost small" id="stopPlan">Stop plan</button></div>';
+  } else {
+    if(pl) h+='<p class="fine" style="margin:0 0 8px">✓ Finished “'+esc(pl.name)+'”. Start another if they still need follow-up.</p>';
+    var sug=planFor(p);
+    h+='<select class="plan-sel" id="planPick" aria-label="Choose a plan">'+PLANS.map(function(x){ return '<option value="'+x.key+'"'+(x.key===sug&&p.source==="readiness"?" selected":(x.key==="online"&&p.source==="hounds"?" selected":""))+'>'+esc(x.name)+'</option>'; }).join("")+'</select>'+
+      '<p class="plan-desc" id="planDesc"></p><button type="button" class="btn small" id="startPlan">Start this plan</button>';
+  }
+  $("planBox").innerHTML=h;
+  var pk=$("planPick"); if(pk){ var upd=function(){ var x=PLAN[pk.value]; $("planDesc").textContent=x.desc+" "+x.steps.length+" steps."; }; pk.addEventListener("change",upd); upd(); }
+}
+function autoStart(){
+  if((me.settings.people||{}).autoPlans===false) return;
+  var fresh=people.filter(function(p){ return p.source==="readiness" && p.stage==="new" && !p.plan && Date.now()-new Date(p.created_at)<3*864e5 && !openTasks(p.id).length; });
+  fresh.reduce(function(chain,p){ return chain.then(function(){ return startPlan(p,planFor(p),true); }); },Promise.resolve())
+    .then(function(){ if(fresh.length) toast("Started follow-up plans for "+fresh.length+" new lead"+(fresh.length===1?"":"s")+"."); });
+}
+function saveAutoPref(on){
+  sb.from("agents").select("settings").eq("id",uid).single().then(function(r){
+    if(r.error) throw r.error; var s=r.data.settings||{}; s.people=Object.assign({},s.people||{},{autoPlans:on}); me.settings=s;
+    return sb.from("agents").update({settings:s,updated_at:new Date().toISOString()}).eq("id",uid);
+  }).then(function(){ toast(on?"New leads will start a plan automatically.":"Auto-start is off."); if(on) autoStart(); })
+    .catch(function(){ toast("Couldn't save that setting. Try again."); });
+}
 function renderToday(){
   var due=openTasks().filter(function(t){ return new Date(t.due_at)<=endOfToday(); });
   var fresh=people.filter(function(p){ return p.stage==="new"; }).slice(0,5);
@@ -281,7 +363,7 @@ function renderToday(){
   due.slice(0,12).forEach(function(t){ var p=byId(t.lead_id), d=p?p.data||{}:{};
     h+='<div class="trow"><input type="checkbox" data-done="'+t.id+'" aria-label="Mark done"><div class="tt">'+
       (p?'<a href="#p/'+p.id+'">'+esc(KIND[t.kind]||"To-do")+' '+esc(d.name||"")+'</a>':'<b>'+esc(KIND[t.kind]||"To-do")+'</b>')+
-      '<small>'+esc(t.title||"")+(t.title?" · ":"")+(overdue(t)?'<span style="color:#a12a1b;font-weight:700">Overdue, '+esc(when(t.due_at))+'</span>':"Due today")+'</small></div></div>'; });
+      '<small>'+esc(t.title||"")+(t.title?" · ":"")+(overdue(t)?'<span style="color:#a12a1b;font-weight:700">Overdue, '+esc(when(t.due_at))+'</span>':"Due today")+'</small>'+msgButtons(t,p)+'</div></div>'; });
   if(fresh.length){ h+='<p style="margin:14px 0 4px;font-weight:700">New leads waiting for a first call</p>';
     fresh.forEach(function(p){ var d=p.data||{}; h+='<div class="trow"><div class="av" style="width:34px;height:34px;font-size:13px">'+esc(initials(d.name))+'</div><div class="tt"><a href="#p/'+p.id+'">'+esc(d.name||"No name")+'</a><small>'+esc(typeLabel(d.type))+' · came in '+esc(ago(p.created_at))+'</small></div></div>'; }); }
   $("today").innerHTML=h;
@@ -300,7 +382,7 @@ function openPerson(id){
     '<a href="'+(ph?"sms:"+esc(ph):"#")+'" class="'+(ph?"":"off")+'" data-log="text"'+(cantText?' data-warn="1"':'')+'>Text</a>'+
     '<a href="'+(em?"mailto:"+esc(em):"#")+'" class="'+(em?"":"off")+'" data-log="email">Email</a>';
   $("pStage").value=p.stage;
-  renderFacts(p);
+  renderFacts(p); renderPlan(p);
   renderPTasks(); $("pTimeline").innerHTML='<li class="fine">Loading…</li>';
   $("listView").hidden=true; $("personView").hidden=false; window.scrollTo(0,0);
   loadEvents(p);
@@ -324,7 +406,7 @@ function loadEvents(p){
 function renderTimeline(){
   var p=cur, ev=(p._events||[]).slice(), d=p.data||{};
   var h=ev.map(function(e){ return '<li><span class="ic">'+(KICON[e.kind]||"•")+'</span><span class="k">'+esc(KIND[e.kind]||e.kind)+'</span><time>'+esc(stamp(e.created_at))+'</time>'+
-    (e.kind!=="stage"&&e.kind!=="task"?'<button type="button" class="del" data-del="'+e.id+'">delete</button>':'')+(e.body?'<p>'+esc(e.body)+'</p>':'')+'</li>'; }).join("");
+    (e.kind!=="stage"&&e.kind!=="task"&&e.kind!=="plan"?'<button type="button" class="del" data-del="'+e.id+'">delete</button>':'')+(e.body?'<p>'+esc(e.body)+'</p>':'')+'</li>'; }).join("");
   h+='<li><span class="ic">'+KICON.created+'</span><span class="k">'+(p.source==="readiness"?"Took the readiness check":"Added")+'</span><time>'+esc(stamp(p.created_at))+'</time>'+
     (p.source==="readiness"?'<p>'+esc(typeLabel(d.type))+(d.when?" · "+(WHEN[d.when]||d.when):"")+'. Gave consent to be contacted.</p>':'')+'</li>';
   $("pTimeline").innerHTML=h;
@@ -332,7 +414,7 @@ function renderTimeline(){
 function renderPTasks(){
   var ts=openTasks(cur.id);
   $("pTasks").innerHTML=ts.length?ts.map(function(t){ return '<div class="trow"><input type="checkbox" data-done="'+t.id+'" aria-label="Mark done"><div class="tt"><b>'+esc(KIND[t.kind]||"To-do")+'</b>'+(t.title?" · "+esc(t.title):"")+
-    '<small'+(overdue(t)?' style="color:#a12a1b;font-weight:700"':'')+'>'+(overdue(t)?"Overdue, ":"")+esc(when(t.due_at))+'</small></div><button type="button" class="del" data-tdel="'+t.id+'" aria-label="Delete task" style="background:none;border:0;color:#8a939d;cursor:pointer">✕</button></div>'; }).join(""):'<p class="fine" style="margin:0">No open tasks. Add the next step below so no one slips through.</p>';
+    '<small'+(overdue(t)?' style="color:#a12a1b;font-weight:700"':'')+'>'+(overdue(t)?"Overdue, ":"")+esc(when(t.due_at))+'</small>'+msgButtons(t,cur)+'</div><button type="button" class="del" data-tdel="'+t.id+'" aria-label="Delete task" style="background:none;border:0;color:#8a939d;cursor:pointer">✕</button></div>'; }).join(""):'<p class="fine" style="margin:0">No open tasks. Add the next step below so no one slips through.</p>';
 }
 
 /* ---------- writes ---------- */
@@ -354,7 +436,7 @@ function setStage(p,stage){
 function suggestTask(p,kind,title,days){ addTask(p,kind,title,dayAt(days)).then(function(){ toast("Added a check-in task "+(days===30?"in a month":"")+"."); }); }
 function dayAt(days){ var d=new Date(); d.setDate(d.getDate()+days); d.setHours(9,0,0,0); return d.toISOString(); }
 function addTask(p,kind,title,due){
-  return sb.from("tasks").insert({agent_id:uid,lead_id:p?p.id:null,kind:kind,title:title||"",due_at:due}).select("id,lead_id,kind,title,due_at,done_at").single().then(function(r){
+  return sb.from("tasks").insert({agent_id:uid,lead_id:p?p.id:null,kind:kind,title:title||"",due_at:due}).select("id,lead_id,kind,title,due_at,done_at,plan,subj,msg").single().then(function(r){
     if(r.error){ toast("Couldn't add the task. Try again."); throw r.error; } tasks.push(r.data); if(cur) renderPTasks(); renderList(); return r.data; });
 }
 function completeTask(id){
@@ -364,7 +446,8 @@ function completeTask(id){
     var p=byId(t.lead_id);
     if(p){ addEvent(p,"task",(KIND[t.kind]||"To-do")+(t.title?": "+t.title:"")).then(function(){ if(cur===p) renderTimeline(); }).catch(function(){});
       if(t.kind==="call"||t.kind==="text"||t.kind==="email"||t.kind==="showing") touch(p,ts); }
-    toast("Done. Nice."); renderList(); if(cur) renderPTasks();
+    var finished=p&&t.plan&&!openTasks(p.id).some(function(x){ return x.plan===t.plan; });
+    toast(finished?"Done. That finishes the plan.":"Done. Nice."); renderList(); if(cur){ renderPTasks(); renderPlan(cur); }
   });
 }
 
@@ -448,6 +531,11 @@ document.addEventListener("click",function(e){
   var dl=t.closest&&t.closest("[data-del]"); if(dl){ var eid=dl.getAttribute("data-del");
     if(dl.dataset.sure!=="1"){ dl.dataset.sure="1"; dl.textContent="tap again to delete"; return; }
     sb.from("lead_events").delete().eq("id",eid).then(function(x){ if(x.error){ toast("Couldn't delete. Try again."); return; } cur._events=cur._events.filter(function(k){ return k.id!==eid; }); renderTimeline(); }); return; }
+  if(t.id==="startPlan"){ startPlan(cur,$("planPick").value); return; }
+  if(t.id==="stopPlan"){ if(t.dataset.sure!=="1"){ t.dataset.sure="1"; t.textContent="Tap again to stop"; setTimeout(function(){ t.dataset.sure=""; t.textContent="Stop plan"; },4000); return; } stopPlan(cur); return; }
+  var cm=t.closest&&t.closest("[data-copymsg]"); if(cm){ var tk=tasks.filter(function(x){ return x.id===cm.getAttribute("data-copymsg"); })[0];
+    if(tk){ var txt=(tk.subj?tk.subj+"\n\n":"")+tk.msg; (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){ toast("Message copied."); },function(){ toast("Open “See message” and copy it from there."); }); } return; }
+  var sa=t.closest&&t.closest("a[data-sent]"); if(sa){ if(sa.getAttribute("data-warn")==="1" && !confirmSend(sa,e)) return; toast("Sent it? Tick the box to mark it done."); return; }
   var a=t.closest&&t.closest("#pActs a[data-log]"); if(a && !a.classList.contains("off")){
     var k=a.getAttribute("data-log");
     if(a.getAttribute("data-warn")==="1" && !confirmText(a,e)) return;
@@ -455,6 +543,8 @@ document.addEventListener("click",function(e){
     setTimeout(function(){ $("logBody").placeholder="How did the "+(KIND[k]||"").toLowerCase()+" go? Save it here."; $("logBody").scrollIntoView({behavior:"smooth",block:"center"}); },400);
   }
 });
+function confirmSend(a,e){ if(a.dataset.ok==="1") return true; e.preventDefault(); a.dataset.ok="1"; a.textContent="Have consent? Tap again"; toast("Only text people who said it's OK. Tap again if they did."); setTimeout(function(){ a.dataset.ok=""; a.textContent="Send text"; },5000); return false; }
+$("autoPlans").addEventListener("change",function(){ saveAutoPref(this.checked); });
 function confirmText(a,e){ if(a.dataset.ok==="1") return true; e.preventDefault(); a.dataset.ok="1"; a.textContent="Have consent? Tap again"; toast("Only text people who said it's OK. Tap Text again if they did."); setTimeout(function(){ a.dataset.ok=""; a.textContent="Text"; },5000); return false; }
 
 function route(){ var m=location.hash.match(/^#p\/([0-9a-f-]{36})$/); if(m) openPerson(m[1]); else { cur=null; $("personView").hidden=true; $("listView").hidden=false; renderList(); } }
@@ -467,14 +557,16 @@ sb.auth.getSession().then(function(r){
   var ses=r.data&&r.data.session; if(!ses){ location.replace("/login"); return; }
   uid=ses.user.id;
   return Promise.all([
-    sb.from("leads").select("id,data,contacted,stage,source,last_touch_at,created_at").eq("agent_id",uid).order("created_at",{ascending:false}).limit(2000),
-    sb.from("tasks").select("id,lead_id,kind,title,due_at,done_at").eq("agent_id",uid).is("done_at",null).order("due_at").limit(2000)
+    sb.from("leads").select("id,data,contacted,stage,source,last_touch_at,created_at,plan").eq("agent_id",uid).order("created_at",{ascending:false}).limit(2000),
+    sb.from("tasks").select("id,lead_id,kind,title,due_at,done_at,plan,subj,msg").eq("agent_id",uid).is("done_at",null).order("due_at").limit(2000),
+    sb.from("agents").select("slug,settings").eq("id",uid).maybeSingle()
   ]).then(function(res){
+    if(res[2]&&res[2].data){ var st=res[2].data.settings||{}; me={name:(st.name||"").trim(),broker:st.broker||"",slug:res[2].data.slug,settings:st}; }
     if(res[0].error||res[1].error){ var m=(res[0].error||res[1].error).message||"";
       $("gate").innerHTML=/stage|tasks|does not exist|column/i.test(m)?"People is almost ready. The database update hasn't been run yet.":"Couldn't load your people. Refresh to try again."; return; }
     people=res[0].data||[]; tasks=res[1].data||[];
     people.forEach(function(p){ if(!p.stage) p.stage=p.contacted?"talking":"new"; });
-    $("gate").hidden=true; route();
+    $("gate").hidden=true; $("autoPlans").checked=(me.settings.people||{}).autoPlans!==false; route(); autoStart();
   });
 }).catch(function(){ $("gate").textContent="Something went wrong. Refresh to try again."; });
 })();
