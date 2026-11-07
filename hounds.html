@@ -288,6 +288,22 @@ $("save").addEventListener("click",function(){
 /* ---------- fresh finds (the robot) ---------- */
 function ago(iso){ if(!iso) return ""; var s=(Date.now()-new Date(iso).getTime())/1000;
   if(s<3600) return Math.max(1,Math.floor(s/60))+" min ago"; if(s<86400) return Math.floor(s/3600)+" hr ago"; var d=Math.floor(s/86400); return d===1?"yesterday":d+" days ago"; }
+/* Some finds point at a listing page (like the r/sanantonio front page), not the post itself.
+   For those, build a search for the post's own words so the agent can jump straight to it. */
+function isGeneralPage(u){
+  return (/reddit\.com/.test(u) && !/\/comments\//.test(u)) ||
+         (/facebook\.com/.test(u) && !/(\/posts\/|\/permalink\/|story_fbid|\/videos\/|\/reel\/)/.test(u));
+}
+function keyPhrase(f){
+  var parts=String(f.snippet||"").replace(/&middot;|·|•|\.\.\./g,"|").split(/\||\. /).map(function(x){ return x.trim(); })
+    .filter(function(x){ return x.split(/\s+/).length>=5 && !/^\d+[a-z]* ago$/i.test(x) && !/r\/[a-z]/i.test(x); });
+  var best=parts.sort(function(a,b){ return (/\?|suggest|advice|looking|recommend|moving|relocat/i.test(b)?1:0)-(/\?|suggest|advice|looking|recommend|moving|relocat/i.test(a)?1:0); })[0]||f.title||"";
+  return best.replace(/["“”]/g,"").split(/\s+/).slice(0,9).join(" ");
+}
+function exactPostLink(f){
+  var site=/reddit\.com/.test(f.url)?"reddit.com":/facebook\.com/.test(f.url)?"facebook.com":f.site;
+  return "https://www.google.com/search?q="+encodeURIComponent('site:'+site+' "'+keyPhrase(f)+'"');
+}
 function band(sc){ return sc>=60?["hot","Hot"]:sc>=30?["warm","Warm"]:["low","Low"]; }
 function loadFinds(){
   return sb.from("hound_finds").select("id,url,title,snippet,site,feed_label,published_at,found_at,score,status").eq("agent_id",uid).neq("status","dismissed").order("found_at",{ascending:false}).limit(300)
@@ -303,8 +319,9 @@ function renderFinds(){
   if(!list.length){ $("finds").innerHTML='<div class="empty" style="color:var(--muted);padding:14px 4px">'+(fview==="new"?"Nothing new right now. The hounds check every 2 hours, or tap Sniff now.":"Nothing here yet.")+'</div>'; return; }
   $("finds").innerHTML=list.slice(0,100).map(function(f){ var b=band(f.score);
     return '<div class="find'+(f.status==="replied"||f.status==="added"?' done':'')+'" data-id="'+f.id+'"><div class="fmeta"><span class="sc '+b[0]+'">'+b[1]+'</span><span>'+esc(f.site)+'</span><span>· '+esc(ago(f.published_at||f.found_at))+'</span>'+(f.feed_label?'<span>· '+esc(f.feed_label)+'</span>':'')+(f.status!=="new"?'<span>· '+esc({saved:"Saved",replied:"Replied",added:"Added to People"}[f.status]||f.status)+'</span>':'')+'</div>'+
-      '<h3><a href="'+esc(f.url)+'" target="_blank" rel="noopener noreferrer">'+esc(f.title||f.url)+'</a></h3>'+(f.snippet?'<p>'+esc(f.snippet)+'</p>':'')+
-      '<div class="acts"><a class="go" href="'+esc(f.url)+'" target="_blank" rel="noopener noreferrer">Open post</a>'+
+      '<h3><a href="'+esc(isGeneralPage(f.url)?exactPostLink(f):f.url)+'" target="_blank" rel="noopener noreferrer">'+esc(f.title||f.url)+'</a></h3>'+(f.snippet?'<p>'+esc(f.snippet)+'</p>':'')+
+      (isGeneralPage(f.url)?'<p class="fine" style="margin:-4px 0 10px">Google found this on a general page, not the post itself. Tap <b>Find the exact post</b> to search for it.</p>':'')+
+      '<div class="acts">'+(isGeneralPage(f.url)?'<a class="go" href="'+esc(exactPostLink(f))+'" target="_blank" rel="noopener noreferrer">Find the exact post</a><a href="'+esc(f.url)+'" target="_blank" rel="noopener noreferrer">Open page</a>':'<a class="go" href="'+esc(f.url)+'" target="_blank" rel="noopener noreferrer">Open post</a>')+
       (f.status!=="replied"?'<button type="button" data-st="replied">I replied</button>':'')+(f.status==="new"?'<button type="button" data-st="saved">Save</button>':'')+
       (f.status!=="added"?'<button type="button" class="add" data-add="1">Add to People</button>':'')+'<button type="button" data-st="dismissed">Not useful</button></div></div>'; }).join("");
 }
