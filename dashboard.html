@@ -1545,9 +1545,15 @@ function framedPhoto(){
   return '<span class="pf pf-'+f[0]+'"><img src="'+src+'" alt="'+esc(agentName())+'"></span>';
 }
 var photoSrc="";
-function cropBox(W,H,A,c){ var bh=Math.min(H,W/A)/c.z, bw=bh*A, cx=Math.max(bw/2,Math.min(W-bw/2,c.cx*W)), cy=Math.max(bh/2,Math.min(H-bh/2,c.cy*H)); return {x:cx-bw/2,y:cy-bh/2,w:bw,h:bh,cx:cx/W,cy:cy/H}; }
-function cropOut(img,A,c,outW,outH,q){ var b=cropBox(img.naturalWidth,img.naturalHeight,A,c), cv=document.createElement("canvas"); cv.width=outW; cv.height=outH;
-  var ctx=cv.getContext("2d"); ctx.imageSmoothingQuality="high"; ctx.drawImage(img,b.x,b.y,b.w,b.h,0,0,outW,outH); return cv.toDataURL("image/jpeg",q||0.88); }
+/* Crop box in photo pixels. Zoom below 1 makes the photo smaller than the frame; then it can
+   move anywhere inside the frame, and the empty space is filled with the photo's edge color. */
+function clampC(v,lo,hi){ return lo<=hi ? Math.max(lo,Math.min(hi,v)) : Math.max(hi,Math.min(lo,v)); }
+function cropBox(W,H,A,c){ var bh=Math.min(H,W/A)/c.z, bw=bh*A, cx=clampC(c.cx*W,bw/2,W-bw/2), cy=clampC(c.cy*H,bh/2,H-bh/2); return {x:cx-bw/2,y:cy-bh/2,w:bw,h:bh,cx:cx/W,cy:cy/H}; }
+function edgeColor(img){ if(img._edge) return img._edge; try{ var n=16, cv=document.createElement("canvas"); cv.width=n; cv.height=n; var x=cv.getContext("2d"); x.drawImage(img,0,0,n,n);
+    var d=x.getImageData(0,0,n,n).data, r=0,g=0,b=0,k=0; for(var i=0;i<n;i++) for(var j=0;j<n;j++){ if(i&&j&&i<n-1&&j<n-1) continue; var o=(j*n+i)*4; r+=d[o]; g+=d[o+1]; b+=d[o+2]; k++; }
+    img._edge="rgb("+Math.round(r/k)+","+Math.round(g/k)+","+Math.round(b/k)+")"; }catch(e){ img._edge="#1c2027"; } return img._edge; }
+function cropOut(img,A,c,outW,outH,q){ var W=img.naturalWidth, H=img.naturalHeight, b=cropBox(W,H,A,c), k=outW/b.w, cv=document.createElement("canvas"); cv.width=outW; cv.height=outH;
+  var ctx=cv.getContext("2d"); ctx.fillStyle=edgeColor(img); ctx.fillRect(0,0,outW,outH); ctx.imageSmoothingQuality="high"; ctx.drawImage(img,-b.x*k,-b.y*k,W*k,H*k); return cv.toDataURL("image/jpeg",q||0.88); }
 /* o: {src, aspect, frames(bool), frame, crop, title, sub, onSave(img, crop, frame)} */
 function openCropper(o){
   var img=new Image(), st2={cx:(o.crop&&o.crop.cx!=null)?o.crop.cx:.5,cy:(o.crop&&o.crop.cy!=null)?o.crop.cy:.45,z:(o.crop&&o.crop.z)||1}, frame=o.frame||"circle", back=document.activeElement;
@@ -1555,7 +1561,7 @@ function openCropper(o){
   ov.innerHTML='<div class="crop-box" role="dialog" aria-modal="true" aria-labelledby="cropT"><h2 id="cropT" tabindex="-1">'+esc(o.title||"Edit your photo")+'</h2>'+
     '<p class="sub">'+esc(o.sub||"Drag the photo to move it. Use the slider to zoom in or out.")+'</p>'+
     '<div class="crop-stage" id="cropStage"><div class="crop-win" id="cropWin"><img id="cropImg" alt=""></div></div>'+
-    '<div class="crop-zoom"><span aria-hidden="true">−</span><input type="range" id="cropZ" min="1" max="4" step="0.01" value="'+st2.z+'" aria-label="Zoom"><span aria-hidden="true">+</span></div>'+
+    '<div class="crop-zoom"><span aria-hidden="true">−</span><input type="range" id="cropZ" min="0.5" max="4" step="0.01" value="'+st2.z+'" aria-label="Zoom"><span aria-hidden="true">+</span></div>'+
     (o.frames?'<p style="font-weight:700;margin:12px 0 0">Pick a frame <span class="opt-l" style="font-weight:400">(shows on your Formal page)</span></p><div class="crop-frames" id="cropFrames"></div>':'')+
     '<div class="crop-acts"><button type="button" class="btn" id="cropSave">Save photo</button><button type="button" class="btn ghost" id="cropCancel">Cancel</button></div>'+
     (o.onNew?'<p style="margin:12px 0 0;text-align:center"><label class="linkbtn" for="cropNew" style="cursor:pointer">Use a different photo</label><input type="file" id="cropNew" accept="image/*" style="position:absolute;width:1px;height:1px;opacity:0"></p>':'')+'</div>';
@@ -1568,12 +1574,13 @@ function openCropper(o){
     var ww=Math.min(maxW,maxH*A), wh=ww/A;
     win.style.width=Math.round(ww)+"px"; win.style.height=Math.round(wh)+"px";
     win.className="crop-win"+(o.frames?" pf pf-"+frame:" plain"); if(o.frames){ win.style.width=Math.round(ww)+"px"; win.style.height=Math.round(wh)+"px"; win.style.margin="0"; }
+    win.style.background=edgeColor(img);
     var b=cropBox(W,H,A,st2); st2.cx=b.cx; st2.cy=b.cy; var k=ww/b.w; view.k=k;
     im.style.width=(W*k)+"px"; im.style.height=(H*k)+"px"; im.style.left=(-b.x*k)+"px"; im.style.top=(-b.y*k)+"px";
   }
   function drawFrames(){ var box=ov.querySelector("#cropFrames"); if(!box) return;
     box.innerHTML=FRAMES.map(function(f){ var A=f[2], W=img.naturalWidth, H=img.naturalHeight, b=cropBox(W,H,A,st2), tw=f[2]<1?44:50, th=tw/A, k=tw/b.w;
-      return '<button type="button" data-fr="'+f[0]+'" aria-pressed="'+(frame===f[0])+'"><span class="pf pf-'+f[0]+'" style="width:'+tw+'px;height:'+th+'px;border-width:2px;box-shadow:none;outline-offset:3px;'+(f[0]==="arch"?'border-radius:'+(tw/2)+'px '+(tw/2)+'px 3px 3px;':'')+'"><img src="'+o.src+'" alt="" style="position:absolute;max-width:none;width:'+(W*k)+'px;height:'+(H*k)+'px;left:'+(-b.x*k)+'px;top:'+(-b.y*k)+'px"></span>'+esc(f[1])+'</button>'; }).join("");
+      return '<button type="button" data-fr="'+f[0]+'" aria-pressed="'+(frame===f[0])+'"><span class="pf pf-'+f[0]+'" style="background:'+edgeColor(img)+';width:'+tw+'px;height:'+th+'px;border-width:2px;box-shadow:none;outline-offset:3px;'+(f[0]==="arch"?'border-radius:'+(tw/2)+'px '+(tw/2)+'px 3px 3px;':'')+'"><img src="'+o.src+'" alt="" style="position:absolute;max-width:none;width:'+(W*k)+'px;height:'+(H*k)+'px;left:'+(-b.x*k)+'px;top:'+(-b.y*k)+'px"></span>'+esc(f[1])+'</button>'; }).join("");
     box.querySelectorAll("[data-fr]").forEach(function(b){ b.addEventListener("click",function(){ frame=b.getAttribute("data-fr"); draw(); drawFrames(); }); });
   }
   var drag=null;
@@ -1581,7 +1588,7 @@ function openCropper(o){
   win.addEventListener("pointermove",function(e){ if(!drag) return; st2.cx=drag.cx-(e.clientX-drag.x)/view.k/img.naturalWidth; st2.cy=drag.cy-(e.clientY-drag.y)/view.k/img.naturalHeight; draw(); });
   function endDrag(){ if(drag){ drag=null; win.classList.remove("drag"); drawFrames(); } }
   win.addEventListener("pointerup",endDrag); win.addEventListener("pointercancel",endDrag);
-  win.addEventListener("wheel",function(e){ e.preventDefault(); st2.z=Math.max(1,Math.min(4,st2.z*(e.deltaY<0?1.06:1/1.06))); zr.value=st2.z; draw(); },{passive:false});
+  win.addEventListener("wheel",function(e){ e.preventDefault(); st2.z=Math.max(0.5,Math.min(4,st2.z*(e.deltaY<0?1.06:1/1.06))); zr.value=st2.z; draw(); },{passive:false});
   zr.addEventListener("input",function(){ st2.z=+zr.value; draw(); }); zr.addEventListener("change",drawFrames);
   function close(){ document.removeEventListener("keydown",onKey); ov.remove(); document.body.style.overflow=""; if(back&&back.focus) try{ back.focus(); }catch(_){} }
   function onKey(e){ if(e.key==="Escape") close(); }
@@ -1597,7 +1604,7 @@ function openCropper(o){
 }
 function editAgentPhoto(src,crop){
   openCropper({src:src,frames:true,frame:settings.photoFrame||"circle",crop:crop||settings.photoCrop,title:"Edit your photo",
-    sub:"Drag the photo so your face is in the middle, and zoom with the slider. Then pick a frame.",
+    sub:"Drag the photo up, down or sideways so your face is in the middle. Slide left to shrink it, right to zoom in. Then pick a frame.",
     onNew:function(f){ readImage(f,"photo"); },
     onSave:function(img,c,frame){
       settings.photo=cropOut(img,1,c,400,400,0.88); settings.photoTall=cropOut(img,.8,c,480,600,0.88);
