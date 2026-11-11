@@ -450,6 +450,43 @@ details.assume summary{cursor:pointer;color:var(--muted);font-size:15px}
 .cal-list .dt{font-weight:800;min-width:86px;font-size:14px;color:var(--muted)}
 .cal-list .ok{margin-left:auto;color:var(--good);font-weight:800}
 
+
+/* ===== Photo frames (Formal layout) ===== */
+.pf{position:relative;display:block;overflow:hidden;background:#1c2027;margin:0 auto}
+.pf img{display:block;width:100%;height:100%;object-fit:cover}
+.pf-circle{width:140px;height:140px;border-radius:50%;border:3px solid var(--gold);box-shadow:0 12px 34px rgba(0,0,0,.45)}
+.pf-oval{width:150px;height:188px;border-radius:50%;border:3px solid var(--gold);box-shadow:0 12px 34px rgba(0,0,0,.45)}
+.pf-square{width:156px;height:156px;border-radius:6px;border:3px solid var(--gold);box-shadow:0 12px 34px rgba(0,0,0,.45)}
+.pf-rect{width:164px;height:205px;border-radius:4px;border:2px solid var(--gold);outline:1px solid color-mix(in srgb,var(--gold) 55%,transparent);outline-offset:6px;box-shadow:0 14px 36px rgba(0,0,0,.5);overflow:hidden}
+.pf-arch{width:164px;height:205px;border-radius:82px 82px 6px 6px;border:3px solid var(--gold);box-shadow:0 12px 34px rgba(0,0,0,.45)}
+.pf-soft-oval,.pf-soft-square,.pf-soft-rect{background:transparent}
+.pf-soft-oval{width:200px;height:250px;-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 58%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 58%,transparent 100%)}
+.pf-soft-square,.pf-soft-rect{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 18%,#000 82%,transparent 100%),linear-gradient(to bottom,transparent 0,#000 18%,#000 82%,transparent 100%);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,transparent 0,#000 18%,#000 82%,transparent 100%),linear-gradient(to bottom,transparent 0,#000 18%,#000 82%,transparent 100%);mask-composite:intersect}
+.pf-soft-square{width:210px;height:210px}
+.pf-soft-rect{width:210px;height:262px}
+@media (min-width:760px){.pf-soft-oval{width:230px;height:288px}.pf-soft-square{width:240px;height:240px}.pf-soft-rect{width:236px;height:295px}.pf-rect,.pf-arch{width:180px;height:225px}.pf-arch{border-radius:90px 90px 6px 6px}}
+
+/* ===== Photo editor (crop + frame) ===== */
+.crop-ov{position:fixed;inset:0;z-index:60;background:rgba(8,10,14,.72);display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:16px}
+.crop-box{background:var(--card);color:var(--ink);border-radius:18px;width:100%;max-width:560px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.4);margin:auto 0}
+.crop-box h2{font-size:22px;margin:0 0 4px}
+.crop-box .sub{color:var(--muted);margin:0 0 14px;font-size:15px}
+.crop-stage{background:radial-gradient(120% 90% at 50% 0%,color-mix(in srgb, var(--brand) 38%, #15181e) 0%,color-mix(in srgb, var(--brand) 18%, #0b0d11) 70%);border-radius:14px;padding:26px 12px;display:grid;place-items:center;touch-action:none;user-select:none;-webkit-user-select:none}
+.crop-win{position:relative;overflow:hidden;cursor:grab;touch-action:none;background:#1c2027}
+.crop-win.drag{cursor:grabbing}
+.crop-win img{position:absolute;max-width:none;pointer-events:none;user-select:none;-webkit-user-drag:none}
+.crop-win.plain{border:2px solid #fff;box-shadow:0 0 0 2000px rgba(0,0,0,0)}
+.crop-zoom{display:flex;align-items:center;gap:10px;margin:14px 0 4px}
+.crop-zoom input{flex:1;accent-color:var(--brand)}
+.crop-zoom span{font-size:20px;color:var(--muted);width:20px;text-align:center}
+.crop-frames{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.crop-frames button{border:2px solid var(--line);background:#14171d;border-radius:12px;padding:8px 4px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;color:#e9ecf1;font-size:12px;font-weight:700;min-height:96px}
+.crop-frames button[aria-pressed="true"]{border-color:var(--gold);box-shadow:0 0 0 2px color-mix(in srgb,var(--gold) 40%,transparent)}
+.crop-frames .mini-f{transform:scale(.3);transform-origin:center;margin:-70px -60px}
+.crop-acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.crop-acts .btn{flex:1 1 140px}
+.frame-line{margin:10px 0 0;font-size:14px;color:var(--muted)}
+
 /* ===== Formal layout ===== */
 .lay-formal{--f-bg:color-mix(in srgb, var(--brand) 18%, #0b0d11);--f-line:rgba(255,255,255,.14)}
 .lay-formal .head{background:var(--f-bg);border-bottom-color:var(--f-line);color:#fff}
@@ -938,7 +975,7 @@ function renderStart(){
     /* Formal: dark, centered, photo first, quick paths, then Call + Get in touch */
     hw.hidden=false;
     var area=String(settings.city||"").trim(), role=settings.realtor?t.fRealtor:t.fAgent;
-    hw.innerHTML='<section class="fhero"><div class="in"><div class="fph">'+photoHTML(132)+'</div>'+
+    hw.innerHTML='<section class="fhero"><div class="in"><div class="fph">'+framedPhoto()+'</div>'+
       '<span class="fchip">'+esc((area?area+" · ":"")+role)+'</span>'+
       '<h1>'+esc(t.startH)+'</h1><p class="flede">'+esc(t.startP)+'</p>'+
       '<p class="fwho">'+esc(agentName())+(settings.broker?" · "+esc(settings.broker):"")+'</p>'+
@@ -1411,8 +1448,9 @@ function renderPage(){
 
   document.getElementById("sComm").addEventListener("input",function(e){ var v=parseFloat(e.target.value); if(isFinite(v)){ settings.comm=v; st.comm=v; saveSettings(); } });
   ["photo","logo"].forEach(function(kind){
-    document.getElementById("up-"+kind).addEventListener("change",function(e){ var f=e.target.files&&e.target.files[0]; if(f) readImage(f,kind); });
-    var rm=document.getElementById("rm-"+kind); if(rm) rm.addEventListener("click",function(){ settings[kind]=""; saveSettings(); applyBrand(); kitDirty=true; renderPage(); });
+    document.getElementById("up-"+kind).addEventListener("change",function(e){ var f=e.target.files&&e.target.files[0]; if(f) readImage(f,kind); e.target.value=""; });
+    if(kind==="photo"){ var ep=document.getElementById("edit-photo"); if(ep) ep.addEventListener("click",function(){ editAgentPhoto(photoSrc||settings.photo, photoSrc?settings.photoCrop:{cx:.5,cy:.5,z:1}); }); }
+    var rm=document.getElementById("rm-"+kind); if(rm) rm.addEventListener("click",function(){ settings[kind]=""; if(kind==="photo"){ settings.photoTall=""; settings.photoCrop=null; photoSrc=""; saveKit(); } saveSettings(); applyBrand(); kitDirty=true; renderPage(); });
   });
   pane.querySelectorAll(".lay").forEach(function(b){ b.addEventListener("click",function(){ settings.layout=b.getAttribute("data-l"); saveSettings(); applyBrand(); pane.querySelectorAll(".lay").forEach(function(x){x.setAttribute("aria-pressed",x===b);}); }); });
   setupWheel();
@@ -1427,11 +1465,9 @@ function renderHeroThumbs(){
   el.innerHTML=h;
   el.querySelectorAll("[data-hero]").forEach(function(b){ b.addEventListener("click",function(){ settings.hero=b.getAttribute("data-hero"); saveSettings(); renderHeroThumbs(); toast("Home page photo updated"); }); });
   document.getElementById("heroOwn").addEventListener("change",function(e){
-    var f=e.target.files&&e.target.files[0]; if(!f) return; var r=new FileReader();
-    r.onload=function(){ var img=new Image(); img.onload=function(){ var sc=Math.min(1,1600/Math.max(img.width,img.height)), cv=document.createElement("canvas"); cv.width=Math.round(img.width*sc); cv.height=Math.round(img.height*sc); cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height);
-      settings.heroCustom=cv.toDataURL("image/jpeg",0.82); settings.hero="custom"; saveSettings(); renderHeroThumbs(); toast("Your photo is now on your home page"); };
-      img.onerror=function(){ toast("That file didn't open as an image. Try a JPG or PNG."); }; img.src=r.result; };
-    r.readAsDataURL(f);
+    var f=e.target.files&&e.target.files[0]; if(!f) return; e.target.value="";
+    fileToData(f,2400,function(d){ openCropper({src:d,aspect:16/10,crop:{cx:.5,cy:.5,z:1},title:"Crop your home page photo",sub:"Drag to choose the part of the picture to show, and zoom with the slider.",
+      onSave:function(img,c){ settings.heroCustom=cropOut(img,16/10,c,1600,1000,0.82); settings.hero="custom"; saveSettings(); renderHeroThumbs(); toast("Your photo is now on your home page"); }}); });
   });
 }
 function renderLangPicker(){
@@ -1469,18 +1505,105 @@ function fld(id,label,val,val2,hint,type){
 }
 function upBox(kind,label,src){
   return '<div class="up"><div class="prev '+kind+'">'+(src?'<img src="'+src+'" alt="">':'No '+kind+' yet')+'</div><div><b style="display:block;margin-bottom:8px">'+label+'</b>'+
-    '<label class="btn small" for="up-'+kind+'">'+(src?"Change":"Upload")+'</label><input type="file" id="up-'+kind+'" accept="image/*"> '+
-    (src?'<button type="button" class="linkbtn" id="rm-'+kind+'">Remove</button>':'')+'</div></div>';
+    (kind==="photo"&&src?'<button type="button" class="btn small" id="edit-photo">Edit photo &amp; frame</button> ':'')+
+    '<label class="btn '+(kind==="photo"&&src?'ghost ':'')+'small" for="up-'+kind+'">'+(src?"Change":"Upload")+'</label><input type="file" id="up-'+kind+'" accept="image/*"> '+
+    (src?'<button type="button" class="linkbtn" id="rm-'+kind+'">Remove</button>':'')+
+    (kind==="photo"&&src?'<p class="frame-line">Frame on your Formal page: <b>'+esc(frameById(settings.photoFrame||"circle")[1])+'</b></p>':'')+'</div></div>';
 }
 function readImage(file,kind){
   var r=new FileReader();
   r.onload=function(){ var img=new Image(); img.onload=function(){
-      var cv=document.createElement("canvas"), ctx=cv.getContext("2d"), out;
-      if(kind==="photo"){ var s=Math.min(img.width,img.height), D=360; cv.width=D; cv.height=D; ctx.drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,D,D); out=cv.toDataURL("image/jpeg",0.86); }
-      else { var sc=Math.min(1,520/img.width,200/img.height); cv.width=Math.round(img.width*sc); cv.height=Math.round(img.height*sc); ctx.drawImage(img,0,0,cv.width,cv.height); out=cv.toDataURL("image/png"); }
-      settings[kind]=out; saveSettings(); applyBrand(); kitDirty=true; loadKitImages(); renderPage(); toast(kind==="photo"?"Photo added":"Logo added");
+      var cv=document.createElement("canvas"), ctx=cv.getContext("2d");
+      if(kind==="photo"){
+        /* keep a copy of the whole photo (so it can be re-cropped later), then open the editor */
+        var sc=Math.min(1,1200/Math.max(img.width,img.height)); cv.width=Math.round(img.width*sc); cv.height=Math.round(img.height*sc); ctx.drawImage(img,0,0,cv.width,cv.height);
+        editAgentPhoto(cv.toDataURL("image/jpeg",0.86),{cx:.5,cy:(cv.height>cv.width*1.15?.3:.45),z:1}); return;
+      }
+      var sc2=Math.min(1,520/img.width,200/img.height); cv.width=Math.round(img.width*sc2); cv.height=Math.round(img.height*sc2); ctx.drawImage(img,0,0,cv.width,cv.height);
+      settings[kind]=cv.toDataURL("image/png"); saveSettings(); applyBrand(); kitDirty=true; loadKitImages(); renderPage(); toast("Logo added");
     }; img.onerror=function(){ toast("That file didn't open as an image. Try a JPG or PNG."); }; img.src=r.result; };
   r.readAsDataURL(file);
+}
+/* Read any picked file into a data URL no bigger than max pixels on its long side */
+function fileToData(file,max,cb){
+  var r=new FileReader();
+  r.onload=function(){ var img=new Image(); img.onload=function(){ var sc=Math.min(1,max/Math.max(img.width,img.height)), cv=document.createElement("canvas");
+      cv.width=Math.round(img.width*sc); cv.height=Math.round(img.height*sc); cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height); cb(cv.toDataURL("image/jpeg",0.88)); };
+    img.onerror=function(){ toast("That file didn't open as an image. Try a JPG or PNG."); }; img.src=r.result; };
+  r.readAsDataURL(file);
+}
+
+/* ================= PHOTO FRAMES + EDITOR =================
+   Agents drag and zoom their photo to fit, and pick a frame for the Formal page.
+   Round and square frames use a square crop; oval, rectangle and arch frames use a
+   taller 4:5 crop. Both come from the same center point, so the face stays centered. */
+var FRAMES=[["circle","Gold circle",1],["oval","Gold oval",.8],["square","Gold square",1],["rect","Double frame",.8],["arch","Arch",.8],["soft-oval","Soft oval",.8],["soft-square","Soft square",1],["soft-rect","Soft rectangle",.8]];
+function frameById(id){ for(var i=0;i<FRAMES.length;i++) if(FRAMES[i][0]===id) return FRAMES[i]; return FRAMES[0]; }
+function framedPhoto(){
+  if(!settings.photo) return photoHTML(132);
+  var f=frameById(settings.photoFrame||"circle"), src=(f[2]<1&&settings.photoTall)?settings.photoTall:settings.photo;
+  return '<span class="pf pf-'+f[0]+'"><img src="'+src+'" alt="'+esc(agentName())+'"></span>';
+}
+var photoSrc="";
+function cropBox(W,H,A,c){ var bh=Math.min(H,W/A)/c.z, bw=bh*A, cx=Math.max(bw/2,Math.min(W-bw/2,c.cx*W)), cy=Math.max(bh/2,Math.min(H-bh/2,c.cy*H)); return {x:cx-bw/2,y:cy-bh/2,w:bw,h:bh,cx:cx/W,cy:cy/H}; }
+function cropOut(img,A,c,outW,outH,q){ var b=cropBox(img.naturalWidth,img.naturalHeight,A,c), cv=document.createElement("canvas"); cv.width=outW; cv.height=outH;
+  var ctx=cv.getContext("2d"); ctx.imageSmoothingQuality="high"; ctx.drawImage(img,b.x,b.y,b.w,b.h,0,0,outW,outH); return cv.toDataURL("image/jpeg",q||0.88); }
+/* o: {src, aspect, frames(bool), frame, crop, title, sub, onSave(img, crop, frame)} */
+function openCropper(o){
+  var img=new Image(), st2={cx:(o.crop&&o.crop.cx!=null)?o.crop.cx:.5,cy:(o.crop&&o.crop.cy!=null)?o.crop.cy:.45,z:(o.crop&&o.crop.z)||1}, frame=o.frame||"circle", back=document.activeElement;
+  var ov=document.createElement("div"); ov.className="crop-ov";
+  ov.innerHTML='<div class="crop-box" role="dialog" aria-modal="true" aria-labelledby="cropT"><h2 id="cropT" tabindex="-1">'+esc(o.title||"Edit your photo")+'</h2>'+
+    '<p class="sub">'+esc(o.sub||"Drag the photo to move it. Use the slider to zoom in or out.")+'</p>'+
+    '<div class="crop-stage" id="cropStage"><div class="crop-win" id="cropWin"><img id="cropImg" alt=""></div></div>'+
+    '<div class="crop-zoom"><span aria-hidden="true">−</span><input type="range" id="cropZ" min="1" max="4" step="0.01" value="'+st2.z+'" aria-label="Zoom"><span aria-hidden="true">+</span></div>'+
+    (o.frames?'<p style="font-weight:700;margin:12px 0 0">Pick a frame <span class="opt-l" style="font-weight:400">(shows on your Formal page)</span></p><div class="crop-frames" id="cropFrames"></div>':'')+
+    '<div class="crop-acts"><button type="button" class="btn" id="cropSave">Save photo</button><button type="button" class="btn ghost" id="cropCancel">Cancel</button></div>'+
+    (o.onNew?'<p style="margin:12px 0 0;text-align:center"><label class="linkbtn" for="cropNew" style="cursor:pointer">Use a different photo</label><input type="file" id="cropNew" accept="image/*" style="position:absolute;width:1px;height:1px;opacity:0"></p>':'')+'</div>';
+  document.body.appendChild(ov); document.body.style.overflow="hidden";
+  var win=ov.querySelector("#cropWin"), im=ov.querySelector("#cropImg"), zr=ov.querySelector("#cropZ"), view={k:1};
+  function aspect(){ return o.frames?frameById(frame)[2]:(o.aspect||1); }
+  function draw(){
+    if(!img.naturalWidth) return;
+    var A=aspect(), W=img.naturalWidth, H=img.naturalHeight, maxW=Math.min(o.frames?240:420, ov.querySelector("#cropStage").clientWidth-24), maxH=o.frames?300:300;
+    var ww=Math.min(maxW,maxH*A), wh=ww/A;
+    win.style.width=Math.round(ww)+"px"; win.style.height=Math.round(wh)+"px";
+    win.className="crop-win"+(o.frames?" pf pf-"+frame:" plain"); if(o.frames){ win.style.width=Math.round(ww)+"px"; win.style.height=Math.round(wh)+"px"; win.style.margin="0"; }
+    var b=cropBox(W,H,A,st2); st2.cx=b.cx; st2.cy=b.cy; var k=ww/b.w; view.k=k;
+    im.style.width=(W*k)+"px"; im.style.height=(H*k)+"px"; im.style.left=(-b.x*k)+"px"; im.style.top=(-b.y*k)+"px";
+  }
+  function drawFrames(){ var box=ov.querySelector("#cropFrames"); if(!box) return;
+    box.innerHTML=FRAMES.map(function(f){ var A=f[2], W=img.naturalWidth, H=img.naturalHeight, b=cropBox(W,H,A,st2), tw=f[2]<1?44:50, th=tw/A, k=tw/b.w;
+      return '<button type="button" data-fr="'+f[0]+'" aria-pressed="'+(frame===f[0])+'"><span class="pf pf-'+f[0]+'" style="width:'+tw+'px;height:'+th+'px;border-width:2px;box-shadow:none;outline-offset:3px;'+(f[0]==="arch"?'border-radius:'+(tw/2)+'px '+(tw/2)+'px 3px 3px;':'')+'"><img src="'+o.src+'" alt="" style="position:absolute;max-width:none;width:'+(W*k)+'px;height:'+(H*k)+'px;left:'+(-b.x*k)+'px;top:'+(-b.y*k)+'px"></span>'+esc(f[1])+'</button>'; }).join("");
+    box.querySelectorAll("[data-fr]").forEach(function(b){ b.addEventListener("click",function(){ frame=b.getAttribute("data-fr"); draw(); drawFrames(); }); });
+  }
+  var drag=null;
+  win.addEventListener("pointerdown",function(e){ drag={x:e.clientX,y:e.clientY,cx:st2.cx,cy:st2.cy}; win.classList.add("drag"); try{ win.setPointerCapture(e.pointerId); }catch(_){} e.preventDefault(); });
+  win.addEventListener("pointermove",function(e){ if(!drag) return; st2.cx=drag.cx-(e.clientX-drag.x)/view.k/img.naturalWidth; st2.cy=drag.cy-(e.clientY-drag.y)/view.k/img.naturalHeight; draw(); });
+  function endDrag(){ if(drag){ drag=null; win.classList.remove("drag"); drawFrames(); } }
+  win.addEventListener("pointerup",endDrag); win.addEventListener("pointercancel",endDrag);
+  win.addEventListener("wheel",function(e){ e.preventDefault(); st2.z=Math.max(1,Math.min(4,st2.z*(e.deltaY<0?1.06:1/1.06))); zr.value=st2.z; draw(); },{passive:false});
+  zr.addEventListener("input",function(){ st2.z=+zr.value; draw(); }); zr.addEventListener("change",drawFrames);
+  function close(){ document.removeEventListener("keydown",onKey); ov.remove(); document.body.style.overflow=""; if(back&&back.focus) try{ back.focus(); }catch(_){} }
+  function onKey(e){ if(e.key==="Escape") close(); }
+  document.addEventListener("keydown",onKey);
+  ov.addEventListener("click",function(e){ if(e.target===ov) close(); });
+  ov.querySelector("#cropCancel").addEventListener("click",close);
+  ov.querySelector("#cropSave").addEventListener("click",function(){ if(!img.naturalWidth) return; var c={cx:st2.cx,cy:st2.cy,z:st2.z}; close(); o.onSave(img,c,frame); });
+  var nf=ov.querySelector("#cropNew"); if(nf) nf.addEventListener("change",function(e){ var f=e.target.files&&e.target.files[0]; if(!f) return; close(); o.onNew(f); });
+  window.addEventListener("resize",draw);
+  img.onload=function(){ im.src=o.src; draw(); drawFrames(); var t=ov.querySelector("#cropT"); if(t) t.focus(); };
+  img.onerror=function(){ close(); toast("That photo didn't open. Try a JPG or PNG."); };
+  img.src=o.src;
+}
+function editAgentPhoto(src,crop){
+  openCropper({src:src,frames:true,frame:settings.photoFrame||"circle",crop:crop||settings.photoCrop,title:"Edit your photo",
+    sub:"Drag the photo so your face is in the middle, and zoom with the slider. Then pick a frame.",
+    onNew:function(f){ readImage(f,"photo"); },
+    onSave:function(img,c,frame){
+      settings.photo=cropOut(img,1,c,400,400,0.88); settings.photoTall=cropOut(img,.8,c,480,600,0.88);
+      settings.photoFrame=frame; settings.photoCrop=c; photoSrc=src;
+      saveSettings(); saveKit(); applyBrand(); kitDirty=true; loadKitImages(); renderPage(); toast("Photo saved");
+    }});
 }
 function setupWheel(){
   var cv=document.getElementById("wheelCv"), ctx=cv.getContext("2d"), mk=document.getElementById("wheelMk"), R=120;
@@ -1590,8 +1713,8 @@ function photoById(id){ for(var i=0;i<PHOTOS.length;i++) if(PHOTOS[i].id===id) r
 /* Default photo and style for each post */
 var KIT_DEFAULT=[["p12","split"],["p16","split"],["p14","overlay"],["p17","overlay"],["p05","overlay"],["p03","split"],["p15","split"],["p13","overlay"],["p04","overlay"],["agent","split"],["p07", "overlay"],["p13", "split"],["p10", "overlay"],["p09", "split"],["p15", "overlay"],["p05", "split"],["p01", "overlay"],["p14", "split"],["p16", "overlay"],["p02", "split"]];
 var kitSaved={};
-var kitPhoto=kitSaved.photo||{}, kitStyle=kitSaved.style||{}, kitCustom={}, kitOpen={}, cal=kitSaved.cal||null;
-function saveKit(){ store("rtb.kit",{photo:kitPhoto,style:kitStyle,cal:cal}); }
+var kitPhoto=kitSaved.photo||{}, kitStyle=kitSaved.style||{}, kitCustom={}, kitOpen={}, cal=kitSaved.cal||null; photoSrc=kitSaved.src||"";
+function saveKit(){ store("rtb.kit",{photo:kitPhoto,style:kitStyle,cal:cal,src:photoSrc}); }
 function postPhoto(i){ var p=kitPhoto[i]||KIT_DEFAULT[i][0]; if(p==="agent" && !settings.photo) p="p01"; if(p==="custom" && !kitCustom[i]) p=KIT_DEFAULT[i][0]==="agent"?"p01":KIT_DEFAULT[i][0]; return p; }
 function postStyle(i){ return kitStyle[i]||KIT_DEFAULT[i][1]; }
 
@@ -1743,7 +1866,9 @@ function renderKit(){
   pane.querySelectorAll("[data-ph]").forEach(function(b){ b.addEventListener("click",function(){ var i=+b.getAttribute("data-i"); kitPhoto[i]=b.getAttribute("data-ph"); saveKit(); renderKit(); }); });
   pane.querySelectorAll("[data-own]").forEach(function(inp){ inp.addEventListener("change",function(e){
     var i=+inp.getAttribute("data-own"), f=e.target.files&&e.target.files[0]; if(!f) return;
-    var r=new FileReader(); r.onload=function(){ var im=new Image(); im.onload=function(){ kitCustom[i]=im; kitPhoto[i]="custom"; renderKit(); toast("Photo added to post "+(i+1)); }; im.onerror=function(){ toast("That file didn't open as an image. Try a JPG or PNG."); }; im.src=r.result; }; r.readAsDataURL(f);
+    inp.value=""; var P=PLATS[kitPlat[i]||"ig"], A=P[1]/P[2];
+    fileToData(f,2400,function(d){ openCropper({src:d,aspect:A,crop:{cx:.5,cy:.5,z:1},title:"Crop your photo for post "+(i+1),sub:"Drag to choose what shows in the post, and zoom with the slider.",
+      onSave:function(img,c){ var im=new Image(); im.onload=function(){ kitCustom[i]=im; kitPhoto[i]="custom"; renderKit(); toast("Photo added to post "+(i+1)); }; im.src=cropOut(img,A,c,P[1],P[2],0.9); }}); });
   }); });
   pane.querySelectorAll("[data-copy]").forEach(function(b){ b.addEventListener("click",function(){ var i=+b.getAttribute("data-copy"); copyText(caption(POSTS[i],kitPlat[i]||"ig"),"Copied. Paste it into the app."); }); });
   pane.querySelectorAll("[data-vid]").forEach(function(b){ b.addEventListener("click",function(){ makeVideo(+b.getAttribute("data-vid")); }); });
@@ -2209,7 +2334,7 @@ function bootDash(){
 }
 function finishDash(row,rows,user){
   agentId=row.id; agentSlug=row.slug; Object.assign(settings,row.settings||{}); normalizeSettings();
-  var k=row.kit||{}; kitPhoto=k.photo||{}; kitStyle=k.style||{}; cal=k.cal||null;
+  var k=row.kit||{}; kitPhoto=k.photo||{}; kitStyle=k.style||{}; cal=k.cal||null; photoSrc=k.src||"";
   /* The Leads tab lists readiness-check results. Everyone else (Get in touch, Hounds, added by hand) lives in People. */
   leads=rows.filter(function(r){ var d=r.data||{}; return d.b||d.s; }).map(rowToLead);
   var top=document.querySelector(".dash-top");
