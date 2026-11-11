@@ -72,7 +72,8 @@ a{color:var(--brand-fg)}
 .who-agent{min-width:0;margin-right:auto}
 .who-agent b{display:block;font-size:16px;line-height:1.2}
 .who-agent small{display:block;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hlogo{max-height:34px;max-width:110px;object-fit:contain;flex:none}
+.hlogo{display:block;max-height:28px;max-width:150px;object-fit:contain;margin:3px 0 2px}
+.lay-formal .hlogo,.lay-bold .hlogo{background:#fff;border-radius:6px;padding:3px 7px;box-sizing:content-box}
 .lang{display:flex;border:1px solid var(--line);border-radius:999px;padding:2px;flex:none}
 .lang button{border:0;background:transparent;padding:5px 11px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;color:var(--muted)}
 .lang button[aria-pressed="true"]{background:var(--brand);color:var(--on-brand)}
@@ -108,7 +109,7 @@ a{color:var(--brand-fg)}
 .pc-tag{margin:12px 0 0;font-size:16px}
 .pc-act{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 .pc-act a{text-decoration:none}
-.pc-logo{display:block;max-height:44px;max-width:160px;object-fit:contain;margin-top:14px}
+.pc-logo{display:block;max-height:34px;max-width:150px;object-fit:contain;margin:4px 0 3px}
 .side .pcard{margin:0}
 .side .pc-top{flex-direction:column;align-items:flex-start}
 .picks{display:grid;gap:12px}
@@ -459,14 +460,12 @@ details.assume summary{cursor:pointer;color:var(--muted);font-size:15px}
 .pf-soft-rect{width:210px;height:262px}
 @media (min-width:760px){.pf-soft-oval{width:230px;height:288px}.pf-soft-square{width:240px;height:240px}.pf-soft-rect{width:236px;height:295px}.pf-rect,.pf-arch{width:180px;height:225px}.pf-arch{border-radius:90px 90px 6px 6px}}
 
-/* Logo beside the photo on the Formal page */
-.fph.with-logo{display:flex;align-items:center;justify-content:center;gap:22px;max-width:100%}
-.fph .pf,.fph .ini{flex:none}
-.logo-plate{flex:0 1 auto;background:#fff;border-radius:12px;padding:12px 14px;box-shadow:0 10px 26px rgba(0,0,0,.4);display:grid;place-items:center;border:1px solid color-mix(in srgb,var(--gold) 45%,transparent)}
-.logo-plate img{display:block;max-width:150px;max-height:84px;object-fit:contain}
-@media (max-width:520px){.fph.with-logo{gap:12px}.logo-plate{padding:8px 9px;border-radius:10px}.logo-plate img{max-width:92px;max-height:58px}}
-.logo-pos{margin-top:12px}
-.logo-pos p{margin:0 0 6px;font-size:14px;font-weight:700}
+/* Agent name with the company logo right under it (Formal page) */
+.fname{display:flex;flex-direction:column;align-items:center;gap:8px;margin:2px 0 2px}
+.fname b{font-family:var(--serif);font-size:26px;font-weight:700;line-height:1.15}
+.fname small{font-size:14px;color:rgba(255,255,255,.72);letter-spacing:.03em}
+.logo-plate{background:#fff;border-radius:10px;padding:8px 12px;box-shadow:0 8px 22px rgba(0,0,0,.35);display:grid;place-items:center;border:1px solid color-mix(in srgb,var(--gold) 45%,transparent)}
+.logo-plate img{display:block;max-width:180px;max-height:56px;object-fit:contain}
 
 /* ===== Photo editor (crop + frame) ===== */
 .crop-ov{position:fixed;inset:0;z-index:60;background:rgba(8,10,14,.72);display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:16px}
@@ -516,7 +515,6 @@ details.assume summary{cursor:pointer;color:var(--muted);font-size:15px}
 .fhero h1{font-family:var(--serif);font-weight:700;font-size:clamp(32px,8.2vw,52px);line-height:1.12;margin:4px 0 0;max-width:18ch}
 .fhero h1 em{font-style:normal;color:var(--gold)}
 .fhero .flede{margin:0;font-size:18px;color:rgba(255,255,255,.82);max-width:44ch}
-.fhero .fwho{margin:0;font-size:15px;color:rgba(255,255,255,.7);letter-spacing:.02em}
 .fhero .speaks{align-self:center;text-shadow:none;color:rgba(255,255,255,.86);font-size:15px}
 .fhero .picks{width:100%;max-width:520px;margin-top:10px;gap:10px}
 .fhero .pick{background:rgba(255,255,255,.055);border:1px solid var(--f-line);color:#fff;border-radius:12px;padding:15px 16px}
@@ -572,8 +570,7 @@ select.t{appearance:auto}
 <header class="head">
   <div class="in">
     <span id="hPhoto"></span>
-    <div class="who-agent"><b id="hName">Monica</b><small id="hBroker"></small></div>
-    <img class="hlogo" id="hLogo" alt="" hidden>
+    <div class="who-agent"><b id="hName">Monica</b><img class="hlogo" id="hLogo" alt="" hidden><small id="hBroker"></small></div>
     <div class="lang" id="langBox" role="group" aria-label="Language">
       <button type="button" id="lang-en" aria-pressed="true">EN</button>
       <button type="button" id="lang-es" aria-pressed="false">ES</button>
@@ -927,10 +924,10 @@ var ICON={
 };
 function profileCard(cls){
   var t=L(), ph=digits(settings.phone);
-  return '<div class="pcard '+(cls||"")+'"><div class="pc-top">'+photoHTML(84)+'<div><b>'+esc(agentName())+'</b><small>'+esc(settings.broker||"")+'</small>'+(settings.phone?'<small>'+esc(settings.phone)+'</small>':'')+(speaksMore()?'<small class="pc-langs">'+GLOBE+' '+esc(langNative())+'</small>':'')+'</div></div>'+
+  return '<div class="pcard '+(cls||"")+'"><div class="pc-top">'+photoHTML(84)+'<div><b>'+esc(agentName())+'</b>'+(settings.logo?'<img class="pc-logo" src="'+settings.logo+'" alt="'+esc(settings.broker||"")+' logo">':'')+'<small>'+esc(settings.broker||"")+'</small>'+(settings.phone?'<small>'+esc(settings.phone)+'</small>':'')+(speaksMore()?'<small class="pc-langs">'+GLOBE+' '+esc(langNative())+'</small>':'')+'</div></div>'+
     (settings.tagline?'<p class="pc-tag">'+esc(settings.tagline)+'</p>':'')+
     '<div class="pc-act">'+(ph?'<a class="btn small" href="tel:'+esc(ph)+'">'+esc(t.call)+'</a>':'')+(settings.email?'<a class="btn ghost small" href="mailto:'+esc(settings.email)+'">'+esc(t.email)+'</a>':'')+'</div>'+
-    (settings.logo?'<img class="pc-logo" src="'+settings.logo+'" alt="'+esc(settings.broker||"")+' logo">':'')+'</div>';
+    '</div>';
 }
 
 /* ================= LANGUAGES SPOKEN ================= */
@@ -975,11 +972,10 @@ function renderStart(){
     /* Formal: dark, centered, photo first, quick paths, then Call + Get in touch */
     hw.hidden=false;
     var area=String(settings.city||"").trim(), role=settings.realtor?t.fRealtor:t.fAgent;
-    var lp=logoSpot(), plate=lp?'<span class="logo-plate"><img src="'+settings.logo+'" alt="'+esc(settings.broker||"Company")+' logo"></span>':'';
-    hw.innerHTML='<section class="fhero"><div class="in"><div class="fph'+(lp?' with-logo':'')+'">'+(lp==="left"?plate:'')+framedPhoto()+(lp==="right"?plate:'')+'</div>'+
+    hw.innerHTML='<section class="fhero"><div class="in"><div class="fph">'+framedPhoto()+'</div>'+
+      '<div class="fname"><b>'+esc(agentName())+'</b>'+(settings.logo?'<span class="logo-plate"><img src="'+settings.logo+'" alt="'+esc(settings.broker||"Company")+' logo"></span>':'')+(settings.broker?'<small>'+esc(settings.broker)+'</small>':'')+'</div>'+
       '<span class="fchip">'+esc((area?area+" · ":"")+role)+'</span>'+
       '<h1>'+esc(t.startH)+'</h1><p class="flede">'+esc(t.startP)+'</p>'+
-      '<p class="fwho">'+esc(agentName())+(settings.broker?" · "+esc(settings.broker):"")+'</p>'+
       (speaksMore()?'<div class="speaks">'+GLOBE+'<span><b>'+esc(t.speakLbl)+':</b> '+esc(langNative())+'</span></div>':'')+
       '<div class="picks">'+picks+'</div>'+ctaRow(t)+trust+'</div></section>';
     h+='</section>'+touchCard(t);
@@ -1420,9 +1416,7 @@ function renderPage(){
      '</div></section>'+
    '<section class="card"><h2>Photo and logo</h2><p class="sub">Your headshot and your brokerage or team logo.</p><div class="uploads">'+
      upBox("photo","Your photo",settings.photo)+upBox("logo","Your logo",settings.logo)+
-   '</div>'+(settings.logo?'<div class="logo-pos"><p>Where should your logo go on your Formal page?</p><div class="cal-opts" id="logoPos">'+
-     [["left","Left of my photo"],["right","Right of my photo"],["none","Don\'t show it there"]].map(function(x){ return '<button type="button" data-lp="'+x[0]+'" aria-pressed="'+((settings.logoPos||"right")===x[0])+'">'+x[1]+'</button>'; }).join("")+
-     '</div><p class="frame-line" style="margin-top:6px">Your logo also shows at the top of your page and on your marketing posts.</p></div>':'')+'</section>'+
+   '</div>'+(settings.logo?'<p class="frame-line" style="margin-top:12px">Your logo shows right under your name on your page, and on your marketing posts.</p>':'')+'</section>'+
    '<section class="card"><h2>Home page photo</h2><p class="sub">The picture behind the top of your page. Warm, sunny photos feel the most welcoming.</p><div class="thumbs" id="heroThumbs"></div></section>'+
    '<section class="card"><h2>Brand color</h2><p class="sub">Drag around the circle to pick any color. Use the slider for lighter or darker.</p><div class="colorbox">'+
      '<div class="wheel" id="wheel"><canvas id="wheelCv" width="240" height="240" aria-label="Color wheel"></canvas><div class="mk" id="wheelMk"></div></div>'+
@@ -1455,8 +1449,6 @@ function renderPage(){
     if(kind==="photo"){ var ep=document.getElementById("edit-photo"); if(ep) ep.addEventListener("click",function(){ editAgentPhoto(photoSrc||settings.photo, photoSrc?settings.photoCrop:{cx:.5,cy:.5,z:1}); }); }
     var rm=document.getElementById("rm-"+kind); if(rm) rm.addEventListener("click",function(){ settings[kind]=""; if(kind==="photo"){ settings.photoTall=""; settings.photoCrop=null; photoSrc=""; saveKit(); } saveSettings(); applyBrand(); kitDirty=true; renderPage(); });
   });
-  pane.querySelectorAll("#logoPos [data-lp]").forEach(function(b){ b.addEventListener("click",function(){ settings.logoPos=b.getAttribute("data-lp"); saveSettings();
-    pane.querySelectorAll("#logoPos [data-lp]").forEach(function(x){ x.setAttribute("aria-pressed",x===b); }); toast(settings.logoPos==="none"?"Logo hidden next to your photo":"Logo moved to the "+settings.logoPos+" of your photo"); }); });
   pane.querySelectorAll(".lay").forEach(function(b){ b.addEventListener("click",function(){ settings.layout=b.getAttribute("data-l"); saveSettings(); applyBrand(); pane.querySelectorAll(".lay").forEach(function(x){x.setAttribute("aria-pressed",x===b);}); }); });
   setupWheel();
   renderThemes();
@@ -1545,7 +1537,6 @@ function fileToData(file,max,cb){
 var FRAMES=[["circle","Gold circle",1],["oval","Gold oval",.8],["square","Gold square",1],["rect","Double frame",.8],["arch","Arch",.8],["soft-oval","Soft oval",.8],["soft-square","Soft square",1],["soft-rect","Soft rectangle",.8]];
 function frameById(id){ for(var i=0;i<FRAMES.length;i++) if(FRAMES[i][0]===id) return FRAMES[i]; return FRAMES[0]; }
 /* Where the company logo sits on the Formal page: "left" or "right" of the photo, or "none" */
-function logoSpot(){ if(!settings.logo) return ""; var p=settings.logoPos||"right"; return p==="left"||p==="right"?p:""; }
 function framedPhoto(){
   if(!settings.photo) return photoHTML(132);
   var f=frameById(settings.photoFrame||"circle"), src=(f[2]<1&&settings.photoTall)?settings.photoTall:settings.photo;
