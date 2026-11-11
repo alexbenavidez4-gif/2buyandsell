@@ -44,7 +44,7 @@
   <div class="wrap">
     <span class="eyebrow">Find people who are asking</span>
     <h1>Release the Hounds</h1>
-    <p class="lead">The hounds bring back public posts from people across Bexar County and the nearby towns, and from military families at bases in the US and overseas who have orders to JBSA, who are asking about buying, selling or moving. You read them and reply yourself, logged in as you.</p>
+    <p class="lead">The hounds bring back public posts from people across Bexar County and the nearby towns, and from military families at bases in the US and overseas who have orders to JBSA, who are asking about buying, selling or moving, in English or Spanish. You read them and reply yourself, logged in as you.</p>
 
     <div id="gate" class="hcard" style="text-align:center">Checking your login…</div>
 
@@ -56,7 +56,7 @@
         </div>
         <p class="fine" style="margin:4px 0 10px">The hounds check your Google Alert feeds every 2 hours and bring back public posts. Real estate companies, listing sites and lenders are skipped, and so are posts that aren't about our area. Only the link and a preview are saved.</p>
         <div class="ftabs" id="ftabs" role="tablist">
-          <button type="button" data-f="new" aria-selected="true">New</button><button type="button" data-f="saved" aria-selected="false">Saved</button><button type="button" data-f="replied" aria-selected="false">Replied</button><button type="button" data-f="all" aria-selected="false">All</button>
+          <button type="button" data-f="new" aria-selected="true">New</button><button type="button" data-f="saved" aria-selected="false">Saved</button><button type="button" data-f="replied" aria-selected="false">Replied</button><button type="button" data-f="all" aria-selected="false">All</button><button type="button" data-f="es" aria-selected="false">Español</button>
         </div>
         <label class="lowtog"><input type="checkbox" id="showLow"> Show low matches (news, listings)</label>
         <div id="finds"></div>
@@ -79,7 +79,7 @@
             <li>Tap <b>Show options</b> and set: How often <b>As-it-happens</b> · Sources <b>Automatic</b> · Region <b>United States</b> · How many <b>All results</b> · Deliver to <b>RSS feed</b>.</li>
             <li>Tap <b>Create Alert</b>. Then tap the orange <b>RSS</b> icon next to it, copy the link from the address bar, and paste it above.</li>
           </ol>
-          <p class="fine">Good phrases to start: <span class="ph">"moving to San Antonio"</span> <span class="ph">"relocating to San Antonio"</span> <span class="ph">"PCS to JBSA"</span> <span class="ph">"San Antonio realtor"</span> <span class="ph">"moving to New Braunfels"</span> <span class="ph">"first time home buyer San Antonio"</span> <span class="ph">"moving to Schertz" OR "moving to Cibolo"</span> <span class="ph">"PCS to Randolph"</span> <span class="ph">site:rallypoint.com JBSA housing</span></p>
+          <p class="fine">Good phrases to start: <span class="ph">"moving to San Antonio"</span> <span class="ph">"relocating to San Antonio"</span> <span class="ph">"PCS to JBSA"</span> <span class="ph">"San Antonio realtor"</span> <span class="ph">"moving to New Braunfels"</span> <span class="ph">"first time home buyer San Antonio"</span> <span class="ph">"moving to Schertz" OR "moving to Cibolo"</span> <span class="ph">"PCS to Randolph"</span> <span class="ph">site:rallypoint.com JBSA housing</span> <span class="ph">"San Antonio" ("busco casa" OR "comprar casa")</span> <span class="ph">"realtor que hable español" San Antonio</span></p><p class="fine">For Spanish phrases, set <b>Language</b> to <b>Any language</b> in Show options, or Google skips posts written in Spanish.</p>
         </div>
       </details>
 
@@ -179,6 +179,7 @@
 .lowtog{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--muted);margin:0 0 10px}
 .lowtog input{width:18px;height:18px}
 .find{border:1px solid var(--line);border-radius:16px;padding:14px;margin:0 0 10px;background:#fff}
+.find .es-tag{background:#fff4d6;color:#7a5200;border-radius:6px;padding:1px 7px;font-weight:800;font-size:13px}
 .find .fmeta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;color:var(--muted)}
 .find .sc{display:inline-block;border-radius:999px;padding:2px 10px;font-weight:800;font-size:13px}
 .sc.hot{background:#fdebd8;color:#8a4a0f} .sc.warm{background:#fff4d6;color:#7a5a00} .sc.low{background:#f1f1ef;color:#77746c}
@@ -204,7 +205,7 @@
 <script>
 (function(){
 "use strict";
-var STARTER_KW=["moving to San Antonio","relocating to San Antonio","PCS to JBSA","PCS to Fort Sam Houston","PCS to Lackland","PCS to Randolph","orders to JBSA","Camp Bullis housing","need a realtor","realtor recommendation","first time home buyer","selling my house","house hunting","best neighborhoods","VA loan"];
+var STARTER_KW=["moving to San Antonio","relocating to San Antonio","PCS to JBSA","PCS to Fort Sam Houston","PCS to Lackland","PCS to Randolph","orders to JBSA","Camp Bullis housing","need a realtor","realtor recommendation","first time home buyer","selling my house","house hunting","best neighborhoods","VA loan","Spanish speaking realtor","comprar casa","busco casa","realtor que hable español","primera casa","préstamo ITIN","casa con owner finance"];
 var STARTER_TOWNS=["San Antonio","Bexar County","Schertz","Cibolo","Selma","Universal City","Converse","Live Oak","Windcrest","New Braunfels","Boerne","Helotes","Seguin","Bulverde","Fair Oaks Ranch","Garden Ridge","Leon Valley","Alamo Heights","Floresville","Castroville","Lytle","La Vernia","Marion","Canyon Lake","St. Hedwig","Somerset","Von Ormy","Elmendorf"];
 /* Google stops reading after about 32 words, so one search can only hold a handful of towns.
    Each phrase searches the first towns; the "Around Bexar County" card covers the rest in groups. */
@@ -258,6 +259,15 @@ function buildPack(w){
     {id:"m8", label:"TikTok PCS to JBSA", url:"https://www.tiktok.com/search?q="+enc("PCS to JBSA")},
     {id:"m9", label:"From other bases", url:google('(site:reddit.com OR site:facebook.com OR site:tiktok.com) ("orders to" OR PCSing OR "PCS to") (JBSA OR Lackland OR Randolph OR "Fort Sam") -site:zillow.com',w)},
     {id:"m7", label:"Facebook PCS groups", url:google("site:facebook.com/groups "+mil+" (housing OR realtor OR neighborhood)",w)}
+  ]});
+  var esArea='("San Antonio" OR Schertz OR Converse OR "New Braunfels" OR Seguin OR Bexar)';
+  out.push({title:"En español", items:[
+    {id:"e1", label:"Facebook: busco casa", url:google('site:facebook.com '+esArea+' ("busco casa" OR "comprar casa" OR "primera casa" OR "alguien sabe" OR "alguien conoce")',w)},
+    {id:"e2", label:"Realtor que hable español", url:google(esArea+' ("realtor que hable español" OR "agente que hable español" OR "Spanish speaking realtor" OR "bilingual realtor") -site:zillow.com -site:realtor.com',w)},
+    {id:"e3", label:"ITIN y owner finance", url:google(esArea+' (ITIN OR "financiamiento del dueño" OR "owner finance") (casa OR home) (busco OR alguien OR necesito OR "looking for")'+NO_CO,w)},
+    {id:"e4", label:"Grupos hispanos en SA", url:google('site:facebook.com/groups ("hispanos en San Antonio" OR "latinos en San Antonio" OR "mexicanos en San Antonio" OR "San Antonio Texas" comunidad)',w)},
+    {id:"e5", label:"TikTok: casas en San Antonio", url:"https://www.tiktok.com/search?q="+enc("comprar casa en San Antonio Texas")},
+    {id:"e6", label:"Facebook: mudarse a SA", url:"https://www.facebook.com/search/posts/?q="+enc("mudarnos a San Antonio casa")}
   ]});
   out.push({title:"Always worth a sniff", items:[
     {id:"rs", label:"r/sanantonio newest", url:"https://www.reddit.com/r/sanantonio/new/"},
@@ -332,6 +342,11 @@ function exactPostLink(f){
   var site=/reddit\.com/.test(f.url)?"reddit.com":/facebook\.com/.test(f.url)?"facebook.com":f.site;
   return "https://www.google.com/search?q="+encodeURIComponent('site:'+site+' "'+keyPhrase(f)+'"');
 }
+/* Spanish-language posts get a tag and their own tab */
+function isSpanish(f){ var t=" "+((f.title||"")+" "+(f.snippet||"")).toLowerCase()+" ";
+  if(/[¿ñ]|español|bienes ra[ií]ces/.test(t)) return true;
+  var m=t.match(/[\s,.!?]+(casa|comprar|vender|busco|buscamos|alguien|necesito|para|una|que|con|por|mudar|nuestra|tengo|somos|donde|dónde|cuánto|préstamo|hipoteca|vivienda|gracias|familia|también)(?=[\s,.!?])/g);
+  return !!m && m.length>=3; }
 function band(sc){ return sc>=60?["hot","Hot"]:sc>=30?["warm","Warm"]:["low","Low"]; }
 function loadFinds(){
   return sb.from("hound_finds").select("id,url,title,snippet,site,feed_label,published_at,found_at,score,status").eq("agent_id",uid).neq("status","dismissed").order("found_at",{ascending:false}).limit(300)
@@ -339,14 +354,14 @@ function loadFinds(){
 }
 function renderFinds(){
   var low=$("showLow").checked;
-  var list=finds.filter(function(f){ return (fview==="all"||f.status===fview) && (low||f.score>=30||f.status!=="new"); })
+  var list=finds.filter(function(f){ if(fview==="es") return isSpanish(f) && (low||f.score>=30||f.status!=="new"); return (fview==="all"||f.status===fview) && (low||f.score>=30||f.status!=="new"); })
     .sort(function(a,b){ return fview==="new"?(b.score-a.score)||(new Date(b.found_at)-new Date(a.found_at)):(new Date(b.found_at)-new Date(a.found_at)); });
   var nNew=finds.filter(function(f){ return f.status==="new"&&(low||f.score>=30); }).length;
   $("newCnt").textContent=nNew?String(nNew):"";
   if(!feeds.length){ $("finds").innerHTML='<div class="empty" style="color:var(--muted);padding:14px 4px">Set up your first alert feed below, and the hounds will start bringing posts back here. 🐾</div>'; $("feedsCard").open=true; return; }
   if(!list.length){ $("finds").innerHTML='<div class="empty" style="color:var(--muted);padding:14px 4px">'+(fview==="new"?"Nothing new right now. The hounds check every 2 hours, or tap Sniff now.":"Nothing here yet.")+'</div>'; return; }
   $("finds").innerHTML=list.slice(0,100).map(function(f){ var b=band(f.score);
-    return '<div class="find'+(f.status==="replied"||f.status==="added"?' done':'')+'" data-id="'+f.id+'"><div class="fmeta"><span class="sc '+b[0]+'">'+b[1]+'</span><span>'+esc(f.site)+'</span><span>· '+esc(ago(f.published_at||f.found_at))+'</span>'+(f.feed_label?'<span>· '+esc(f.feed_label)+'</span>':'')+(f.status!=="new"?'<span>· '+esc({saved:"Saved",replied:"Replied",added:"Added to People"}[f.status]||f.status)+'</span>':'')+'</div>'+
+    return '<div class="find'+(f.status==="replied"||f.status==="added"?' done':'')+'" data-id="'+f.id+'"><div class="fmeta"><span class="sc '+b[0]+'">'+b[1]+'</span>'+(isSpanish(f)?'<span class="es-tag">Español</span>':'')+'<span>'+esc(f.site)+'</span><span>· '+esc(ago(f.published_at||f.found_at))+'</span>'+(f.feed_label?'<span>· '+esc(f.feed_label)+'</span>':'')+(f.status!=="new"?'<span>· '+esc({saved:"Saved",replied:"Replied",added:"Added to People"}[f.status]||f.status)+'</span>':'')+'</div>'+
       '<h3><a href="'+esc(isGeneralPage(f.url)?exactPostLink(f):f.url)+'" target="_blank" rel="noopener noreferrer">'+esc(f.title||f.url)+'</a></h3>'+(f.snippet?'<p>'+esc(f.snippet)+'</p>':'')+
       (isGeneralPage(f.url)?'<p class="fine" style="margin:-4px 0 10px">Google found this on a general page, not the post itself. Tap <b>Find the exact post</b> to search for it.</p>':'')+
       '<div class="acts">'+(isGeneralPage(f.url)?'<a class="go" href="'+esc(exactPostLink(f))+'" target="_blank" rel="noopener noreferrer">Find the exact post</a><a href="'+esc(f.url)+'" target="_blank" rel="noopener noreferrer">Open page</a>':'<a class="go" href="'+esc(f.url)+'" target="_blank" rel="noopener noreferrer">Open post</a>')+
