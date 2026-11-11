@@ -72,8 +72,13 @@ a{color:var(--brand-fg)}
 .who-agent{min-width:0;margin-right:auto}
 .who-agent b{display:block;font-size:16px;line-height:1.2}
 .who-agent small{display:block;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hlogo{display:block;max-height:28px;max-width:150px;object-fit:contain;margin:3px 0 2px}
-.lay-formal .hlogo,.lay-bold .hlogo{background:#fff;border-radius:6px;padding:3px 7px;box-sizing:content-box}
+/* Company logo: its own row just below the top bar, lined up under the agent's name */
+.hlogo-row{background:var(--paper)}
+.hlogo-row .in{max-width:1080px;margin:0 auto;padding:10px 16px 10px 68px}
+.hlogo{display:block;max-height:40px;max-width:190px;object-fit:contain}
+.lay-formal .hlogo-row{background:color-mix(in srgb, var(--brand) 18%, #0b0d11)}
+.lay-formal .hlogo,.lay-bold .hlogo{background:#fff;border-radius:8px;padding:5px 9px;box-sizing:content-box}
+.lay-bold .hlogo-row{background:var(--brand)}
 .lang{display:flex;border:1px solid var(--line);border-radius:999px;padding:2px;flex:none}
 .lang button{border:0;background:transparent;padding:5px 11px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;color:var(--muted)}
 .lang button[aria-pressed="true"]{background:var(--brand);color:var(--on-brand)}
@@ -570,7 +575,7 @@ select.t{appearance:auto}
 <header class="head">
   <div class="in">
     <span id="hPhoto"></span>
-    <div class="who-agent"><b id="hName">Monica</b><img class="hlogo" id="hLogo" alt="" hidden><small id="hBroker"></small></div>
+    <div class="who-agent"><b id="hName">Monica</b><small id="hBroker"></small></div>
     <div class="lang" id="langBox" role="group" aria-label="Language">
       <button type="button" id="lang-en" aria-pressed="true">EN</button>
       <button type="button" id="lang-es" aria-pressed="false">ES</button>
@@ -578,7 +583,7 @@ select.t{appearance:auto}
   </div>
 </header>
 
-<main id="view-tool"><div id="heroWrap" hidden></div><div class="shell"><aside class="side" id="side"></aside><div class="col" id="app"></div></div><footer class="legal" id="legalFoot"></footer></main>
+<main id="view-tool"><div class="hlogo-row" id="hLogoRow" hidden><div class="in"><img class="hlogo" id="hLogo" alt=""></div></div><div id="heroWrap" hidden></div><div class="shell"><aside class="side" id="side"></aside><div class="col" id="app"></div></div><footer class="legal" id="legalFoot"></footer></main>
 <div class="navbar" id="navbar" hidden><div class="in" id="navIn"></div></div>
 
 <main id="view-agent" hidden>
@@ -847,8 +852,8 @@ function applyBrand(){
   document.getElementById("hBroker").textContent=settings.broker||"";
   var lb=document.getElementById("langBox"); lb.style.display=hasLang("es")?"":"none";
   if(!hasLang("es") && lang==="es"){ lang="en"; document.documentElement.lang="en"; document.getElementById("lang-en").setAttribute("aria-pressed","true"); document.getElementById("lang-es").setAttribute("aria-pressed","false"); }
-  var lg=document.getElementById("hLogo");
-  if(settings.logo){ lg.src=settings.logo; lg.alt=(settings.broker||"")+" logo"; lg.hidden=false; } else lg.hidden=true;
+  var lg=document.getElementById("hLogo"), lr=document.getElementById("hLogoRow");
+  if(settings.logo){ lg.src=settings.logo; lg.alt=(settings.broker||"")+" logo"; lr.hidden=false; } else lr.hidden=true;
 }
 
 /* ================= QUESTIONS & MATH ================= */
@@ -973,7 +978,7 @@ function renderStart(){
     hw.hidden=false;
     var area=String(settings.city||"").trim(), role=settings.realtor?t.fRealtor:t.fAgent;
     hw.innerHTML='<section class="fhero"><div class="in"><div class="fph">'+framedPhoto()+'</div>'+
-      '<div class="fname"><b>'+esc(agentName())+'</b>'+(settings.logo?'<span class="logo-plate"><img src="'+settings.logo+'" alt="'+esc(settings.broker||"Company")+' logo"></span>':'')+(settings.broker?'<small>'+esc(settings.broker)+'</small>':'')+'</div>'+
+      '<div class="fname"><b>'+esc(agentName())+'</b>'+(settings.broker?'<small>'+esc(settings.broker)+'</small>':'')+'</div>'+
       '<span class="fchip">'+esc((area?area+" · ":"")+role)+'</span>'+
       '<h1>'+esc(t.startH)+'</h1><p class="flede">'+esc(t.startP)+'</p>'+
       (speaksMore()?'<div class="speaks">'+GLOBE+'<span><b>'+esc(t.speakLbl)+':</b> '+esc(langNative())+'</span></div>':'')+
