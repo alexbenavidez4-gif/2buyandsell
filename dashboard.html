@@ -961,8 +961,9 @@ function renderStart(){
 }
 /* Call button (when the agent has a phone) + Get in touch, which jumps to the short form below */
 function telHref(){ var d=String(settings.phone||"").replace(/[^0-9]/g,""); if(d.length===10) d="1"+d; return d.length>=11?"tel:+"+d:""; }
+function prettyPhone(p){ var d=String(p||"").replace(/[^0-9]/g,""); if(d.length===11&&d.charAt(0)==="1") d=d.slice(1); return d.length===10?"("+d.slice(0,3)+") "+d.slice(3,6)+"-"+d.slice(6):String(p||""); }
 function ctaRow(t){ var tel=telHref();
-  return '<div class="cta-row">'+(tel?'<a class="btn cta-call" href="'+esc(tel)+'">'+esc(fill(t.ctaCall,{phone:settings.phone}))+'</a>':'')+
+  return '<div class="cta-row">'+(tel?'<a class="btn cta-call" href="'+esc(tel)+'">'+esc(fill(t.ctaCall,{phone:prettyPhone(settings.phone)}))+'</a>':'')+
     '<button type="button" class="btn ghost cta-touch">'+esc(t.ctaTouch)+'</button></div>'; }
 function touchCard(t){ var ag=agentName();
   if(st.touchDone) return '<section class="touch" id="touch"><h2>'+esc(t.touchH)+'</h2><p class="done" role="status">'+esc(st.touchDone)+'</p></section>';
