@@ -44,7 +44,7 @@
   <div class="wrap">
     <span class="eyebrow">Find people who are asking</span>
     <h1>Release the Hounds</h1>
-    <p class="lead">The hounds bring back public posts from people across Bexar County and the nearby towns, and from military families with orders to JBSA, who are asking about buying, selling or moving. You read them and reply yourself, logged in as you.</p>
+    <p class="lead">The hounds bring back public posts from people across Bexar County and the nearby towns, and from military families at bases in the US and overseas who have orders to JBSA, who are asking about buying, selling or moving. You read them and reply yourself, logged in as you.</p>
 
     <div id="gate" class="hcard" style="text-align:center">Checking your login…</div>
 
@@ -238,6 +238,7 @@ function buildPack(w){
       {id:"fg"+i, label:"Facebook groups", url:google("site:facebook.com/groups "+phrase+area,w)},
       {id:"fb"+i, label:"Facebook", url:"https://www.facebook.com/search/posts/?q="+enc(k+firstTown)},
       {id:"nd"+i, label:"Nextdoor", url:"https://nextdoor.com/search/posts/?query="+enc(k)},
+      {id:"tt"+i, label:"TikTok", url:"https://www.tiktok.com/search?q="+enc(k+(local?"":" "+(cfg.towns[0]||"San Antonio")))},
       {id:"x"+i,  label:"X", url:"https://x.com/search?q="+enc(phrase+area+" since:"+sinceDate(w))+"&f=live"},
       {id:"wb"+i, label:"Whole web", url:google(phrase+area+NO_CO,w)}
     ]});
@@ -254,6 +255,8 @@ function buildPack(w){
     {id:"m4", label:"r/MilitarySpouse", url:google("site:reddit.com/r/MilitarySpouse "+mil,w)},
     {id:"m5", label:"r/AirForce", url:google("site:reddit.com/r/AirForce (Lackland OR Randolph OR JBSA) (PCS OR housing OR \"off base\")",w)},
     {id:"m6", label:"r/army", url:google("site:reddit.com/r/army (\"Fort Sam\" OR \"Camp Bullis\" OR BAMC) (PCS OR housing OR \"off base\")",w)},
+    {id:"m8", label:"TikTok PCS to JBSA", url:"https://www.tiktok.com/search?q="+enc("PCS to JBSA")},
+    {id:"m9", label:"From other bases", url:google('(site:reddit.com OR site:facebook.com OR site:tiktok.com) ("orders to" OR PCSing OR "PCS to") (JBSA OR Lackland OR Randolph OR "Fort Sam") -site:zillow.com',w)},
     {id:"m7", label:"Facebook PCS groups", url:google("site:facebook.com/groups "+mil+" (housing OR realtor OR neighborhood)",w)}
   ]});
   out.push({title:"Always worth a sniff", items:[
