@@ -1384,7 +1384,7 @@ function renderPage(){
      '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><input class="t" id="themeName" type="text" placeholder="Name this theme, like Spring listing" style="flex:1;min-width:180px"><button class="btn small" type="button" id="themeSave">Save theme</button></div></div></section>'+
    '<section class="card"><h2>Page layout</h2><p class="sub">Pick how your page looks to buyers and sellers. Saved themes remember this too.</p><div class="layouts">'+
      lays.map(function(x){ return '<button type="button" class="lay" data-l="'+x[0]+'" aria-pressed="'+(settings.layout===x[0])+'">'+mini[x[0]]+'<b>'+x[1]+'</b><small>'+x[2]+'</small></button>'; }).join("")+
-   '</div><p style="margin:14px 0 0"><a href="#tool">See your page →</a></p></section></div>';
+   '</div><p style="margin:14px 0 0"><a href="'+(MODE==="dash"?"/"+esc(agentSlug):"#tool")+'"'+(MODE==="dash"?' target="_blank" rel="noopener"':'')+'>See your page →</a></p></section></div>';
 
   [["sCity","city"],["sName","name"],["sBroker","broker"],["sEmail","email"],["sPhone","phone"],["sLink","link"],["sTag","tagline"]].forEach(function(p){
     document.getElementById(p[0]).addEventListener("input",function(e){ settings[p[1]]=e.target.value; saveSettings(); applyBrand(); kitDirty=true; });
