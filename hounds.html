@@ -44,7 +44,7 @@
   <div class="wrap">
     <span class="eyebrow">Find people who are asking</span>
     <h1>Release the Hounds</h1>
-    <p class="lead">The hounds bring back public posts from people around San Antonio who are asking about buying, selling or moving. You read them and reply yourself, logged in as you.</p>
+    <p class="lead">The hounds bring back public posts from people across Bexar County and the nearby towns, and from military families with orders to JBSA, who are asking about buying, selling or moving. You read them and reply yourself, logged in as you.</p>
 
     <div id="gate" class="hcard" style="text-align:center">Checking your login…</div>
 
@@ -54,7 +54,7 @@
           <h2>Fresh finds <span class="cnt" id="newCnt"></span></h2>
           <button type="button" class="btn small" id="sniffNow">🐾 Sniff now</button>
         </div>
-        <p class="fine" style="margin:4px 0 10px">The hounds check your Google Alert feeds every 2 hours and bring back public posts. Only the link and a preview are saved.</p>
+        <p class="fine" style="margin:4px 0 10px">The hounds check your Google Alert feeds every 2 hours and bring back public posts. Real estate companies, listing sites and lenders are skipped, and so are posts that aren't about our area. Only the link and a preview are saved.</p>
         <div class="ftabs" id="ftabs" role="tablist">
           <button type="button" data-f="new" aria-selected="true">New</button><button type="button" data-f="saved" aria-selected="false">Saved</button><button type="button" data-f="replied" aria-selected="false">Replied</button><button type="button" data-f="all" aria-selected="false">All</button>
         </div>
@@ -79,7 +79,7 @@
             <li>Tap <b>Show options</b> and set: How often <b>As-it-happens</b> · Sources <b>Automatic</b> · Region <b>United States</b> · How many <b>All results</b> · Deliver to <b>RSS feed</b>.</li>
             <li>Tap <b>Create Alert</b>. Then tap the orange <b>RSS</b> icon next to it, copy the link from the address bar, and paste it above.</li>
           </ol>
-          <p class="fine">Good phrases to start: <span class="ph">"moving to San Antonio"</span> <span class="ph">"relocating to San Antonio"</span> <span class="ph">"PCS to JBSA"</span> <span class="ph">"San Antonio realtor"</span> <span class="ph">"moving to New Braunfels"</span> <span class="ph">"first time home buyer San Antonio"</span></p>
+          <p class="fine">Good phrases to start: <span class="ph">"moving to San Antonio"</span> <span class="ph">"relocating to San Antonio"</span> <span class="ph">"PCS to JBSA"</span> <span class="ph">"San Antonio realtor"</span> <span class="ph">"moving to New Braunfels"</span> <span class="ph">"first time home buyer San Antonio"</span> <span class="ph">"moving to Schertz" OR "moving to Cibolo"</span> <span class="ph">"PCS to Randolph"</span> <span class="ph">site:rallypoint.com JBSA housing</span></p>
         </div>
       </details>
 
@@ -204,8 +204,11 @@
 <script>
 (function(){
 "use strict";
-var STARTER_KW=["moving to San Antonio","relocating to San Antonio","PCS to JBSA","PCS to Fort Sam Houston","PCS to Lackland","need a realtor","realtor recommendation","first time home buyer","selling my house","house hunting","best neighborhoods","VA loan"];
-var STARTER_TOWNS=["San Antonio","Converse","Schertz","Cibolo","New Braunfels","Boerne","Helotes","Universal City","Live Oak","Selma"];
+var STARTER_KW=["moving to San Antonio","relocating to San Antonio","PCS to JBSA","PCS to Fort Sam Houston","PCS to Lackland","PCS to Randolph","orders to JBSA","Camp Bullis housing","need a realtor","realtor recommendation","first time home buyer","selling my house","house hunting","best neighborhoods","VA loan"];
+var STARTER_TOWNS=["San Antonio","Bexar County","Schertz","Cibolo","Selma","Universal City","Converse","Live Oak","Windcrest","New Braunfels","Boerne","Helotes","Seguin","Bulverde","Fair Oaks Ranch","Garden Ridge","Leon Valley","Alamo Heights","Floresville","Castroville","Lytle","La Vernia","Marion","Canyon Lake","St. Hedwig","Somerset","Von Ormy","Elmendorf"];
+/* Google stops reading after about 32 words, so one search can only hold a handful of towns.
+   Each phrase searches the first towns; the "Around Bexar County" card covers the rest in groups. */
+var AREA_MAX=8, NO_CO=" -site:zillow.com -site:realtor.com -site:redfin.com -site:trulia.com -site:homes.com -inurl:realty -inurl:realestate";
 var $=function(id){ return document.getElementById(id); };
 var sb=null, uid=null, cfg={kw:STARTER_KW.slice(),towns:STARTER_TOWNS.slice()}, links=[], finds=[], feeds=[], fview="new";
 
@@ -218,8 +221,10 @@ function getSeen(){ try{ return JSON.parse(localStorage.getItem(seenKey())||"[]"
 function addSeen(id){ try{ var s=getSeen(); if(s.indexOf(id)<0){ s.push(id); localStorage.setItem(seenKey(),JSON.stringify(s)); } }catch(e){} }
 
 /* ---------- search builders ---------- */
-function mentionsTown(k){ var lk=k.toLowerCase(); return cfg.towns.some(function(t){ return lk.indexOf(t.toLowerCase())>-1; }) || /jbsa|fort sam|lackland|randolph|texas/.test(lk); }
-function areaOr(){ return "("+cfg.towns.map(function(t){ return /\s/.test(t)?'"'+t+'"':t; }).join(" OR ")+")"; }
+function mentionsTown(k){ var lk=k.toLowerCase(); return cfg.towns.some(function(t){ return lk.indexOf(t.toLowerCase())>-1; }) || /jbsa|fort sam|lackland|randolph|bullis|texas/.test(lk); }
+function orList(ts){ return "("+ts.map(function(t){ return /\s/.test(t)?'"'+t+'"':t; }).join(" OR ")+")"; }
+function areaOr(){ return orList(cfg.towns.slice(0,AREA_MAX)); }
+function groups(a,n){ var g=[]; for(var i=0;i<a.length;i+=n) g.push(a.slice(i,i+n)); return g; }
 function enc(s){ return encodeURIComponent(s); }
 function sinceDate(w){ var d=new Date(Date.now()-({d:1,w:7,m:30}[w])*864e5); return d.toISOString().slice(0,10); }
 function google(q,w){ return "https://www.google.com/search?q="+enc(q)+"&tbs=qdr:"+w; }
@@ -234,9 +239,23 @@ function buildPack(w){
       {id:"fb"+i, label:"Facebook", url:"https://www.facebook.com/search/posts/?q="+enc(k+firstTown)},
       {id:"nd"+i, label:"Nextdoor", url:"https://nextdoor.com/search/posts/?query="+enc(k)},
       {id:"x"+i,  label:"X", url:"https://x.com/search?q="+enc(phrase+area+" since:"+sinceDate(w))+"&f=live"},
-      {id:"wb"+i, label:"Whole web", url:google(phrase+area+" -site:zillow.com -site:realtor.com -site:redfin.com",w)}
+      {id:"wb"+i, label:"Whole web", url:google(phrase+area+NO_CO,w)}
     ]});
   });
+  var asks='("moving to" OR "relocating to" OR "need a realtor" OR "buy a house" OR "where to live" OR PCS)';
+  out.push({title:"Around Bexar County", items:groups(cfg.towns.slice(1),6).map(function(g,i){
+    return {id:"tw"+i, label:g.slice(0,2).join(", ")+(g.length>2?" +"+(g.length-2):""), url:google("(site:reddit.com OR site:facebook.com OR site:nextdoor.com) "+asks+" "+orList(g),w)};
+  })});
+  var mil='(PCS OR "orders to" OR "stationed at") (JBSA OR Lackland OR Randolph OR "Fort Sam" OR "Camp Bullis" OR "San Antonio")';
+  out.push({title:"Military forums", items:[
+    {id:"m1", label:"RallyPoint", url:google("site:rallypoint.com "+mil,w)},
+    {id:"m2", label:"PCSgrades", url:google("site:pcsgrades.com "+mil,w)},
+    {id:"m3", label:"MilitaryByOwner", url:google("site:militarybyowner.com San Antonio",w)},
+    {id:"m4", label:"r/MilitarySpouse", url:google("site:reddit.com/r/MilitarySpouse "+mil,w)},
+    {id:"m5", label:"r/AirForce", url:google("site:reddit.com/r/AirForce (Lackland OR Randolph OR JBSA) (PCS OR housing OR \"off base\")",w)},
+    {id:"m6", label:"r/army", url:google("site:reddit.com/r/army (\"Fort Sam\" OR \"Camp Bullis\" OR BAMC) (PCS OR housing OR \"off base\")",w)},
+    {id:"m7", label:"Facebook PCS groups", url:google("site:facebook.com/groups "+mil+" (housing OR realtor OR neighborhood)",w)}
+  ]});
   out.push({title:"Always worth a sniff", items:[
     {id:"rs", label:"r/sanantonio newest", url:"https://www.reddit.com/r/sanantonio/new/"},
     {id:"cr", label:"Craigslist real estate wanted", url:"https://sanantonio.craigslist.org/search/rew"},
