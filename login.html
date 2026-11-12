@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Log in · 2BuyAndSell</title>
-<meta name="description" content="Log in to your 2BuyAndSell agent dashboard, or create your account.">
+<meta name="description" content="Log in to the 2BuyAndSell dashboard.">
 <link rel="canonical" href="https://www.2buyandsell.com/login.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="2BuyAndSell">
 <meta property="og:title" content="Log in · 2BuyAndSell">
-<meta property="og:description" content="Log in to your 2BuyAndSell agent dashboard, or create your account.">
+<meta property="og:description" content="Log in to the 2BuyAndSell dashboard.">
 <meta property="og:url" content="https://www.2buyandsell.com/login.html">
 <meta property="og:image" content="https://www.2buyandsell.com/img/og-image.jpg">
 <meta property="og:image:width" content="1200">
@@ -36,19 +36,19 @@
 <header class="top">
   <div class="wrap">
     <a class="mark" href="index.html" aria-label="2BuyAndSell home"><img src="img/logo-icon-128.png" width="44" height="37" alt=""><span><b class="m2">2</b>BuyAnd<b class="ms">Sell</b></span></a>
-    <div style="display:flex;align-items:center;gap:14px"><a href="login.html" style="font-weight:700;color:var(--navy);text-decoration:none">Log in</a><a class="btn" href="index.html#join">Claim a spot</a></div>
+    <div style="display:flex;align-items:center;gap:14px"><a class="btn" href="/">Free check · Evaluación gratis</a></div>
   </div>
 </header>
 
 <main class="doc">
   <div class="wrap">
-    <span class="eyebrow">For agents</span>
-    <h1>Agent log in</h1>
+    <span class="eyebrow">Owner</span>
+    <h1>Log in</h1>
     
 
-    <p style="font-size:19px;margin-top:10px;color:var(--muted)">Founding agents use 2BuyAndSell free while we're in early access. No card needed.</p>
+    <p style="font-size:19px;margin-top:10px;color:var(--muted)">This log in is for the site owner. Looking to buy or sell? <a href="/">Start the free check</a>. ¿Quieres comprar o vender? <a href="/">Empieza tu evaluación gratis</a>.</p>
     <div class="form-card" style="max-width:520px">
-      <div class="chips" role="tablist" aria-label="Log in or create an account" style="display:flex;gap:8px;margin-bottom:20px">
+      <div class="chips" role="tablist" aria-label="Log in" style="display:none">
         <button type="button" class="btn" id="tabIn" role="tab" aria-selected="true" style="flex:1;min-height:46px">Log in</button>
         <button type="button" class="btn navy" id="tabUp" role="tab" aria-selected="false" style="flex:1;min-height:46px;background:#eef3f9;color:var(--navy)">Create account</button>
       </div>
@@ -106,7 +106,6 @@
     $("tabUp").style.background=up?"var(--gold)":"#eef3f9"; $("tabUp").style.color=up?"var(--gold-ink)":"var(--navy)"; }
   $("tabIn").addEventListener("click",function(){ tab(false); });
   $("tabUp").addEventListener("click",function(){ tab(true); });
-  if(location.hash==="#signup") tab(true);
   $("forgot").addEventListener("click",function(e){ e.preventDefault(); $("forgotBox").hidden=false; $("fgEmail").value=$("inEmail").value; $("fgEmail").focus(); });
   $("fgGo").addEventListener("click",function(){
     var em=$("fgEmail").value.trim(), m=$("fgMsg"), b=$("fgGo");
@@ -168,13 +167,13 @@
 <footer>
   <div class="wrap">
     <a class="mark" href="index.html"><img src="img/logo-icon-128.png" width="44" height="37" alt=""><span><b class="m2">2</b>BuyAnd<b class="ms">Sell</b></span></a>
-    <p>A San Antonio software company for real estate agents and loan officers.</p>
+    <p>Home buying and selling help in San Antonio, in English and Spanish. Ayuda para comprar y vender casa en San Antonio, en inglés y español.</p>
     <ul class="flinks">
-      <li><a href="about.html">About</a></li>
-      <li><a href="contact.html">Contact</a></li>
+      <li><a href="about.html">About · Acerca de</a></li>
+      <li><a href="contact.html">Contact · Contacto</a></li>
       <li><a href="privacy.html">Privacy Policy</a></li>
       <li><a href="terms.html">Terms of Use</a></li>
-      <li><a href="login.html">Agent log in</a></li>
+      <li><a href="login.html">Log in</a></li>
     </ul>
     <p>2BuyAndSell is software. It is not a lender, mortgage broker, real estate brokerage, appraiser or credit bureau. It does not pull credit or make loan decisions. Readiness scores, price ranges and net estimates are estimates to help start a conversation. They are not loan approvals, appraisals or offers.</p>
     <p>We support Fair Housing and equal opportunity for everyone.</p>

@@ -577,8 +577,8 @@ select.t{appearance:auto}
     <span id="hPhoto"></span>
     <div class="who-agent"><b id="hName">Monica</b><small id="hBroker"></small></div>
     <div class="lang" id="langBox" role="group" aria-label="Language">
-      <button type="button" id="lang-en" aria-pressed="true">EN</button>
-      <button type="button" id="lang-es" aria-pressed="false">ES</button>
+      <button type="button" id="lang-en" aria-pressed="true">English</button>
+      <button type="button" id="lang-es" aria-pressed="false">Español</button>
     </div>
   </div>
 </header>
@@ -614,7 +614,7 @@ select.t{appearance:auto}
 <div class="toast" id="toast" role="status"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/config.js"></script>
+<script src="/config.js?v=2"></script>
 <script>window.MODE="public";</script>
 <script>
 (function(){
@@ -1160,7 +1160,7 @@ function submitLead(R,needAddr){
   st.submitted=fill(t.thanks,{name:n.split(" ")[0],agent:agentName()})+t.demoNote;
   var y=window.scrollY; renderResults(); window.scrollTo(0,y);
 }
-function setLang(l){ lang=l; document.documentElement.lang=l;
+function setLang(l){ lang=l; document.documentElement.lang=l; try{ localStorage.setItem("site.lang",l); }catch(e){}
   document.getElementById("lang-en").setAttribute("aria-pressed",l==="en");
   document.getElementById("lang-es").setAttribute("aria-pressed",l==="es");
   var y=window.scrollY; if(location.hash==="#privacy"||location.hash==="#terms"){ renderDoc(location.hash.slice(1)); return; } render(); if(st.screen==="results") window.scrollTo(0,y); }
@@ -2284,7 +2284,10 @@ window.addEventListener("hashchange",route);
 
 /* ================= LIVE MODE (Supabase) ================= */
 var SITE_HOST="2buyandsell.com", sb=null, agentId=null, agentSlug="", saveT=null, lastContacted={};
-function __start(){ applyBrand(); loadKitImages(); route(); }
+function initLang(){ if(MODE!=="public") return; var l=null; try{ l=localStorage.getItem("site.lang"); }catch(e){}
+  if(l!=="en"&&l!=="es"){ var n=(navigator.languages&&navigator.languages[0])||navigator.language||"en"; l=/^es/i.test(n)?"es":"en"; }
+  if(l==="es"&&hasLang("es")){ lang="es"; document.documentElement.lang="es"; document.getElementById("lang-en").setAttribute("aria-pressed","false"); document.getElementById("lang-es").setAttribute("aria-pressed","true"); } }
+function __start(){ initLang(); applyBrand(); loadKitImages(); route(); }
 function timeAgo(iso){ var s=(Date.now()-new Date(iso).getTime())/1000;
   if(s<90) return "Just now"; if(s<3600) return Math.round(s/60)+" min ago";
   if(s<86400){ var hr=Math.round(s/3600); return hr+(hr===1?" hr ago":" hrs ago"); }
@@ -2319,15 +2322,19 @@ function sendLead(lead,t,n){
     st.submitted=fill(t.thanks,{name:n.split(" ")[0],agent:agentName()}); var y=window.scrollY; renderResults(); window.scrollTo(0,y); });
 }
 function slugFromUrl(){ var q=new URLSearchParams(location.search).get("a"); if(q) return q.trim().toLowerCase();
-  var p=location.pathname.replace(/^\/+|\/+$/g,"").split("/")[0]; return decodeURIComponent(p||"").toLowerCase(); }
+  var p=location.pathname.replace(/^\/+|\/+$/g,"").split("/")[0]; p=decodeURIComponent(p||"").toLowerCase();
+  if(!p||p==="index.html") return ownerSlug(); return p; }
+/* This site belongs to one agent. Her page is the home page; any other address goes home. */
+function ownerSlug(){ return String(window.OWNER_SLUG||"").trim().toLowerCase(); }
 function bootPublic(){
   var slug=slugFromUrl();
+  if(ownerSlug() && slug!==ownerSlug()){ location.replace("/"); return; }
   if(!slug||/\.html$/.test(slug)){ fatal("Page not found","This agent page doesn't exist."); return; }
   sb.from("agents").select("id,slug,settings").eq("slug",slug).maybeSingle().then(function(r){
     if(r.error){ fatal("Something went wrong","Please refresh the page to try again."); return; }
     if(!r.data){ fatal("Page not found","We couldn't find an agent at 2buyandsell.com/"+esc(slug)+"."); return; }
     agentId=r.data.id; agentSlug=r.data.slug; Object.assign(settings,r.data.settings||{}); normalizeSettings();
-    document.title=(agentName()!=="your agent"?agentName()+" · ":"")+"Buy and sell readiness check";
+    document.title=(agentName()!=="your agent"?agentName()+" · ":"")+"Buy and sell readiness check · Evaluación para comprar o vender";
     if(location.hash==="#agent") history.replaceState(null,"",location.pathname+location.search);
     __start(); });
 }
