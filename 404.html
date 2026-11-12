@@ -1052,29 +1052,35 @@ function touchCard(t){ var ag=agentName();
     '<label class="consent" for="tOk"><input type="checkbox" id="tOk"><span>'+esc(fill(t.touchConsent,{agent:ag}))+'</span></label>'+
     '<p class="err" id="tErr" role="alert"></p><button type="submit" class="btn">'+esc(t.touchSend)+'</button></form></section>'; }
 /* Intro video on the live page: shown once per visit, muted until the visitor taps Sound (browsers block sound on its own). */
-var introShown=false;
+var introBox=null, introOver=false, introTimer=null;
+function introFph(){ return document.querySelector(".fhero .fph"); }
+function introFinish(){ if(introOver) return; introOver=true; clearTimeout(introTimer);
+  var fph=introFph(), box=introBox, v=box&&box.querySelector("video");
+  if(!fph||!box||box.parentNode!==fph){ if(box&&box.parentNode) box.parentNode.removeChild(box); if(fph){ fph.classList.remove("intro","reveal"); } return; }
+  var photo=fph.firstElementChild, ph=(photo&&photo.offsetHeight)||150, ih=parseFloat(fph.style.getPropertyValue("--ih"))||300;
+  fph.style.setProperty("--is",(ph/ih).toFixed(3)); fph.style.setProperty("--ih",ph+"px");
+  box.classList.add("shrink"); fph.classList.add("reveal");
+  setTimeout(function(){ try{ v.pause(); }catch(e){} if(box.parentNode) box.parentNode.removeChild(box);
+    var f=introFph(); if(f){ f.classList.remove("intro","reveal"); f.style.removeProperty("--iw"); f.style.removeProperty("--ih"); f.style.removeProperty("--is"); } },1500); }
+/* Called every time the intro area is drawn, so the video survives the page redrawing itself (for example when the language changes). */
 function playIntro(){
-  if(introShown||MODE!=="public") return; introShown=true;
-  try{ if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return; }catch(e){}
-  var fph=document.querySelector(".fhero .fph"); if(!fph||!fph.firstElementChild) return;
-  var photo=fph.firstElementChild, iw=Math.min(window.innerWidth*0.94,860), ih=iw*9/16, es=lang==="es";
-  var box=document.createElement("div"); box.className="ivid";
+  if(introOver||MODE!=="public") return;
+  var fph=introFph(); if(!fph||!fph.firstElementChild) return;
+  var iw=Math.min(window.innerWidth*0.94,860), ih=iw*9/16, es=lang==="es";
+  fph.style.setProperty("--iw",iw+"px"); fph.style.setProperty("--ih",ih+"px"); fph.classList.add("intro");
+  if(introBox){ fph.appendChild(introBox); var v0=introBox.querySelector("video"); try{ var p0=v0.play(); if(p0&&p0.catch) p0.catch(function(){}); }catch(e){} return; }
+  try{ if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){ introOver=true; fph.classList.remove("intro"); return; } }catch(e){}
+  var box=introBox=document.createElement("div"); box.className="ivid";
   box.innerHTML='<div class="ivm"><video muted playsinline preload="auto" poster="/img/intro-poster.jpg" src="/img/intro.mp4"></video></div>'+
     '<div class="ibar"><button type="button" class="isnd">🔊 '+(es?"Sonido":"Sound")+'</button><button type="button" class="iskip">'+(es?"Saltar":"Skip")+' ›</button></div>';
-  fph.style.setProperty("--iw",iw+"px"); fph.style.setProperty("--ih",ih+"px");
-  fph.classList.add("intro"); fph.appendChild(box);
-  var v=box.querySelector("video"), over=false, timer=null;
-  function finish(){ if(over) return; over=true; clearTimeout(timer);
-    var ph=photo.offsetHeight||150; fph.style.setProperty("--is",(ph/ih).toFixed(3)); fph.style.setProperty("--ih",ph+"px");
-    box.classList.add("shrink"); fph.classList.add("reveal");
-    setTimeout(function(){ try{ v.pause(); }catch(e){} if(box.parentNode) box.parentNode.removeChild(box);
-      fph.classList.remove("intro","reveal"); fph.style.removeProperty("--iw"); fph.style.removeProperty("--ih"); fph.style.removeProperty("--is"); },1500); }
-  v.addEventListener("ended",finish); v.addEventListener("error",finish);
-  box.querySelector(".iskip").addEventListener("click",finish);
-  box.querySelector(".isnd").addEventListener("click",function(){ v.muted=!v.muted; v.volume=0.6; this.textContent=(v.muted?"🔊 ":"🔇 ")+(es?"Sonido":"Sound"); });
-  timer=setTimeout(finish,13000);
-  var pr; try{ pr=v.play(); }catch(e){ finish(); }
-  if(pr&&pr.catch) pr.catch(function(){ finish(); });
+  fph.appendChild(box);
+  var v=box.querySelector("video");
+  v.addEventListener("ended",introFinish); v.addEventListener("error",introFinish);
+  box.querySelector(".iskip").addEventListener("click",introFinish);
+  box.querySelector(".isnd").addEventListener("click",function(){ v.muted=!v.muted; v.volume=0.6; this.textContent=(v.muted?"🔊 ":"🔇 ")+(lang==="es"?"Sonido":"Sound"); });
+  introTimer=setTimeout(introFinish,14000);
+  var pr; try{ pr=v.play(); }catch(e){ introFinish(); }
+  if(pr&&pr.catch) pr.catch(function(e){ if(e&&e.name==="AbortError") return; introFinish(); });
 }
 /* Home value request: the owner's address goes to the agent, who replies with a personal estimate. Shows up with her other messages. */
 function valueCard(t){ var ag=agentName();
