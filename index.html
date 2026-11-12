@@ -525,6 +525,19 @@ details.assume summary{cursor:pointer;color:var(--muted);font-size:15px}
 @media (max-width:900px){.fhero::before{background-size:0 0,0 0,460px auto;opacity:.12}.fhero::after{display:none}}
 .fhero .in{max-width:640px;margin:0 auto;padding:40px 18px 46px;display:flex;flex-direction:column;align-items:center;gap:14px}
 .fhero .fph{position:relative;margin-bottom:4px}
+/* Intro video: plays large with soft edges, then shrinks into the agent's photo */
+.fph.intro{display:grid;place-items:center;min-height:var(--ih);transition:min-height 1.1s cubic-bezier(.5,0,.2,1)}
+.fph.intro > :not(.ivid){opacity:0;transition:opacity 1s ease .35s}
+.fph.intro.reveal > :not(.ivid){opacity:1}
+.ivid{position:absolute;left:50%;top:50%;z-index:2;width:var(--iw);aspect-ratio:16/9;transform:translate(-50%,-50%) scale(1);transition:transform 1.3s cubic-bezier(.5,0,.2,1),opacity 1s ease .3s}
+.ivid.shrink{transform:translate(-50%,-50%) scale(var(--is));opacity:0;pointer-events:none}
+.ivid .ivm{position:absolute;inset:0;border-radius:36px;overflow:hidden;
+  -webkit-mask-image:linear-gradient(to right,transparent 0,#000 13%,#000 87%,transparent 100%),linear-gradient(to bottom,transparent 0,#000 15%,#000 85%,transparent 100%);-webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to right,transparent 0,#000 13%,#000 87%,transparent 100%),linear-gradient(to bottom,transparent 0,#000 15%,#000 85%,transparent 100%);mask-composite:intersect}
+.ivid video{width:100%;height:100%;object-fit:cover;display:block}
+.ivid .ibar{position:absolute;left:0;right:0;bottom:17%;display:flex;justify-content:center;gap:8px}
+.ivid .ibar button{border:1px solid rgba(255,255,255,.55);background:rgba(10,14,20,.55);color:#fff;font:600 13px/1 var(--body);padding:8px 13px;border-radius:999px;cursor:pointer;backdrop-filter:blur(4px)}
+.ivid .ibar button:hover{background:rgba(10,14,20,.8)}
 .fhero .fph .ph,.fhero .fph .ini{border:3px solid var(--gold);box-shadow:0 12px 34px rgba(0,0,0,.45)}
 .fhero .fph .ini{background:#1c2027;color:var(--gold)}
 .fchip{display:inline-block;border:1px solid color-mix(in srgb, var(--gold) 55%, transparent);background:rgba(255,255,255,.04);color:#f3e7cf;border-radius:999px;padding:8px 18px;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
@@ -1004,6 +1017,7 @@ function renderStart(){
       '<h1>'+esc(t.startH)+'</h1><p class="flede">'+esc(t.startP)+'</p>'+
       (speaksMore()?'<div class="speaks">'+GLOBE+'<span><b>'+esc(t.speakLbl)+':</b> '+esc(langNative())+'</span></div>':'')+
       '<div class="picks">'+picks+'</div>'+ctaRow(t)+trust+'</div></section>';
+    playIntro();
     h+='</section>'+valueCard(t)+touchCard(t);
   }else if(H){
     hw.hidden=false;
@@ -1047,6 +1061,31 @@ function touchCard(t){ var ag=agentName();
     '<div><label class="f" for="tMsg">'+esc(fill(t.tMsg,{agent:ag}))+'</label><textarea id="tMsg" maxlength="1500"></textarea></div>'+
     '<label class="consent" for="tOk"><input type="checkbox" id="tOk"><span>'+esc(fill(t.touchConsent,{agent:ag}))+'</span></label>'+
     '<p class="err" id="tErr" role="alert"></p><button type="submit" class="btn">'+esc(t.touchSend)+'</button></form></section>'; }
+/* Intro video on the live page: shown once per visit, muted until the visitor taps Sound (browsers block sound on its own). */
+var introShown=false;
+function playIntro(){
+  if(introShown||MODE!=="public") return; introShown=true;
+  try{ if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return; }catch(e){}
+  var fph=document.querySelector(".fhero .fph"); if(!fph||!fph.firstElementChild) return;
+  var photo=fph.firstElementChild, iw=Math.min(window.innerWidth*0.94,860), ih=iw*9/16, es=lang==="es";
+  var box=document.createElement("div"); box.className="ivid";
+  box.innerHTML='<div class="ivm"><video muted playsinline preload="auto" poster="/img/intro-poster.jpg" src="/img/intro.mp4"></video></div>'+
+    '<div class="ibar"><button type="button" class="isnd">🔊 '+(es?"Sonido":"Sound")+'</button><button type="button" class="iskip">'+(es?"Saltar":"Skip")+' ›</button></div>';
+  fph.style.setProperty("--iw",iw+"px"); fph.style.setProperty("--ih",ih+"px");
+  fph.classList.add("intro"); fph.appendChild(box);
+  var v=box.querySelector("video"), over=false, timer=null;
+  function finish(){ if(over) return; over=true; clearTimeout(timer);
+    var ph=photo.offsetHeight||150; fph.style.setProperty("--is",(ph/ih).toFixed(3)); fph.style.setProperty("--ih",ph+"px");
+    box.classList.add("shrink"); fph.classList.add("reveal");
+    setTimeout(function(){ try{ v.pause(); }catch(e){} if(box.parentNode) box.parentNode.removeChild(box);
+      fph.classList.remove("intro","reveal"); fph.style.removeProperty("--iw"); fph.style.removeProperty("--ih"); fph.style.removeProperty("--is"); },1500); }
+  v.addEventListener("ended",finish); v.addEventListener("error",finish);
+  box.querySelector(".iskip").addEventListener("click",finish);
+  box.querySelector(".isnd").addEventListener("click",function(){ v.muted=!v.muted; v.volume=0.6; this.textContent=(v.muted?"🔊 ":"🔇 ")+(es?"Sonido":"Sound"); });
+  timer=setTimeout(finish,13000);
+  var pr; try{ pr=v.play(); }catch(e){ finish(); }
+  if(pr&&pr.catch) pr.catch(function(){ finish(); });
+}
 /* Home value request: the owner's address goes to the agent, who replies with a personal estimate. Shows up with her other messages. */
 function valueCard(t){ var ag=agentName();
   if(st.valueDone) return '<section class="touch" id="value"><h2>'+esc(t.valH)+'</h2><p class="done" role="status">'+esc(st.valueDone)+'</p></section>';
