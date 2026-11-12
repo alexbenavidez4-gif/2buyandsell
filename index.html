@@ -1081,16 +1081,27 @@ function playIntro(){
   if(introBox){ fph.appendChild(introBox); var v0=introBox.querySelector("video"); try{ var p0=v0.play(); if(p0&&p0.catch) p0.catch(function(){}); }catch(e){} return; }
   try{ if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){ introOver=true; fph.classList.remove("intro"); return; } }catch(e){}
   var box=introBox=document.createElement("div"); box.className="ivid";
-  box.innerHTML='<div class="ivm"><video muted playsinline preload="auto" poster="/img/intro-poster.jpg" src="/img/intro.mp4"></video></div>'+
+  box.innerHTML='<div class="ivm"><video playsinline preload="auto" poster="/img/intro-poster.jpg" src="/img/intro.mp4?v=2"></video></div>'+
     '<div class="ibar"><button type="button" class="isnd">🔊 '+(es?"Sonido":"Sound")+'</button><button type="button" class="iskip">'+(es?"Saltar":"Skip")+' ›</button></div>';
   fph.appendChild(box);
   var v=box.querySelector("video");
   v.addEventListener("ended",introFinish); v.addEventListener("error",introFinish);
   box.querySelector(".iskip").addEventListener("click",introFinish);
-  box.querySelector(".isnd").addEventListener("click",function(){ v.muted=!v.muted; v.volume=0.6; this.textContent=(v.muted?"🔊 ":"🔇 ")+(lang==="es"?"Sonido":"Sound"); });
+  var snd=box.querySelector(".isnd");
+  function label(){ snd.textContent=(v.muted?"🔊 ":"🔇 ")+(lang==="es"?"Sonido":"Sound"); }
+  snd.addEventListener("click",function(){ v.muted=!v.muted; v.volume=0.6; label(); });
   introTimer=setTimeout(introFinish,14000);
-  var pr; try{ pr=v.play(); }catch(e){ introFinish(); }
-  if(pr&&pr.catch) pr.catch(function(e){ if(e&&e.name==="AbortError") return; introFinish(); });
+  /* Try to start with the music on. Browsers only allow that after the visitor has touched the page, so if it is refused the video starts silent and the music joins on their first tap or key press. */
+  function quiet(){ v.muted=true; label();
+    var pm; try{ pm=v.play(); }catch(e){ introFinish(); return; }
+    if(pm&&pm.catch) pm.catch(function(e){ if(e&&e.name==="AbortError") return; introFinish(); });
+    var on=function(ev){ if(ev.target&&ev.target.closest&&ev.target.closest(".ibar")) return;
+      document.removeEventListener("pointerdown",on,true); document.removeEventListener("keydown",on,true);
+      if(!introOver){ v.muted=false; v.volume=0.6; label(); } };
+    document.addEventListener("pointerdown",on,true); document.addEventListener("keydown",on,true); }
+  v.muted=false; v.volume=0.6; label();
+  var pr; try{ pr=v.play(); }catch(e){ quiet(); }
+  if(pr&&pr.catch) pr.catch(function(e){ if(e&&e.name==="AbortError") return; quiet(); });
 }
 /* Home value request: the owner's address goes to the agent, who replies with a personal estimate. Shows up with her other messages. */
 function valueCard(t){ var ag=agentName();
