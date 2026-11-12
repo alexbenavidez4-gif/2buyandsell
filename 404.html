@@ -634,6 +634,11 @@ en:{
  pickBoth:["Sell and buy","Plan your whole move, start to finish"],
  call:"Call", email:"Email",
  ctaCall:"Call {phone}", ctaTouch:"Get in touch →", fRealtor:"REALTOR®", fAgent:"Real estate agent",
+ valBtn:"What's my home worth? →", valH:"What's your home worth today?", valP:"Tell {agent} about your home. She reviews recent sales near you and sends you a personal estimate within one business day. Free, with no obligation.",
+ valAddr:"Home address", valAddrPh:"Street, city, ZIP", valBeds:"Bedrooms (optional)", valBaths:"Bathrooms (optional)", valNotes:"Recent upgrades or anything else {agent} should know (optional)", valSend:"Request my estimate",
+ valConsent:"I agree that {agent} may contact me by phone, text or email about my home value request. Message and data rates may apply; reply STOP to opt out.",
+ valFine:"This is an estimate based on recent sales. It is not an appraisal.", valErrAddr:"Please add the home's address.",
+ valThanks:"Thanks, {name}! {agent} got your request and will send your estimate within one business day.",
  touchH:"Let's talk about your goals", touchP:"Buying, selling or just exploring? Send {agent} a quick note.",
  tName:"Name", tPhone:"Phone", tEmail:"Email", tMsg:"How can {agent} help? (optional)", touchSend:"Send message",
  touchConsent:"I agree that {agent} may contact me by phone, text or email about my message. Message and data rates may apply; reply STOP to opt out.",
@@ -723,6 +728,11 @@ es:{
  pickBoth:["Vender y comprar","Planea tu mudanza de principio a fin"],
  call:"Llamar", email:"Correo",
  ctaCall:"Llamar al {phone}", ctaTouch:"Contáctame →", fRealtor:"REALTOR®", fAgent:"Agente de bienes raíces",
+ valBtn:"¿Cuánto vale mi casa? →", valH:"¿Cuánto vale tu casa hoy?", valP:"Cuéntale a {agent} sobre tu casa. Ella revisa las ventas recientes de tu zona y te manda un estimado personal en un día hábil. Gratis y sin compromiso.",
+ valAddr:"Dirección de la casa", valAddrPh:"Calle, ciudad, código postal", valBeds:"Recámaras (opcional)", valBaths:"Baños (opcional)", valNotes:"Mejoras recientes o algo más que {agent} deba saber (opcional)", valSend:"Pedir mi estimado",
+ valConsent:"Acepto que {agent} me contacte por teléfono, mensaje de texto o correo sobre mi solicitud de valor de mi casa. Pueden aplicar tarifas de mensajes y datos; responde STOP para cancelar.",
+ valFine:"Este es un estimado basado en ventas recientes. No es un avalúo.", valErrAddr:"Por favor escribe la dirección de la casa.",
+ valThanks:"¡Gracias, {name}! {agent} recibió tu solicitud y te mandará tu estimado en un día hábil.",
  touchH:"Hablemos de tus metas", touchP:"¿Vas a comprar, vender o solo estás explorando? Mándale un mensaje a {agent}.",
  tName:"Nombre", tPhone:"Teléfono", tEmail:"Correo", tMsg:"¿Cómo te puede ayudar {agent}? (opcional)", touchSend:"Enviar mensaje",
  touchConsent:"Acepto que {agent} me contacte por teléfono, mensaje de texto o correo sobre mi mensaje. Pueden aplicar tarifas de mensajes y datos; responde STOP para cancelar.",
@@ -984,7 +994,7 @@ function renderStart(){
       '<h1>'+esc(t.startH)+'</h1><p class="flede">'+esc(t.startP)+'</p>'+
       (speaksMore()?'<div class="speaks">'+GLOBE+'<span><b>'+esc(t.speakLbl)+':</b> '+esc(langNative())+'</span></div>':'')+
       '<div class="picks">'+picks+'</div>'+ctaRow(t)+trust+'</div></section>';
-    h+='</section>'+touchCard(t);
+    h+='</section>'+valueCard(t)+touchCard(t);
   }else if(H){
     hw.hidden=false;
     hw.innerHTML='<section class="hero" style="background-image:url(&quot;'+esc(H.url)+'&quot;);background-position:'+Math.round(H.fx*100)+'% '+Math.round(H.fy*100)+'%">'+
@@ -993,19 +1003,22 @@ function renderStart(){
       '<h1>'+esc(t.startH)+'</h1><p class="lede">'+esc(t.startP)+'</p>'+trust+'</div></section>';
     if(settings.layout==="profile") h+=profileCard("inline lifted-card")+'<div class="picks">';
     else h+='<div class="picks lifted">';
-    h+=picks+'</div>'+ctaRow(t)+'</section>'+touchCard(t);
+    h+=picks+'</div>'+ctaRow(t)+'</section>'+valueCard(t)+touchCard(t);
   }else{
     hw.hidden=true; hw.innerHTML="";
     var hero='<span class="badge">'+esc(t.badge)+'</span><h1>'+esc(t.startH)+'</h1><p class="lede">'+esc(t.startP)+'</p>'+(speaksMore()?'<p class="speaks plain">'+GLOBE+'<span><b>'+esc(t.speakLbl)+':</b> '+esc(langNative())+'</span></p>':'');
     if(settings.layout==="bold") h+='<div class="band">'+hero+'</div>';
     else if(settings.layout==="profile") h+=profileCard("inline")+hero;
     else h+=hero;
-    h+='<div class="picks">'+picks+'</div>'+ctaRow(t)+'</section>'+touchCard(t);
+    h+='<div class="picks">'+picks+'</div>'+ctaRow(t)+'</section>'+valueCard(t)+touchCard(t);
   }
   app.innerHTML=h;
   document.querySelectorAll("#heroWrap .pick, #app .pick").forEach(function(b){ b.addEventListener("click",function(){ startFlow(b.getAttribute("data-f"),0); }); });
   document.querySelectorAll(".cta-touch").forEach(function(b){ b.addEventListener("click",function(){ var c=document.getElementById("touch"); if(!c) return;
     c.scrollIntoView({behavior:"smooth",block:"start"}); setTimeout(function(){ var n=document.getElementById("tName"); if(n) n.focus({preventScroll:true}); },450); }); });
+  document.querySelectorAll(".cta-value").forEach(function(b){ b.addEventListener("click",function(){ var c=document.getElementById("value"); if(!c) return;
+    c.scrollIntoView({behavior:"smooth",block:"start"}); setTimeout(function(){ var n=document.getElementById("vAddr"); if(n) n.focus({preventScroll:true}); },450); }); });
+  var vf=document.getElementById("valueForm"); if(vf) vf.addEventListener("submit",function(e){ e.preventDefault(); submitValue(); });
   var tf=document.getElementById("touchForm"); if(tf) tf.addEventListener("submit",function(e){ e.preventDefault(); submitTouch(); });
 }
 /* Call button (when the agent has a phone) + Get in touch, which jumps to the short form below */
@@ -1013,6 +1026,7 @@ function telHref(){ var d=String(settings.phone||"").replace(/[^0-9]/g,""); if(d
 function prettyPhone(p){ var d=String(p||"").replace(/[^0-9]/g,""); if(d.length===11&&d.charAt(0)==="1") d=d.slice(1); return d.length===10?"("+d.slice(0,3)+") "+d.slice(3,6)+"-"+d.slice(6):String(p||""); }
 function ctaRow(t){ var tel=telHref();
   return '<div class="cta-row">'+(tel?'<a class="btn cta-call" href="'+esc(tel)+'">'+esc(fill(t.ctaCall,{phone:prettyPhone(settings.phone)}))+'</a>':'')+
+    '<button type="button" class="btn ghost cta-value">'+esc(t.valBtn)+'</button>'+
     '<button type="button" class="btn ghost cta-touch">'+esc(t.ctaTouch)+'</button></div>'; }
 function touchCard(t){ var ag=agentName();
   if(st.touchDone) return '<section class="touch" id="touch"><h2>'+esc(t.touchH)+'</h2><p class="done" role="status">'+esc(st.touchDone)+'</p></section>';
@@ -1023,6 +1037,39 @@ function touchCard(t){ var ag=agentName();
     '<div><label class="f" for="tMsg">'+esc(fill(t.tMsg,{agent:ag}))+'</label><textarea id="tMsg" maxlength="1500"></textarea></div>'+
     '<label class="consent" for="tOk"><input type="checkbox" id="tOk"><span>'+esc(fill(t.touchConsent,{agent:ag}))+'</span></label>'+
     '<p class="err" id="tErr" role="alert"></p><button type="submit" class="btn">'+esc(t.touchSend)+'</button></form></section>'; }
+/* Home value request: the owner's address goes to the agent, who replies with a personal estimate. Shows up with her other messages. */
+function valueCard(t){ var ag=agentName();
+  if(st.valueDone) return '<section class="touch" id="value"><h2>'+esc(t.valH)+'</h2><p class="done" role="status">'+esc(st.valueDone)+'</p></section>';
+  return '<section class="touch" id="value" aria-labelledby="valueH"><h2 id="valueH">'+esc(t.valH)+'</h2><p>'+esc(fill(t.valP,{agent:ag}))+'</p>'+
+    '<form id="valueForm" novalidate><div><label class="f" for="vAddr">'+esc(t.valAddr)+'</label><input class="t" id="vAddr" type="text" autocomplete="street-address" maxlength="160" placeholder="'+esc(t.valAddrPh)+'"></div>'+
+    '<div class="two"><div><label class="f" for="vBeds">'+esc(t.valBeds)+'</label><input class="t" id="vBeds" type="text" inputmode="numeric" maxlength="4"></div>'+
+    '<div><label class="f" for="vBaths">'+esc(t.valBaths)+'</label><input class="t" id="vBaths" type="text" inputmode="decimal" maxlength="4"></div></div>'+
+    '<div><label class="f" for="vName">'+esc(t.tName)+'</label><input class="t" id="vName" type="text" autocomplete="name" maxlength="80"></div>'+
+    '<div class="two"><div><label class="f" for="vPhone">'+esc(t.tPhone)+'</label><input class="t" id="vPhone" type="tel" autocomplete="tel" inputmode="tel" maxlength="30"></div>'+
+    '<div><label class="f" for="vEmail">'+esc(t.tEmail)+'</label><input class="t" id="vEmail" type="email" autocomplete="email" maxlength="120"></div></div>'+
+    '<div><label class="f" for="vNotes">'+esc(fill(t.valNotes,{agent:ag}))+'</label><textarea id="vNotes" maxlength="1000"></textarea></div>'+
+    '<label class="consent" for="vOk"><input type="checkbox" id="vOk"><span>'+esc(fill(t.valConsent,{agent:ag}))+'</span></label>'+
+    '<p class="err" id="vErr" role="alert"></p><button type="submit" class="btn">'+esc(t.valSend)+'</button>'+
+    '<p style="margin:0;font-size:14px;color:var(--muted)">'+esc(t.valFine)+'</p></form></section>'; }
+function submitValue(){
+  var t=L(), ag=agentName(), g=function(id){ var el=document.getElementById(id); return el?el.value.trim():""; }, err=document.getElementById("vErr");
+  var ad=g("vAddr"), beds=g("vBeds"), baths=g("vBaths"), n=g("vName"), ph=g("vPhone"), em=g("vEmail"), notes=g("vNotes"), ok=document.getElementById("vOk").checked;
+  if(ad.length<6){ err.textContent=t.valErrAddr; document.getElementById("vAddr").focus(); return; }
+  if(!n){ err.textContent=t.errName; document.getElementById("vName").focus(); return; }
+  if(!ph&&!em){ err.textContent=fill(t.errReach,{agent:ag}); document.getElementById("vPhone").focus(); return; }
+  if(ph && ph.replace(/[^0-9]/g,"").length<10){ err.textContent=t.errPhone; document.getElementById("vPhone").focus(); return; }
+  if(em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ err.textContent=t.errEmail; document.getElementById("vEmail").focus(); return; }
+  if(!ok){ err.textContent=fill(t.errConsent,{agent:ag}); document.getElementById("vOk").focus(); return; }
+  err.textContent="";
+  var btn=document.querySelector('#valueForm button[type="submit"]'); if(btn) btn.disabled=true;
+  var msg="HOME VALUE REQUEST. Address: "+ad+(beds?". Bedrooms: "+beds:"")+(baths?". Bathrooms: "+baths:"")+(notes?". Notes: "+notes:"");
+  var lead={type:"other",via:"contact",valueReq:true,addr:ad,beds:beds,baths:baths,name:n,phone:ph,email:em,msg:msg,lang:lang,pref:lang,consentAt:new Date().toISOString()};
+  sendTouch(lead,function(good){
+    if(!good){ if(btn) btn.disabled=false; err.textContent=t.touchFail; return; }
+    st.valueDone=fill(t.valThanks,{name:n.split(" ")[0],agent:ag});
+    var c=document.getElementById("value"); if(c) c.outerHTML=valueCard(t);
+  });
+}
 function submitTouch(){
   var t=L(), ag=agentName(), g=function(id){ var el=document.getElementById(id); return el?el.value.trim():""; }, err=document.getElementById("tErr");
   var n=g("tName"), ph=g("tPhone"), em=g("tEmail"), msg=g("tMsg"), ok=document.getElementById("tOk").checked;
