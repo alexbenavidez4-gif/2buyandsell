@@ -3,16 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>2BuyAndSell · Free home readiness check · Evaluación gratis para comprar o vender casa</title>
-<meta name="description" content="Free 2-minute check to see if you're ready to buy or sell a home in San Antonio. Evaluación gratis de 2 minutos para saber si estás listo para comprar o vender casa en San Antonio. English · Español.">
+<title>Monica Polo | Bilingual Realtor San Antonio | Habla Español</title>
+<meta name="description" content="Monica Polo is a bilingual REALTOR® in San Antonio helping families buy and sell homes in English or Spanish. Free 2-minute readiness check. ¡Hablo español!">
 <link rel="canonical" href="https://www.2buyandsell.com/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="2BuyAndSell">
-<meta property="og:title" content="Ready to buy or sell? · ¿Listo para comprar o vender?">
-<meta property="og:description" content="Free 2-minute readiness check, in English and Spanish. Evaluación gratis de 2 minutos, en inglés y español.">
+<meta property="og:title" content="Monica Polo · Bilingual Realtor in San Antonio · Realtor que habla español">
+<meta property="og:description" content="Buy or sell a home in San Antonio with a REALTOR® who explains every step in English or Spanish. Free 2-minute readiness check. Evaluación gratis de 2 minutos.">
 <meta property="og:url" content="https://www.2buyandsell.com/">
 <meta property="og:image" content="https://www.2buyandsell.com/img/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "RealEstateAgent", "@id": "https://www.2buyandsell.com/#monica", "name": "Monica Polo", "description": "Bilingual (English and Spanish) REALTOR® helping families buy and sell homes in San Antonio and Bexar County.", "url": "https://www.2buyandsell.com/", "image": "https://www.2buyandsell.com/img/og-image.jpg", "telephone": "+1-210-249-8331", "address": {"@type": "PostalAddress", "addressLocality": "San Antonio", "addressRegion": "TX", "addressCountry": "US"}, "areaServed": [{"@type": "City", "name": "San Antonio, TX"}, {"@type": "City", "name": "Converse, TX"}, {"@type": "City", "name": "Schertz, TX"}, {"@type": "City", "name": "Cibolo, TX"}, {"@type": "City", "name": "Universal City, TX"}, {"@type": "City", "name": "Live Oak, TX"}, {"@type": "City", "name": "Selma, TX"}, {"@type": "City", "name": "New Braunfels, TX"}, {"@type": "City", "name": "Boerne, TX"}, {"@type": "City", "name": "Helotes, TX"}, {"@type": "AdministrativeArea", "name": "Bexar County, TX"}], "knowsLanguage": ["en", "es"], "parentOrganization": {"@type": "RealEstateAgent", "name": "Reliance Residential Realty"}, "memberOf": {"@type": "Organization", "name": "San Antonio Board of REALTORS®"}, "sameAs": ["https://www.instagram.com/agentmonipolo/"]}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do you speak Spanish?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. I work with buyers and sellers in English and Spanish, and you can switch this page to Español at the top."}}, {"@type": "Question", "name": "Does the readiness check cost anything?", "acceptedAnswer": {"@type": "Answer", "text": "No. It's free, takes about 2 minutes and doesn't check your credit. I reply to you personally."}}, {"@type": "Question", "name": "How do I find out what my home is worth?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your address in the home value section on this page. I'll send you a personal estimate within one business day."}}, {"@type": "Question", "name": "How do I reach you?", "acceptedAnswer": {"@type": "Answer", "text": "Call me at (210) 249-8331, or use Get in touch on this page."}}, {"@type": "Question", "name": "¿Hablas español?", "acceptedAnswer": {"@type": "Answer", "text": "Sí. Trabajo con compradores y vendedores en español e inglés, y puedes cambiar esta página a español arriba."}}, {"@type": "Question", "name": "¿Cuesta algo la evaluación?", "acceptedAnswer": {"@type": "Answer", "text": "No. Es gratis, toma unos 2 minutos y no revisa tu crédito. Te respondo personalmente."}}, {"@type": "Question", "name": "¿Cómo sé cuánto vale mi casa?", "acceptedAnswer": {"@type": "Answer", "text": "Escribe tu dirección en la sección del valor de tu casa en esta página. Te mando un estimado personal en un día hábil."}}, {"@type": "Question", "name": "¿Cómo te contacto?", "acceptedAnswer": {"@type": "Answer", "text": "Llámame al (210) 249-8331, o usa Contáctame en esta página."}}]}]</script>
 <meta name="theme-color" content="#1a467c">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -357,6 +358,24 @@ details.assume summary{cursor:pointer;color:var(--muted);font-size:15px}
 .vbar i{display:block;height:100%;width:0;background:var(--brand,#1e3a5f);transition:width .2s linear}
 .btn.vidbtn{background:#f1c45a;color:#1a1406;border-color:#f1c45a}
 
+#view-tool{min-height:100vh;min-height:100svh}
+/* Until her page has loaded, keep the text below it out of view so nothing jumps when the page appears */
+body:not(.ready) .about-agent,body:not(.ready) #legalFoot,body:not(.ready) #view-tool .shell{display:none}
+#hPhoto{display:inline-block;min-width:40px;min-height:40px}
+/* About Monica: plain text in the page itself, in both languages, so search engines can read it */
+.about-agent{background:var(--card);border-top:1px solid var(--line);margin-top:28px}
+.about-agent .in{max-width:1080px;margin:0 auto;padding:30px 16px 34px;display:grid;gap:34px}
+@media (min-width:860px){.about-agent .in{grid-template-columns:1fr 1fr;gap:44px}}
+html[lang="es"] .about-agent .aa-es{order:-1}
+.about-agent h2{font-size:24px;margin:0 0 10px;line-height:1.25}
+.lay-formal .about-agent h2{font-family:var(--serif)}
+.about-agent h3{font-size:18px;margin:20px 0 8px}
+.about-agent h4{font-size:16px;margin:14px 0 4px}
+.about-agent p,.about-agent li{color:var(--ink);font-size:16px;line-height:1.55}
+.about-agent p{margin:0 0 8px}
+.about-agent ul{margin:0;padding-left:20px;display:grid;gap:6px}
+.about-agent .aa-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.about-agent .aa-cta .btn{flex:1 1 200px;text-align:center}
 .legal{border-top:1px solid var(--line);background:var(--card);margin-top:8px}
 .legal .in{max-width:1000px;margin:0 auto;padding:22px 16px 28px;display:grid;gap:8px;font-size:14px;color:var(--muted);text-align:center}
 .legal p{margin:0}
@@ -526,11 +545,13 @@ details.assume summary{cursor:pointer;color:var(--muted);font-size:15px}
 .fhero .in{max-width:640px;margin:0 auto;padding:40px 18px 46px;display:flex;flex-direction:column;align-items:center;gap:14px}
 .fhero .fph{position:relative;margin-bottom:4px}
 /* Intro video: plays large with soft edges, then shrinks into the agent's photo */
-.fph.intro{display:grid;place-items:center;min-height:var(--ih);transition:min-height 1.1s cubic-bezier(.5,0,.2,1)}
+.fph.intro{display:grid;place-items:center}
+.fhero:has(.fph.intro) .in > :not(.fph){opacity:0;transition:opacity .9s ease .35s}
+.fhero:has(.fph.intro.reveal) .in > :not(.fph){opacity:1}
 .fph.intro > :not(.ivid){opacity:0;transition:opacity 1s ease .35s}
 .fph.intro.reveal > :not(.ivid){opacity:1}
-.ivid{position:absolute;left:50%;top:50%;z-index:2;width:var(--iw);aspect-ratio:16/9;transform:translate(-50%,-50%) scale(1);transition:transform 1.3s cubic-bezier(.5,0,.2,1),opacity 1s ease .3s}
-.ivid.shrink{transform:translate(-50%,-50%) scale(var(--is));opacity:0;pointer-events:none}
+.ivid{position:absolute;left:50%;top:0;z-index:2;width:var(--iw);aspect-ratio:16/9;transform-origin:50% 0;transform:translateX(-50%) scale(1);transition:transform 1.3s cubic-bezier(.5,0,.2,1),opacity 1s ease .3s}
+.ivid.shrink{transform:translateX(-50%) scale(var(--is));opacity:0;pointer-events:none}
 .ivid .ivm{position:absolute;inset:0;border-radius:36px;overflow:hidden;
   -webkit-mask-image:linear-gradient(to right,transparent 0,#000 13%,#000 87%,transparent 100%),linear-gradient(to bottom,transparent 0,#000 15%,#000 85%,transparent 100%);-webkit-mask-composite:source-in;
   mask-image:linear-gradient(to right,transparent 0,#000 13%,#000 87%,transparent 100%),linear-gradient(to bottom,transparent 0,#000 15%,#000 85%,transparent 100%);mask-composite:intersect}
@@ -607,13 +628,31 @@ select.t{appearance:auto}
   </div>
 </header>
 
-<main id="view-tool"><div class="hlogo-row" id="hLogoRow" hidden><div class="in"><img class="hlogo" id="hLogo" alt=""></div></div><div id="heroWrap" hidden></div><div class="shell"><aside class="side" id="side"></aside><div class="col" id="app"></div></div><footer class="legal" id="legalFoot"></footer></main>
+<main id="view-tool"><div class="hlogo-row" id="hLogoRow" hidden><div class="in"><img class="hlogo" id="hLogo" alt=""></div></div><div id="heroWrap" hidden></div><div class="shell"><aside class="side" id="side"></aside><div class="col" id="app"></div></div><section class="about-agent" id="about" aria-label="About Monica Polo · Acerca de Monica Polo"><div class="in"><div class="aa-col" lang="en"><h2>Monica Polo, bilingual REALTOR® in San Antonio</h2>
+<p>I'm Monica Polo, a sales agent with Reliance Residential Realty and a member of the San Antonio Board of REALTORS®. I help families buy and sell homes across San Antonio and Bexar County, and I explain every step in plain words, in English or Spanish, with no pressure.</p>
+<h3>How I can help</h3><ul>
+<li><b>Buying your first home.</b> Start with the free 2-minute readiness check, then we make a plan together.</li>
+<li><b>Selling your home.</b> Get a personal home value estimate within one business day.</li>
+<li><b>Military families moving to JBSA.</b> Find a home near Lackland, Randolph or Fort Sam Houston.</li>
+<li><b>Selling and buying at the same time.</b> One plan for your whole move.</li></ul>
+<h3>Areas I serve</h3><p>San Antonio, Converse, Schertz, Cibolo, Universal City, Live Oak, Selma, New Braunfels, Boerne, Helotes and the rest of Bexar County.</p>
+<h3>Questions</h3><h4>Do you speak Spanish?</h4><p>Yes. I work with buyers and sellers in English and Spanish, and you can switch this page to Español at the top.</p><h4>Does the readiness check cost anything?</h4><p>No. It's free, takes about 2 minutes and doesn't check your credit. I reply to you personally.</p><h4>How do I find out what my home is worth?</h4><p>Enter your address in the home value section on this page. I'll send you a personal estimate within one business day.</p><h4>How do I reach you?</h4><p>Call me at <a href="tel:+12102498331">(210) 249-8331</a>, or use Get in touch on this page.</p>
+<p class="aa-cta"><a class="btn" href="#heroWrap">Start the free check</a><a class="btn ghost" href="tel:+12102498331">Call (210) 249-8331</a></p></div><div class="aa-col aa-es" lang="es"><h2>Monica Polo, realtor que habla español en San Antonio</h2>
+<p>Soy Monica Polo, agente de ventas con Reliance Residential Realty y miembro del San Antonio Board of REALTORS®. Ayudo a familias a comprar y vender casa en San Antonio y todo el condado de Bexar, y explico cada paso con palabras sencillas, en español o en inglés, sin presión.</p>
+<h3>Cómo te puedo ayudar</h3><ul>
+<li><b>Comprar tu primera casa.</b> Empieza con la evaluación gratis de 2 minutos y hacemos un plan juntos.</li>
+<li><b>Vender tu casa.</b> Recibe un estimado personal del valor de tu casa en un día hábil.</li>
+<li><b>Familias militares que se mudan a JBSA.</b> Encuentra casa cerca de Lackland, Randolph o Fort Sam Houston.</li>
+<li><b>Vender y comprar al mismo tiempo.</b> Un solo plan para toda tu mudanza.</li></ul>
+<h3>Zonas donde trabajo</h3><p>San Antonio, Converse, Schertz, Cibolo, Universal City, Live Oak, Selma, New Braunfels, Boerne, Helotes y el resto del condado de Bexar.</p>
+<h3>Preguntas</h3><h4>¿Hablas español?</h4><p>Sí. Trabajo con compradores y vendedores en español e inglés, y puedes cambiar esta página a español arriba.</p><h4>¿Cuesta algo la evaluación?</h4><p>No. Es gratis, toma unos 2 minutos y no revisa tu crédito. Te respondo personalmente.</p><h4>¿Cómo sé cuánto vale mi casa?</h4><p>Escribe tu dirección en la sección del valor de tu casa en esta página. Te mando un estimado personal en un día hábil.</p><h4>¿Cómo te contacto?</h4><p>Llámame al <a href="tel:+12102498331">(210) 249-8331</a>, o usa Contáctame en esta página.</p>
+<p class="aa-cta"><a class="btn" href="#heroWrap">Empieza la evaluación gratis</a><a class="btn ghost" href="tel:+12102498331">Llamar al (210) 249-8331</a></p></div></div></section><footer class="legal" id="legalFoot"></footer></main>
 <div class="navbar" id="navbar" hidden><div class="in" id="navIn"></div></div>
 
 <main id="view-agent" hidden>
   <div class="dash">
     <div class="dash-top">
-      <h1>Agent dashboard <span class="exm">Demo</span></h1>
+      <h2 style="font-size:28px">Agent dashboard</h2>
       <p>Your 2BuyAndSell account: your leads, your page's look, and ready-to-post marketing.</p>
     </div>
     <div class="tabs" role="tablist">
@@ -995,6 +1034,7 @@ function render(){
   if(st.screen!=="start"){ var hw=document.getElementById("heroWrap"); hw.hidden=true; hw.innerHTML=""; }
   if(st.screen==="start") renderStart(); else if(st.screen==="q") renderQ(); else renderResults();
   document.body.classList.toggle("has-nav",!navbar.hidden);
+  document.body.classList.add("ready");
 }
 function heroSrc(){
   if(settings.hero==="none") return null;
@@ -1068,7 +1108,7 @@ function introFinish(){ if(introOver) return; introOver=true; clearTimeout(intro
   var fph=introFph(), box=introBox, v=box&&box.querySelector("video");
   if(!fph||!box||box.parentNode!==fph){ if(box&&box.parentNode) box.parentNode.removeChild(box); if(fph){ fph.classList.remove("intro","reveal"); } return; }
   var photo=fph.firstElementChild, ph=(photo&&photo.offsetHeight)||150, ih=parseFloat(fph.style.getPropertyValue("--ih"))||300;
-  fph.style.setProperty("--is",(ph/ih).toFixed(3)); fph.style.setProperty("--ih",ph+"px");
+  fph.style.setProperty("--is",(ph/ih).toFixed(3));
   box.classList.add("shrink"); fph.classList.add("reveal");
   setTimeout(function(){ try{ v.pause(); }catch(e){} if(box.parentNode) box.parentNode.removeChild(box);
     var f=introFph(); if(f){ f.classList.remove("intro","reveal"); f.style.removeProperty("--iw"); f.style.removeProperty("--ih"); f.style.removeProperty("--is"); } },1500); }
@@ -2448,7 +2488,7 @@ function bootPublic(){
     if(r.error){ fatal("Something went wrong","Please refresh the page to try again."); return; }
     if(!r.data){ fatal("Page not found","We couldn't find an agent at 2buyandsell.com/"+esc(slug)+"."); return; }
     agentId=r.data.id; agentSlug=r.data.slug; Object.assign(settings,r.data.settings||{}); normalizeSettings();
-    document.title=(agentName()!=="your agent"?agentName()+" · ":"")+"Buy and sell readiness check · Evaluación para comprar o vender";
+    if(!/^\/(index\.html)?$/.test(location.pathname)) document.title=(agentName()!=="your agent"?agentName()+" · ":"")+"Buy and sell readiness check · Evaluación para comprar o vender";
     if(location.hash==="#agent") history.replaceState(null,"",location.pathname+location.search);
     __start(); });
 }
