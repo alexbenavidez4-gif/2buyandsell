@@ -72,13 +72,19 @@ a{color:var(--brand-fg)}
 .who-agent{min-width:0;margin-right:auto}
 .who-agent b{display:block;font-size:16px;line-height:1.2}
 .who-agent small{display:block;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-/* Company logo: its own row just below the top bar, lined up under the agent's name */
-.hlogo-row{background:var(--paper)}
-.hlogo-row .in{max-width:1080px;margin:0 auto;padding:10px 16px 10px 68px}
-.hlogo{display:block;max-height:40px;max-width:190px;object-fit:contain}
-.lay-formal .hlogo-row{background:color-mix(in srgb, var(--brand) 18%, #0b0d11)}
-.lay-formal .hlogo,.lay-bold .hlogo{background:#fff;border-radius:8px;padding:5px 9px;box-sizing:content-box}
-.lay-bold .hlogo-row{background:var(--brand)}
+/* Company logo: in the top bar, just left of the agent's name, with a thin divider */
+.hlogo-wrap:not([hidden]){display:flex;align-items:center;flex:none;padding-right:12px;border-right:1px solid var(--line)}
+.hlogo{display:block;max-height:26px;max-width:120px;object-fit:contain}
+.lay-formal .hlogo,.lay-bold .hlogo{background:#fff;border-radius:6px;padding:4px 7px;box-sizing:content-box}
+.l-short{display:none}
+@media (max-width:520px){
+  .head .in{gap:9px}
+  .hlogo{max-height:20px;max-width:78px}
+  .lay-formal .hlogo,.lay-bold .hlogo{padding:3px 5px}
+  .hlogo-wrap:not([hidden]){padding-right:9px}
+  .l-long{display:none}.l-short{display:inline}
+  .lang button{padding:5px 9px}
+}
 .lang{display:flex;border:1px solid var(--line);border-radius:999px;padding:2px;flex:none}
 .lang button{border:0;background:transparent;padding:5px 11px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;color:var(--muted)}
 .lang button[aria-pressed="true"]{background:var(--brand);color:var(--on-brand)}
@@ -649,15 +655,16 @@ select.t{appearance:auto}
 <header class="head">
   <div class="in">
     <span id="hPhoto"></span>
+    <span class="hlogo-wrap" id="hLogoRow" hidden><img class="hlogo" id="hLogo" alt=""></span>
     <div class="who-agent"><b id="hName">Monica</b><small id="hBroker"></small></div>
     <div class="lang" id="langBox" role="group" aria-label="Language">
-      <button type="button" id="lang-en" aria-pressed="true">English</button>
-      <button type="button" id="lang-es" aria-pressed="false">Español</button>
+      <button type="button" id="lang-en" aria-pressed="true" aria-label="English"><span class="l-long">English</span><span class="l-short" aria-hidden="true">EN</span></button>
+      <button type="button" id="lang-es" aria-pressed="false" aria-label="Español"><span class="l-long">Español</span><span class="l-short" aria-hidden="true">ES</span></button>
     </div>
   </div>
 </header>
 
-<main id="view-tool"><div class="hlogo-row" id="hLogoRow" hidden><div class="in"><img class="hlogo" id="hLogo" alt=""></div></div><div id="heroWrap" hidden></div><div class="shell"><aside class="side" id="side"></aside><div class="col" id="app"></div></div><footer class="legal" id="legalFoot"></footer></main>
+<main id="view-tool"><div id="heroWrap" hidden></div><div class="shell"><aside class="side" id="side"></aside><div class="col" id="app"></div></div><footer class="legal" id="legalFoot"></footer></main>
 <div class="navbar" id="navbar" hidden><div class="in" id="navIn"></div></div>
 
 <main id="view-agent" hidden>
