@@ -665,6 +665,14 @@ select.t{appearance:auto}
 .fhero .cta-row .btn.ghost .rip{background:var(--gold);--ro:.35}
 .fhero .cta-row .btn.cta-call .rip{background:#fff;--ro:.5}
 @media (prefers-reduced-motion:reduce){.cta-row .btn:hover::after,.cta-row .cta-call:hover .b-ic{animation:none}.cta-row .btn .b-ic,.cta-row .btn .b-arrow{transition:none}}
+/* Share button (works on iPhone even when the browser bar is hidden or the site is opened from the home screen) */
+.sharefab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:25;display:none;align-items:center;gap:8px;border:0;border-radius:999px;padding:12px 18px 12px 15px;font-family:inherit;font-weight:700;font-size:15px;line-height:1;color:#16120a;background:var(--gold,#c9962b);box-shadow:0 10px 26px rgba(0,0,0,.28);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s ease}
+body.ready .sharefab.on{display:inline-flex;animation:fabIn .45s cubic-bezier(.2,.8,.2,1) both}
+.sharefab:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(0,0,0,.32)}
+.sharefab:active{transform:scale(.95)}
+.sharefab svg{flex:none}
+@keyframes fabIn{from{opacity:0;transform:translateY(14px) scale(.9)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){body.ready .sharefab.on{animation:none}}
 </style>
 </head>
 <body>
@@ -736,6 +744,8 @@ select.t{appearance:auto}
   </div>
 </div>
 <div class="toast" id="toast" role="status"></div>
+<button type="button" class="sharefab" id="shareFab" aria-label="Share this page"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12M7.5 7.5 12 3l4.5 4.5M8 11H6a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-2"/></svg><span id="shareFabTxt">Share</span></button>
+
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/config.js?v=2"></script>
@@ -2606,6 +2616,26 @@ document.addEventListener("pointerdown",function(e){
   s.style.setProperty("--rs",Math.ceil(Math.hypot(r.width,r.height)/6));
   el.appendChild(s); setTimeout(function(){ s.remove(); },800);
 },{passive:true});
+</script>
+<script>
+/* Share button: opens the iPhone/Android share sheet (Messages, WhatsApp, Mail, Copy...). Falls back to copying the link. */
+(function(){
+  var b=document.getElementById("shareFab"); if(!b) return;
+  if(window.MODE==="dash"||document.documentElement.classList.contains("no-share")) return;
+  function es(){ return (document.documentElement.lang||"").indexOf("es")===0; }
+  function label(){ var t=document.getElementById("shareFabTxt"); if(t) t.textContent=es()?"Compartir":"Share"; b.setAttribute("aria-label",es()?"Compartir esta página":"Share this page"); }
+  function pageUrl(){ var p=location.pathname.replace(/\/index\.html$/,"/"); return "https://www.2buyandsell.com"+(p||"/"); }
+  b.classList.add("on"); label();
+  new MutationObserver(label).observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});
+  b.addEventListener("click",function(){
+    var name=(document.querySelector(".who-agent b, .who-agent strong")||{}).textContent||"";
+    var data={title:document.title,text:es()?("Te comparto la página de "+(name||"mi agente")+", agente de bienes raíces en San Antonio:"):("Here's "+(name?name+"'s":"my")+" real estate page in San Antonio:"),url:pageUrl()};
+    if(navigator.share){ navigator.share(data).catch(function(){}); return; }
+    var done=function(){ if(window.toast) toast(es()?"Enlace copiado":"Link copied"); };
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(data.url).then(done,function(){ prompt("Copy this link:",data.url); }); }
+    else prompt("Copy this link:",data.url);
+  });
+})();
 </script>
 </body>
 </html>
