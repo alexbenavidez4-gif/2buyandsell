@@ -366,7 +366,7 @@ details.assume summary{cursor:pointer;color:var(--muted);font-size:15px}
 
 #view-tool{min-height:100vh;min-height:100svh}
 /* Until her page has loaded, keep the text below it out of view so nothing jumps when the page appears */
-body:not(.ready) .about-agent,body:not(.ready) #legalFoot,body:not(.ready) #view-tool .shell{display:none}
+body:not(.ready) .about-agent,body:not(.ready) .sharebar,body:not(.ready) #legalFoot,body:not(.ready) #view-tool .shell{display:none}
 #hPhoto{display:inline-block;min-width:40px;min-height:40px}
 /* About Monica: plain text in the page itself, in both languages, so search engines can read it */
 .about-agent{background:var(--card);border-top:1px solid var(--line);margin-top:28px}
@@ -665,14 +665,18 @@ select.t{appearance:auto}
 .fhero .cta-row .btn.ghost .rip{background:var(--gold);--ro:.35}
 .fhero .cta-row .btn.cta-call .rip{background:#fff;--ro:.5}
 @media (prefers-reduced-motion:reduce){.cta-row .btn:hover::after,.cta-row .cta-call:hover .b-ic{animation:none}.cta-row .btn .b-ic,.cta-row .btn .b-arrow{transition:none}}
-/* Share button (works on iPhone even when the browser bar is hidden or the site is opened from the home screen) */
-.sharefab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:25;display:none;align-items:center;gap:8px;border:0;border-radius:999px;padding:12px 18px 12px 15px;font-family:inherit;font-weight:700;font-size:15px;line-height:1;color:#16120a;background:var(--gold,#c9962b);box-shadow:0 10px 26px rgba(0,0,0,.28);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s ease}
-body.ready .sharefab.on{display:inline-flex;animation:fabIn .45s cubic-bezier(.2,.8,.2,1) both}
-.sharefab:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(0,0,0,.32)}
-.sharefab:active{transform:scale(.95)}
-.sharefab svg{flex:none}
-@keyframes fabIn{from{opacity:0;transform:translateY(14px) scale(.9)}to{opacity:1;transform:none}}
-@media (prefers-reduced-motion:reduce){body.ready .sharefab.on{animation:none}}
+/* Share link: small pill centered at the very bottom of the page, same feel as the buttons up top */
+.sharebar{display:flex;justify-content:center;background:var(--card);padding:4px 16px calc(28px + env(safe-area-inset-bottom))}
+.sharebtn{display:none;align-items:center;justify-content:center;gap:8px;min-width:190px;padding:9px 30px;border-radius:999px;font-size:14px;font-weight:700;letter-spacing:.02em}
+.sharebtn.on{display:inline-flex}
+.sharebtn svg{flex:none;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.sharebtn:hover svg{transform:translateY(-2px) scale(1.1)}
+.sharebtn::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.45) 50%,transparent 65%);transform:translateX(-120%)}
+.sharebtn:hover::after{animation:pickShine .9s ease}
+.sharebtn,.lay-formal .sharebtn{background:linear-gradient(135deg,rgba(201,150,43,.2),rgba(201,150,43,.1));color:#7a5810}
+.sharebtn:hover,.lay-formal .sharebtn:hover{background:linear-gradient(135deg,rgba(201,150,43,.3),rgba(201,150,43,.16));box-shadow:0 8px 20px rgba(16,24,40,.12),0 0 20px rgba(201,150,43,.3)}
+.lay-formal .sharebtn .rip{background:var(--gold);--ro:.35}
+@media (prefers-reduced-motion:reduce){.sharebtn:hover::after{animation:none}.sharebtn svg{transition:none}}
 </style>
 </head>
 <body>
@@ -715,7 +719,7 @@ body.ready .sharefab.on{display:inline-flex;animation:fabIn .45s cubic-bezier(.2
 <li><b>Vender y comprar al mismo tiempo.</b> Un solo plan para toda tu mudanza.</li></ul>
 <h3>Zonas donde trabajo</h3><p>San Antonio, Converse, Schertz, Cibolo, Universal City, Live Oak, Selma, New Braunfels, Boerne, Helotes y el resto del condado de Bexar.</p>
 <h3>Preguntas</h3><h4>¿Cuesta algo la evaluación?</h4><p>No. Es gratis, toma unos 2 minutos y no revisa tu crédito. Te respondo personalmente.</p><h4>¿Cómo sé cuánto vale mi casa?</h4><p>Escribe tu dirección en la sección del valor de tu casa en esta página. Te mando un estimado personal en un día hábil.</p><h4>¿Cómo te contacto?</h4><p>Llámame al <a href="tel:+12102498331">(210) 249-8331</a>, o usa Contáctame en esta página.</p>
-<p class="aa-cta"><a class="btn" href="#heroWrap">Empieza la evaluación gratis</a><a class="btn ghost" href="tel:+12102498331">Llamar al (210) 249-8331</a></p></div></div></section><footer class="legal" id="legalFoot"></footer></main>
+<p class="aa-cta"><a class="btn" href="#heroWrap">Empieza la evaluación gratis</a><a class="btn ghost" href="tel:+12102498331">Llamar al (210) 249-8331</a></p></div></div></section><footer class="legal" id="legalFoot"></footer><div class="sharebar"><button type="button" class="btn ghost sharebtn" id="shareFab" aria-label="Share this page"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12M7.5 7.5 12 3l4.5 4.5M8 11H6a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-2"/></svg><span id="shareFabTxt">Share</span></button></div></main>
 <div class="navbar" id="navbar" hidden><div class="in" id="navIn"></div></div>
 
 <main id="view-agent" hidden>
@@ -744,7 +748,6 @@ body.ready .sharefab.on{display:inline-flex;animation:fabIn .45s cubic-bezier(.2
   </div>
 </div>
 <div class="toast" id="toast" role="status"></div>
-<button type="button" class="sharefab" id="shareFab" aria-label="Share this page"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12M7.5 7.5 12 3l4.5 4.5M8 11H6a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-2"/></svg><span id="shareFabTxt">Share</span></button>
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
