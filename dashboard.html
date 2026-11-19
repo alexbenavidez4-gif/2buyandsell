@@ -570,6 +570,22 @@ select.t{appearance:auto}
 .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:10px;font-weight:600;font-size:14px;display:none;z-index:30}
 .toast.show{display:block}
 @media (prefers-reduced-motion: reduce){ .progress .bar i{transition:none} }
+/* ---- Monica Polo colors: ivory 60 / heritage green 30 / terracotta 10 (same as the public page) ---- */
+body.mp-theme{--brand:#31564F;--brand-fg:#31564F;--btn-bg:#31564F;--on-brand:#F5F0E7;--gold:#B8755B;--ink:#1F2B27;--muted:#5b655e;--paper:#F5F0E7;--card:#FBF8F2;--line:#E3DCCB;--brand-soft:#E9E2D2;color-scheme:light}
+body.mp-theme .head,body.mp-theme.lay-bold .head,body.mp-theme.lay-classic .head,body.mp-theme.lay-profile .head,body.mp-theme.lay-formal .head{background:#31564F;color:#F5F0E7;border-bottom:0;box-shadow:inset 0 -3px 0 #B8755B}
+body.mp-theme .head .who-agent small{color:#F5F0E7;opacity:.8}
+body.mp-theme .head .lang{border-color:rgba(245,240,231,.35)}
+body.mp-theme .head .lang button{color:#F5F0E7;opacity:.8}
+body.mp-theme .head .lang button[aria-pressed="true"]{background:#F5F0E7;color:#31564F;opacity:1}
+body.mp-theme .btn{background:#31564F;color:#F5F0E7;border:0;border-radius:3px;text-transform:uppercase;letter-spacing:.06em;font-size:15px;transition:background .25s ease}
+body.mp-theme .btn:hover{background:#B8755B;color:#fff}
+body.mp-theme .btn.ghost{background:transparent;color:#31564F;border:0;box-shadow:none}
+body.mp-theme .btn.ghost:hover{background:#E9E2D2;color:#31564F}
+body.mp-theme .quick a{background:#31564F;color:#F5F0E7;border-radius:4px;box-shadow:none;transition:background .25s ease}
+body.mp-theme .quick a:hover{background:#B8755B}
+body.mp-theme .band{background:#31564F;color:#F5F0E7;border-radius:0}
+body.mp-theme #installCard{background:#B8755B !important;color:#fff !important}
+body.mp-theme #installCard:hover{background:#9A5F47 !important}
 </style>
 </head>
 <body>
@@ -859,6 +875,7 @@ function applyBrand(){
   root.setProperty("--on-brand", contrastWhite(c)>=4.5 ? "#ffffff" : "#111418");
   document.body.classList.remove("lay-classic","lay-bold","lay-profile","lay-formal");
   document.body.classList.add("lay-"+settings.layout);
+  document.body.classList.toggle("mp-theme",/^monica\s+polo\b/i.test(settings.name||""));
   document.getElementById("hPhoto").innerHTML=photoHTML(40);
   document.getElementById("hName").textContent=agentName();
   document.getElementById("hBroker").textContent=settings.broker||"";

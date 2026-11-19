@@ -20,7 +20,7 @@
     css(".tabbar{position:fixed;left:0;right:0;bottom:0;z-index:40;display:none;background:#fff;border-top:1px solid #e7e1d6;padding:6px 6px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -4px 18px rgba(22,32,42,.06)}"+
         ".tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;color:#6b7580;text-decoration:none;font:700 12px/1.1 'Source Sans 3',system-ui,sans-serif;border-radius:12px}"+
         ".tabbar a svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}"+
-        ".tabbar a[aria-current=page]{color:#1a467c;background:#eef3f9}"+
+        ".tabbar a[aria-current=page]{color:var(--brand-fg,#1a467c);background:var(--brand-soft,#eef3f9)}"+
         "@media (max-width:760px){.tabbar{display:flex}body{padding-bottom:calc(74px + env(safe-area-inset-bottom))}}"+
         (standalone ? ".tabbar{display:flex}body{padding-bottom:calc(74px + env(safe-area-inset-bottom))}" : ""));
     var nav = document.createElement("nav"); nav.className = "tabbar"; nav.setAttribute("aria-label", "App sections");
