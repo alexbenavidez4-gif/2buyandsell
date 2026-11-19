@@ -727,6 +727,9 @@ select.t{appearance:auto}
 .homes .all span{display:inline-block;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
 .homes .all:hover span{transform:translateX(4px)}
 @media (max-width:520px){.homes form{flex-direction:column}}
+/* Calendly popup (loaded only when someone taps Schedule) */
+.calendly-overlay{z-index:9999!important}
+.cta-row .cta-sched .b-ic{color:var(--gold)}
 </style>
 </head>
 <body>
@@ -1202,6 +1205,7 @@ function renderStart(){
   }
   app.innerHTML=h;
   document.querySelectorAll("#heroWrap .pick, #app .pick").forEach(function(b){ b.addEventListener("click",function(){ startFlow(b.getAttribute("data-f"),0); }); });
+  document.querySelectorAll(".cta-sched").forEach(function(b){ b.addEventListener("click",openSched); });
   document.querySelectorAll(".cta-touch").forEach(function(b){ b.addEventListener("click",function(){ var c=document.getElementById("touch"); if(!c) return;
     c.scrollIntoView({behavior:"smooth",block:"start"}); setTimeout(function(){ var n=document.getElementById("tName"); if(n) n.focus({preventScroll:true}); },450); }); });
   document.querySelectorAll(".cta-value").forEach(function(b){ b.addEventListener("click",function(){ var c=document.getElementById("value"); if(!c) return;
@@ -1229,12 +1233,21 @@ function brokerCard(){ var u=brokerUrl(), b=settings.broker||""; if(!u||!b) retu
   var sub=/reliance\s+residential/i.test(b)?(es?"Agencia familiar · San Antonio · Hill Country":"Family-owned brokerage · San Antonio · Hill Country"):"";
   return '<a class="brokerage" href="'+esc(u)+'" target="_blank" rel="noopener">'+(settings.logo?'<span class="bk-logo"><img src="'+settings.logo+'" alt="'+esc(b)+' logo"></span>':'')+
     '<span class="bk-txt"><span class="bk-k">'+(es?"Bajo la agencia de":"Brokered by")+'</span><span class="bk-n">'+esc(b)+'</span>'+(sub?'<span class="bk-s">'+sub+'</span>':'')+'</span><span class="bk-visit">'+(es?"Visitar ":"Visit ")+esc(b)+' <span class="bk-go" aria-hidden="true">↗</span></span></a>'; }
+function schedUrl(){ var u=safeUrl(settings.calendly||""); if(u) return u; return /^monica\s+polo\b/i.test(settings.name||"")?"https://calendly.com/realmonipolo/30-minute-call-with-monica":""; }
+function openSched(){ var u=schedUrl(); if(!u) return; var full=u+(u.indexOf("?")<0?"?":"&")+"hide_gdpr_banner=1&primary_color=c9962b";
+  function go(){ try{ window.Calendly.initPopupWidget({url:full}); }catch(e){ window.open(u,"_blank"); } }
+  if(window.Calendly) return go();
+  if(!document.getElementById("calCss")){ var l=document.createElement("link"); l.id="calCss"; l.rel="stylesheet"; l.href="https://assets.calendly.com/assets/external/widget.css"; document.head.appendChild(l); }
+  var s=document.createElement("script"); s.src="https://assets.calendly.com/assets/external/widget.js"; s.async=true; s.onload=go; s.onerror=function(){ window.open(u,"_blank"); }; document.head.appendChild(s);
+  if(window.toast) toast(lang==="es"?"Abriendo el calendario…":"Opening the calendar…"); }
 function ctaRow(t){ var tel=telHref();
   var arw=function(s){ s=esc(s); return /\s*\u2192\s*$/.test(s)?'<span>'+s.replace(/\s*\u2192\s*$/,'')+'</span><span class="b-arrow" aria-hidden="true">\u2192</span>':'<span>'+s+'</span>'; };
   var ph='<svg class="b-ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>';
   var hs='<svg class="b-ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>';
   var ml='<svg class="b-ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm0 1 8 7 8-7"/></svg>';
+  var ca='<svg class="b-ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zM4 10h16M8 3v4M16 3v4M9 14.5l2 2 4-4"/></svg>';
   return '<div class="cta-row">'+(tel?'<a class="btn cta-call" href="'+esc(tel)+'">'+ph+arw(fill(t.ctaCall,{phone:prettyPhone(settings.phone)}))+'</a>':'')+
+    (schedUrl()?'<button type="button" class="btn ghost cta-sched">'+ca+arw(lang==="es"?"Agenda una cita →":"Schedule an appointment →")+'</button>':'')+
     '<button type="button" class="btn ghost cta-value">'+hs+arw(t.valBtn)+'</button>'+
     '<button type="button" class="btn ghost cta-touch">'+ml+arw(t.ctaTouch)+'</button></div>'; }
 function touchCard(t){ var ag=agentName();
