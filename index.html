@@ -1198,7 +1198,7 @@ function brokerUrl(){ var u=safeUrl(settings.brokerUrl||""); if(u) return u; if(
 function brokerCard(){ var u=brokerUrl(), b=settings.broker||""; if(!u||!b) return ""; var es=lang==="es";
   var sub=/reliance\s+residential/i.test(b)?(es?"Agencia familiar · San Antonio · Hill Country":"Family-owned brokerage · San Antonio · Hill Country"):"";
   return '<a class="brokerage" href="'+esc(u)+'" target="_blank" rel="noopener">'+(settings.logo?'<span class="bk-logo"><img src="'+settings.logo+'" alt="'+esc(b)+' logo"></span>':'')+
-    '<span class="bk-txt"><span class="bk-k">'+(es?"Orgullosa agente de":"Proud member of")+'</span><span class="bk-n">'+esc(b)+'</span>'+(sub?'<span class="bk-s">'+sub+'</span>':'')+'</span><span class="bk-visit">'+(es?"Visitar ":"Visit ")+esc(b)+' <span class="bk-go" aria-hidden="true">↗</span></span></a>'; }
+    '<span class="bk-txt"><span class="bk-k">'+(es?"Bajo la agencia de":"Brokered by")+'</span><span class="bk-n">'+esc(b)+'</span>'+(sub?'<span class="bk-s">'+sub+'</span>':'')+'</span><span class="bk-visit">'+(es?"Visitar ":"Visit ")+esc(b)+' <span class="bk-go" aria-hidden="true">↗</span></span></a>'; }
 function ctaRow(t){ var tel=telHref();
   var arw=function(s){ s=esc(s); return /\s*\u2192\s*$/.test(s)?'<span>'+s.replace(/\s*\u2192\s*$/,'')+'</span><span class="b-arrow" aria-hidden="true">\u2192</span>':'<span>'+s+'</span>'; };
   var ph='<svg class="b-ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>';
