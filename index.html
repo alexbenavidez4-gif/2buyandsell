@@ -709,6 +709,24 @@ select.t{appearance:auto}
 .brokerage:hover .bk-go{transform:translate(3px,-3px)}
 .brokerage:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.brokerage,.brokerage .bk-go{transition:none}.brokerage:hover{transform:none}.brokerage:hover::after{animation:none}}
+/* Home search: sends visitors to the MLS search on the agent's brokerage site */
+.homes{box-sizing:border-box;width:100%;max-width:560px;margin:22px auto 0;padding:20px 18px;border-radius:18px;text-align:center;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.03));box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 8px 22px rgba(0,0,0,.28)}
+.homes .h-k{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.homes h3{font-family:var(--serif);font-size:24px;color:#fff;margin:6px 0 4px}
+.homes p{color:rgba(255,255,255,.65);font-size:14px;margin:0 0 14px}
+.homes form{display:flex;gap:8px;margin:0}
+.homes input{flex:1;min-width:0;border:0;border-radius:12px;padding:13px 14px;font:inherit;font-size:16px;background:#fff;color:#16120a}
+.homes input:focus{outline:3px solid var(--gold);outline-offset:2px}
+.homes .btn.h-go{border-radius:12px;padding:13px 20px;background:var(--gold);color:#16120a;white-space:nowrap;font-weight:700}
+.homes .btn.h-go .rip{background:#fff;--ro:.5}
+.homes .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:14px}
+.homes .chips a{position:relative;overflow:hidden;color:#fff;text-decoration:none;font-size:13px;font-weight:600;padding:7px 13px;border-radius:999px;background:rgba(255,255,255,.08);transition:background .2s ease,transform .2s cubic-bezier(.2,.8,.2,1),color .2s ease}
+.homes .chips a:hover{background:rgba(201,150,43,.22);color:#f3e7c9;transform:translateY(-1px)}
+.homes .chips a:active{transform:scale(.96)}
+.homes .all{display:inline-block;margin-top:14px;color:var(--gold);font-weight:700;font-size:14px;text-decoration:none}
+.homes .all span{display:inline-block;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.homes .all:hover span{transform:translateX(4px)}
+@media (max-width:520px){.homes form{flex-direction:column}}
 </style>
 </head>
 <body>
@@ -1162,7 +1180,7 @@ function renderStart(){
       '<span class="fchip">'+esc((area?area+" · ":"")+role)+'</span>'+
       '<h1>'+esc(t.startH)+'</h1><p class="flede">'+esc(t.startP)+'</p>'+
       (speaksMore()?'<div class="speaks">'+GLOBE+'<span><b>'+esc(t.speakLbl)+':</b> '+esc(langNative())+'</span></div>':'')+
-      '<div class="picks">'+picks+'</div>'+ctaRow(t)+brokerCard()+trust+'</div></section>';
+      '<div class="picks">'+picks+'</div>'+ctaRow(t)+brokerCard()+homesCard()+trust+'</div></section>';
     playIntro();
     h+='</section>'+valueCard(t)+touchCard(t);
   }else if(H){
@@ -1190,10 +1208,22 @@ function renderStart(){
     c.scrollIntoView({behavior:"smooth",block:"start"}); setTimeout(function(){ var n=document.getElementById("vAddr"); if(n) n.focus({preventScroll:true}); },450); }); });
   var vf=document.getElementById("valueForm"); if(vf) vf.addEventListener("submit",function(e){ e.preventDefault(); submitValue(); });
   var tf=document.getElementById("touchForm"); if(tf) tf.addEventListener("submit",function(e){ e.preventDefault(); submitTouch(); });
+  var hf=document.getElementById("homesForm"); if(hf) hf.addEventListener("submit",function(e){ e.preventDefault(); var q=(document.getElementById("homesQ").value||"").trim(); var u=q?homesHref(q):brokerUrl(); var w=window.open(u,"_blank"); if(w){ try{ w.opener=null; }catch(_){} } else location.href=u; });
 }
 /* Call button (when the agent has a phone) + Get in touch, which jumps to the short form below */
 function telHref(){ var d=String(settings.phone||"").replace(/[^0-9]/g,""); if(d.length===10) d="1"+d; return d.length>=11?"tel:+"+d:""; }
 function prettyPhone(p){ var d=String(p||"").replace(/[^0-9]/g,""); if(d.length===11&&d.charAt(0)==="1") d=d.slice(1); return d.length===10?"("+d.slice(0,3)+") "+d.slice(3,6)+"-"+d.slice(6):String(p||""); }
+var IDX_MONICA="https://monicapolo.reliancerr.com/idx/?search_type%5B0%5D=Single-Family&search_type%5B1%5D=Land%20%2F%20Farm&search_type%5B2%5D=Commercial&search_type%5B3%5D=Townhouse%2FCondo&search_type%5B4%5D=Multi-Family&search_type%5B5%5D=Residential%20Income&feed=aborsaborctxmls&quicksearch=true&usersearch=true";
+function homesBase(){ return (/^monica\s+polo\b/i.test(settings.name||"")&&/reliance/i.test(settings.broker||""))?IDX_MONICA:""; }
+function homesHref(q){ return homesBase()+"&search_location="+encodeURIComponent(q); }
+function homesCard(){ var base=homesBase(); if(!base) return ""; var es=lang==="es", towns=["San Antonio","New Braunfels","Schertz","Cibolo","Converse","Boerne"];
+  return '<section class="homes" aria-label="'+(es?"Buscar casas":"Search homes")+'"><span class="h-k">'+(es?"Buscar casas":"Search homes")+'</span>'+
+    '<h3>'+(es?"Mira casas en venta":"Check properties for sale")+'</h3>'+
+    '<p>'+(es?"Busca todas las casas en venta del MLS en el sitio de Monica en Reliance.":"Search every home for sale on the MLS through Monica's Reliance site.")+'</p>'+
+    '<form id="homesForm" role="search"><input id="homesQ" type="search" enterkeyhint="search" autocomplete="off" placeholder="'+(es?"Ciudad, dirección o código postal":"City, address or ZIP")+'" aria-label="'+(es?"Ciudad, dirección o código postal":"City, address or ZIP")+'">'+
+    '<button type="submit" class="btn h-go">'+(es?"Buscar casas":"Search homes")+'</button></form>'+
+    '<div class="chips">'+towns.map(function(c){ return '<a href="'+esc(homesHref(c))+'" target="_blank" rel="noopener">'+esc(c)+'</a>'; }).join("")+'</div>'+
+    '<a class="all" href="'+esc(brokerUrl())+'" target="_blank" rel="noopener">'+(es?"Ver casas destacadas":"See featured listings")+' <span aria-hidden="true">→</span></a></section>'; }
 function brokerUrl(){ var u=safeUrl(settings.brokerUrl||""); if(u) return u; if(/^monica\s+polo\b/i.test(settings.name||"")&&/reliance/i.test(settings.broker||"")) return "https://monicapolo.reliancerr.com/"; return /reliance\s+residential/i.test(settings.broker||"")?"https://www.reliancerr.com/":""; }
 function brokerCard(){ var u=brokerUrl(), b=settings.broker||""; if(!u||!b) return ""; var es=lang==="es";
   var sub=/reliance\s+residential/i.test(b)?(es?"Agencia familiar · San Antonio · Hill Country":"Family-owned brokerage · San Antonio · Hill Country"):"";
