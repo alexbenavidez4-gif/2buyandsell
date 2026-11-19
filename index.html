@@ -1599,9 +1599,9 @@ document.getElementById("lang-es").addEventListener("click",function(){setLang("
 /* ================= LEGAL: FOOTER, PRIVACY, DISCLAIMERS ================= */
 var PLATFORM="2BuyAndSell", LEGAL_DATE={en:"November 3, 2026",es:"3 de noviembre de 2026"};
 var CPN_URL="https://www.trec.texas.gov/forms/consumer-protection-notice";
-function cpnLink(){ if(/^monica\s+polo\b/i.test(settings.name||"")) return "https://www.dropbox.com/scl/fi/nalt1khikqbqrhh99kr6u/CN-1-5_0-copy.pdf?rlkey=e0k1k7525g946wiat3h1l8dnj&st=q81o0vp9&e=1&bmus=1&dl=0"; return CPN_URL; }
+function cpnLink(){ if(/^monica\s+polo\b/i.test(settings.name||"")) return "/docs/consumer-protection-notice.pdf"; return CPN_URL; }
 var IABS_FALLBACK="https://www.trec.texas.gov/node/1568";
-function iabsLink(){ var u=safeUrl(settings.iabs); if(u) return u; if(/^monica\s+polo\b/i.test(settings.name||"")) return "https://drive.google.com/file/d/1REvne4dr7lsB9RwVeYEhkqQDu-zPxJEK/view?usp=sharing"; return ""; }
+function iabsLink(){ var u=safeUrl(settings.iabs); if(u) return u; if(/^monica\s+polo\b/i.test(settings.name||"")) return "/docs/information-about-brokerage-services.pdf"; return ""; }
 var LEGAL={
  en:{
   foot:{privacy:"Privacy Policy",terms:"Disclaimers & Terms",eho:"Equal Housing Opportunity",iabs:"Texas Real Estate Commission Information About Brokerage Services",cpn:"Texas Real Estate Commission Consumer Protection Notice",
