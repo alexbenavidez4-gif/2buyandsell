@@ -1183,6 +1183,7 @@ document.getElementById("lang-es").addEventListener("click",function(){setLang("
 var PLATFORM="2BuyAndSell", LEGAL_DATE={en:"November 3, 2026",es:"3 de noviembre de 2026"};
 var CPN_URL="https://www.trec.texas.gov/forms/consumer-protection-notice";
 var IABS_FALLBACK="https://www.trec.texas.gov/node/1568";
+function iabsLink(){ var u=safeUrl(settings.iabs); if(u) return u; if(/^monica\s+polo\b/i.test(settings.name||"")) return "https://drive.google.com/file/d/1REvne4dr7lsB9RwVeYEhkqQDu-zPxJEK/view?usp=sharing"; return ""; }
 var LEGAL={
  en:{
   foot:{privacy:"Privacy Policy",terms:"Disclaimers & Terms",eho:"Equal Housing Opportunity",iabs:"Texas Real Estate Commission Information About Brokerage Services",cpn:"Texas Real Estate Commission Consumer Protection Notice",
@@ -1251,7 +1252,7 @@ var PROFILE_SITES=[["har","HAR.com"],["realtorcom","Realtor.com"],["zillow","Zil
 function safeUrl(u){ u=String(u||"").trim(); if(!u) return ""; if(!/^https?:\/\//i.test(u)) u="https://"+u; return /^https?:\/\/[^\s"<>]+$/i.test(u)?u:""; }
 function legalVars(){ return {agent:agentName(),broker:settings.broker||"the sponsoring broker",email:settings.email||"the agent's email",phone:settings.phone||"",phoneSep:settings.phone?" or ":"",platform:PLATFORM}; }
 function renderFooter(){
-  var el=document.getElementById("legalFoot"), F=LEGAL[lang].foot, iabs=safeUrl(settings.iabs)||IABS_FALLBACK;
+  var el=document.getElementById("legalFoot"), F=LEGAL[lang].foot, iabs=iabsLink()||IABS_FALLBACK;
   var who=esc(agentName())+(settings.realtor?", "+F.realtor:"")+(settings.license?" · "+esc(fill(F.lic,{n:settings.license})):"")+" · "+esc(settings.broker||"");
   var links=PROFILE_SITES.filter(function(p){return safeUrl(settings[p[0]]);}).map(function(p){ return '<a href="'+esc(safeUrl(settings[p[0]]))+'" target="_blank" rel="noopener">'+p[1]+'</a>'; });
   el.innerHTML='<div class="in">'+
@@ -1507,7 +1508,7 @@ function renderChecklist(){
   var el=document.getElementById("chk"); if(!el) return;
   var items=[
     [!!(settings.broker||"").trim(),"Brokerage name","Required on your page and ads."],
-    [!!safeUrl(settings.iabs),"Information About Brokerage Services (IABS) link", safeUrl(settings.iabs)?"Linked from your footer.":"Required. Fill out TREC's current IABS form (effective Jan. 1, 2026) with your info, upload it, and paste the link here."],
+    [!!iabsLink(),"Information About Brokerage Services (IABS) link", iabsLink()?"Linked from your footer.":"Required. Fill out TREC's current IABS form (effective Jan. 1, 2026) with your info, upload it, and paste the link here."],
     [true,"TREC Consumer Protection Notice","Linked automatically to TREC's official notice."],
     [true,"Privacy policy and disclaimers","Included on your page. Have a Texas attorney review the template before going live."],
     [true,"Equal Housing Opportunity","Shown in your footer and disclaimers."],
