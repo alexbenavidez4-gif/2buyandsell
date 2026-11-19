@@ -2750,7 +2750,13 @@ function bootPublic(){
     agentId=r.data.id; agentSlug=r.data.slug; Object.assign(settings,r.data.settings||{}); normalizeSettings();
     document.title=(agentName()!=="your agent"?agentName()+" · ":"")+"Buy and sell readiness check · Evaluación para comprar o vender";
     if(location.hash==="#agent") history.replaceState(null,"",location.pathname+location.search);
-    __start(); });
+    __start(); deepLink(); });
+}
+function deepLink(){
+  try{ var q=new URLSearchParams(location.search), g=q.get('go'), l=q.get('lang');
+    if(l==='es'||l==='en'){ if(l!==lang) setLang(l); }
+    if(g==='buy'||g==='sell'||g==='both'){ startFlow(g,0); window.scrollTo(0,0); }
+  }catch(e){}
 }
 function bootDash(){
   sb.auth.getSession().then(function(r){
@@ -2822,5 +2828,8 @@ document.addEventListener("pointerdown",function(e){
   });
 })();
 </script>
+<nav aria-label="Buy and sell in San Antonio · Comprar y vender en San Antonio" style="max-width:760px;margin:0 auto;padding:28px 20px 40px;font:600 15px/1.8 'Source Sans 3',system-ui,sans-serif;text-align:center;color:#5b655e">
+<a style="color:#31564F" href="/buy-a-home-san-antonio.html">Buy a home in San Antonio</a> · <a style="color:#31564F" href="/sell-your-home-san-antonio.html">Sell your home in San Antonio</a> · <a style="color:#31564F" href="/comprar-casa-san-antonio.html">Comprar casa en San Antonio</a> · <a style="color:#31564F" href="/vender-casa-san-antonio.html">Vender tu casa en San Antonio</a>
+</nav>
 </body>
 </html>

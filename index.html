@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Monica Polo, REALTOR® | Bilingual Real Estate Agent San Antonio | Se habla español</title>
-<meta name="description" content="Monica Polo, REALTOR®, is a bilingual real estate agent in San Antonio helping families buy and sell homes in English or Spanish. Free 2-minute readiness check. ¡Hablo español!">
+<title>San Antonio Realtor | Monica Polo · Se habla español</title>
+<meta name="description" content="Bilingual San Antonio REALTOR® Monica Polo helps you buy or sell a home in English or Spanish. Free 2-minute readiness check. Se habla español.">
 <link rel="canonical" href="https://www.2buyandsell.com/">
 <meta property="og:type" content="website">
 <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon.png?v=3">
 <link rel="apple-touch-icon" href="/img/app-apple-180.png?v=3">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta property="og:site_name" content="Monica Polo Real Estate">
-<meta property="og:title" content="Monica Polo, REALTOR® · Bilingual · Se habla español">
+<meta property="og:title" content="San Antonio Realtor | Monica Polo · Se habla español">
 <meta property="og:description" content="Buy or sell a home in San Antonio with an agent who explains every step in English or Spanish. Free 2-minute readiness check. Evaluación gratis de 2 minutos.">
 <meta property="og:url" content="https://www.2buyandsell.com/">
 <meta property="og:image" content="https://www.2buyandsell.com/img/og-share3.jpg">
@@ -2787,7 +2787,13 @@ function bootPublic(){
     agentId=r.data.id; agentSlug=r.data.slug; Object.assign(settings,r.data.settings||{}); normalizeSettings();
     if(!/^\/(index\.html)?$/.test(location.pathname)) document.title=(agentName()!=="your agent"?agentName()+" · ":"")+"Buy and sell readiness check · Evaluación para comprar o vender";
     if(location.hash==="#agent") history.replaceState(null,"",location.pathname+location.search);
-    __start(); });
+    __start(); deepLink(); });
+}
+function deepLink(){
+  try{ var q=new URLSearchParams(location.search), g=q.get('go'), l=q.get('lang');
+    if(l==='es'||l==='en'){ if(l!==lang) setLang(l); }
+    if(g==='buy'||g==='sell'||g==='both'){ startFlow(g,0); window.scrollTo(0,0); }
+  }catch(e){}
 }
 function bootDash(){
   sb.auth.getSession().then(function(r){
@@ -2859,5 +2865,8 @@ document.addEventListener("pointerdown",function(e){
   });
 })();
 </script>
+<nav aria-label="Buy and sell in San Antonio · Comprar y vender en San Antonio" style="max-width:760px;margin:0 auto;padding:28px 20px 40px;font:600 15px/1.8 'Source Sans 3',system-ui,sans-serif;text-align:center;color:#5b655e">
+<a style="color:#31564F" href="/buy-a-home-san-antonio.html">Buy a home in San Antonio</a> · <a style="color:#31564F" href="/sell-your-home-san-antonio.html">Sell your home in San Antonio</a> · <a style="color:#31564F" href="/comprar-casa-san-antonio.html">Comprar casa en San Antonio</a> · <a style="color:#31564F" href="/vender-casa-san-antonio.html">Vender tu casa en San Antonio</a>
+</nav>
 </body>
 </html>
