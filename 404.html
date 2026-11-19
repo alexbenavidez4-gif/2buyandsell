@@ -1147,7 +1147,7 @@ function renderStart(){
 /* Call button (when the agent has a phone) + Get in touch, which jumps to the short form below */
 function telHref(){ var d=String(settings.phone||"").replace(/[^0-9]/g,""); if(d.length===10) d="1"+d; return d.length>=11?"tel:+"+d:""; }
 function prettyPhone(p){ var d=String(p||"").replace(/[^0-9]/g,""); if(d.length===11&&d.charAt(0)==="1") d=d.slice(1); return d.length===10?"("+d.slice(0,3)+") "+d.slice(3,6)+"-"+d.slice(6):String(p||""); }
-function brokerUrl(){ var u=safeUrl(settings.brokerUrl||""); if(u) return u; return /reliance\s+residential/i.test(settings.broker||"")?"https://www.reliancerr.com/":""; }
+function brokerUrl(){ var u=safeUrl(settings.brokerUrl||""); if(u) return u; if(/^monica\s+polo\b/i.test(settings.name||"")&&/reliance/i.test(settings.broker||"")) return "https://monicapolo.reliancerr.com/"; return /reliance\s+residential/i.test(settings.broker||"")?"https://www.reliancerr.com/":""; }
 function brokerCard(){ var u=brokerUrl(), b=settings.broker||""; if(!u||!b) return ""; var es=lang==="es";
   var sub=/reliance\s+residential/i.test(b)?(es?"Agencia familiar · San Antonio · Hill Country":"Family-owned brokerage · San Antonio · Hill Country"):"";
   return '<a class="brokerage" href="'+esc(u)+'" target="_blank" rel="noopener">'+(settings.logo?'<span class="bk-logo"><img src="'+settings.logo+'" alt="'+esc(b)+' logo"></span>':'')+
