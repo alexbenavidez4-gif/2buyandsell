@@ -1,6 +1,6 @@
 /* 2BuyAndSell service worker: opens fast, shows a friendly page when offline.
    Only touches this site's own files. Logins and data (Supabase) always go straight to the network. */
-const V = "2bas-v1";
+const V = "2bas-v2";
 const PRECACHE = ["/offline.html", "/site.css", "/app.js", "/img/app-192.png", "/img/logo-icon-128.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(V).then(c => c.addAll(PRECACHE)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== V).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
