@@ -741,10 +741,11 @@ body.mp-theme .fhero .mpwelcome small{color:#B8755B}
 body.mp-theme .fhero .speaks,body.mp-theme .fhero .trust li{color:#5b655e}
 body.mp-theme .fhero .trust svg{color:#B8755B}
 /* intro video on ivory: framed photo, no dark feathered edges */
-body.mp-theme .ivid .ivm{-webkit-mask-image:none;mask-image:none;border-radius:10px;box-shadow:0 18px 44px rgba(49,86,79,.25)}
+body.mp-theme .ivid .ivm{-webkit-mask-image:none;mask-image:none;border-radius:0;box-shadow:none}
 body.mp-theme .iquote .q-es{color:#31564F;text-shadow:none}
 body.mp-theme .iquote .q-en{color:#5b655e}
 body.mp-theme .iquote .q-or path{stroke:#B8755B}
+body.mp-theme .iquote .q-or circle{fill:#B8755B}
 body.mp-theme .ivid .ibar button{border:0;background:rgba(10,14,20,.6)}
 /* the three paths: quiet rows, no boxes. Deep green wipes in on hover. */
 body.mp-theme .fhero .picks{gap:6px}
@@ -807,6 +808,22 @@ body.mp-theme .navbar{border-top:0;box-shadow:0 -8px 24px rgba(49,86,79,.08)}
 body.mp-theme .about-agent{border-top:3px solid #B8755B}
 body.mp-theme .about-agent h2,body.mp-theme .legal .who{color:#31564F}
 body.mp-theme .touch{border-top-color:#B8755B}
+/* ---- intro video: Spanish-style terracotta frame + balanced placement ---- */
+.ivid .fc,.ivid .fd{display:none}
+body.mp-theme .ivid::before{content:"";position:absolute;inset:-14px;border:1.6px solid #B8755B;pointer-events:none;z-index:-1}
+body.mp-theme .ivid::after{content:"";position:absolute;inset:-8px;border:1px solid rgba(184,117,91,.5);pointer-events:none;z-index:-1}
+body.mp-theme .ivid .fc{display:block;position:absolute;width:22px;height:22px;background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><rect width='22' height='22' fill='%23F5F0E7'/><g fill='none' stroke='%23B8755B' stroke-linecap='round'><path d='M8 22V19A11 11 0 0 1 19 8H22' stroke-width='1.6'/><path d='M14 22V20A5 5 0 0 1 19 14H22' stroke-width='1' opacity='.55'/></g><path d='M11.2 8.9l2.3 2.3-2.3 2.3-2.3-2.3z' fill='%23B8755B'/></svg>") center/100% 100% no-repeat;pointer-events:none}
+body.mp-theme .ivid .fc.tl{left:-22px;top:-22px}
+body.mp-theme .ivid .fc.tr{right:-22px;top:-22px;transform:scaleX(-1)}
+body.mp-theme .ivid .fc.bl{left:-22px;bottom:-22px;transform:scaleY(-1)}
+body.mp-theme .ivid .fc.br{right:-22px;bottom:-22px;transform:scale(-1,-1)}
+body.mp-theme .ivid .fd{display:block;position:absolute;left:50%;width:9px;height:9px;margin-left:-4.5px;background:#B8755B;outline:5px solid #F5F0E7;transform:rotate(45deg);pointer-events:none}
+body.mp-theme .ivid .fd.t{top:-18px}
+body.mp-theme .ivid .fd.b{bottom:-18px}
+body.mp-theme .fhero .fph{transition:margin-top .9s ease}
+body.mp-theme .fph.intro{margin-top:clamp(0px,calc((100svh - 520px)/2),150px)}
+body.mp-theme .iquote{top:calc(100% + 46px)}
+body.mp-theme .demo{display:none}
 .mpbrand{background:var(--paper);text-align:center;padding:26px 20px 6px}
 .mpbrand img{display:block;margin:0 auto;width:min(78%,340px);height:auto}
 .fhero .mpwelcome{width:100%;max-width:520px;display:flex;flex-direction:column;gap:6px;align-items:center}
@@ -814,7 +831,7 @@ body.mp-theme .touch{border-top-color:#B8755B}
 .fhero .mpwelcome small{font-size:12px;font-weight:700;letter-spacing:.16em}
 </style>
 </head>
-<body>
+<body class="mp-theme">
 
 <nav class="demo" aria-label="Demo views">
   <div class="in">
@@ -828,7 +845,7 @@ body.mp-theme .touch{border-top-color:#B8755B}
   <div class="in">
     <span id="hPhoto"></span>
     <span class="hlogo-wrap" id="hLogoRow" hidden><img class="hlogo" id="hLogo" alt=""></span>
-    <div class="who-agent"><b id="hName">Monica</b><small id="hBroker"></small></div>
+    <div class="who-agent"><b id="hName">Monica Polo</b><small id="hBroker"></small></div>
     <div class="lang" id="langBox" role="group" aria-label="Language">
       <button type="button" id="lang-en" aria-pressed="true" aria-label="English"><span class="l-long">English</span><span class="l-short" aria-hidden="true">EN</span></button>
       <button type="button" id="lang-es" aria-pressed="false" aria-label="Español"><span class="l-long">Español</span><span class="l-short" aria-hidden="true">ES</span></button>
@@ -1354,12 +1371,12 @@ function introFinish(){ if(introOver) return; introOver=true; clearTimeout(intro
 function playIntro(){
   if(introOver||MODE!=="public") return;
   var fph=introFph(); if(!fph||!fph.firstElementChild) return;
-  var iw=Math.min(window.innerWidth*0.94,860), ih=iw*9/16, es=lang==="es";
+  var iw=isMonica()?Math.min(window.innerWidth-68,560):Math.min(window.innerWidth*0.94,860), ih=iw*9/16, es=lang==="es";
   fph.style.setProperty("--iw",iw+"px"); fph.style.setProperty("--ih",ih+"px"); fph.classList.add("intro");
   if(introBox){ fph.appendChild(introBox); var v0=introBox.querySelector("video"); try{ var p0=v0.play(); if(p0&&p0.catch) p0.catch(function(){}); }catch(e){} return; }
   try{ if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){ introOver=true; fph.classList.remove("intro"); return; } }catch(e){}
   var box=introBox=document.createElement("div"); box.className="ivid";
-  box.innerHTML='<div class="ivm"><video playsinline preload="auto" poster="/img/intro-poster.jpg" src="/img/intro.mp4?v=4"></video></div>'+
+  box.innerHTML='<div class="ivm"><video playsinline preload="auto" poster="/img/intro-poster.jpg" src="/img/intro.mp4?v=4"></video></div><i class="fc tl"></i><i class="fc tr"></i><i class="fc bl"></i><i class="fc br"></i><i class="fd t"></i><i class="fd b"></i>'+
     '<div class="ibar"><button type="button" class="isnd">🔊 '+(es?"Sonido":"Sound")+'</button><button type="button" class="iskip">'+(es?"Saltar":"Skip")+' ›</button></div>'+
     '<div class="iquote" aria-hidden="true"><svg class="q-or" viewBox="0 0 120 14"><path d="M2 7h42M76 7h42" stroke="#c9962b" stroke-width="1.2"/><path d="M60 1l6 6-6 6-6-6z" fill="none" stroke="#c9962b" stroke-width="1.2"/><circle cx="48" cy="7" r="1.6" fill="#c9962b"/><circle cx="72" cy="7" r="1.6" fill="#c9962b"/></svg>'+
     '<p class="q-es">“Venimos de raíces fuertes, de familias que soñaron en grande. Tu casa es el siguiente capítulo de ese sueño.”</p>'+
