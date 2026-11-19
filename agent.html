@@ -661,7 +661,7 @@ select.t{appearance:auto}
 @keyframes qIn{to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.iquote .q-es,.iquote .q-en,.iquote .q-or{animation:none;opacity:1;transform:none}}
 /* Brokerage card under the hero buttons: links to the brokerage's website */
-.brokerage{display:flex;align-items:center;gap:16px;margin:26px auto 0;max-width:520px;padding:14px 18px 14px 14px;border-radius:16px;text-decoration:none;color:#fff;text-align:left;position:relative;overflow:hidden;isolation:isolate;-webkit-tap-highlight-color:transparent;
+.brokerage{display:flex;flex-wrap:wrap;align-items:center;gap:14px 16px;margin:26px auto 0;max-width:520px;padding:14px 18px 14px 14px;border-radius:16px;text-decoration:none;color:#fff;text-align:left;position:relative;overflow:hidden;isolation:isolate;-webkit-tap-highlight-color:transparent;
  background:linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.035));box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 8px 22px rgba(0,0,0,.28);transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease,background .25s ease}
 .brokerage:hover{transform:translateY(-2px);background:linear-gradient(135deg,rgba(255,255,255,.13),rgba(255,255,255,.05));box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 14px 34px rgba(0,0,0,.35),0 0 28px rgba(201,150,43,.22)}
 .brokerage:active{transform:scale(.98);transition-duration:.08s}
@@ -674,7 +674,9 @@ select.t{appearance:auto}
 .brokerage .bk-k{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700}
 .brokerage .bk-n{display:block;font-family:var(--serif);font-size:19px;line-height:1.2;margin-top:3px}
 .brokerage .bk-s{display:block;font-size:13px;color:rgba(255,255,255,.65);margin-top:3px}
-.brokerage .bk-go{margin-left:auto;flex:none;font-size:20px;color:var(--gold);transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.brokerage .bk-visit{flex:1 0 100%;display:flex;justify-content:center;align-items:center;gap:8px;padding:11px 16px;border-radius:999px;background:var(--gold);color:#16120a;font-size:14px;font-weight:700;line-height:1.2;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.brokerage .bk-txt{flex:1;min-width:0}
+.brokerage .bk-go{display:inline-block;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
 .brokerage:hover .bk-go{transform:translate(3px,-3px)}
 .brokerage:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.brokerage,.brokerage .bk-go{transition:none}.brokerage:hover{transform:none}.brokerage:hover::after{animation:none}}
@@ -1149,7 +1151,7 @@ function brokerUrl(){ var u=safeUrl(settings.brokerUrl||""); if(u) return u; ret
 function brokerCard(){ var u=brokerUrl(), b=settings.broker||""; if(!u||!b) return ""; var es=lang==="es";
   var sub=/reliance\s+residential/i.test(b)?(es?"Agencia familiar · San Antonio · Hill Country":"Family-owned brokerage · San Antonio · Hill Country"):"";
   return '<a class="brokerage" href="'+esc(u)+'" target="_blank" rel="noopener">'+(settings.logo?'<span class="bk-logo"><img src="'+settings.logo+'" alt="'+esc(b)+' logo"></span>':'')+
-    '<span><span class="bk-k">'+(es?"Orgullosa agente de":"Proud member of")+'</span><span class="bk-n">'+esc(b)+'</span>'+(sub?'<span class="bk-s">'+sub+'</span>':'')+'</span><span class="bk-go" aria-hidden="true">↗</span></a>'; }
+    '<span class="bk-txt"><span class="bk-k">'+(es?"Orgullosa agente de":"Proud member of")+'</span><span class="bk-n">'+esc(b)+'</span>'+(sub?'<span class="bk-s">'+sub+'</span>':'')+'</span><span class="bk-visit">'+(es?"Visitar ":"Visit ")+esc(b)+' <span class="bk-go" aria-hidden="true">↗</span></span></a>'; }
 function ctaRow(t){ var tel=telHref();
   var arw=function(s){ s=esc(s); return /\s*\u2192\s*$/.test(s)?'<span>'+s.replace(/\s*\u2192\s*$/,'')+'</span><span class="b-arrow" aria-hidden="true">\u2192</span>':'<span>'+s+'</span>'; };
   var ph='<svg class="b-ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>';
