@@ -1408,13 +1408,16 @@ function touchCard(t){ var ag=agentName();
 /* Intro video on the live page: shown once per visit, muted until the visitor taps Sound (browsers block sound on its own). */
 var introBox=null, introOver=false, introTimer=null;
 function introFph(){ return document.querySelector(".fhero .fph"); }
-function introFinish(){ if(introOver) return; introOver=true; clearTimeout(introTimer);
+function introFinish(tail){ if(introOver) return; introOver=true; clearTimeout(introTimer); tail=(tail===true);
   var fph=introFph(), box=introBox, v=box&&box.querySelector("video");
   if(!fph||!box||box.parentNode!==fph){ if(box&&box.parentNode) box.parentNode.removeChild(box); if(fph){ fph.classList.remove("intro","reveal"); } return; }
   var photo=fph.firstElementChild, ph=(photo&&photo.offsetHeight)||150, ih=parseFloat(fph.style.getPropertyValue("--ih"))||300;
   fph.style.setProperty("--is",(ph/ih).toFixed(3));
   box.classList.add("shrink"); fph.classList.add("reveal");
-  setTimeout(function(){ try{ v.pause(); }catch(e){} if(box.parentNode) box.parentNode.removeChild(box);
+  /* tail: the page appears at the end of the picture, but the music keeps playing (the picture is already faded out) and is removed when the track ends */
+  var rm=function(){ try{ v.pause(); }catch(e){} if(box.parentNode) box.parentNode.removeChild(box); };
+  if(tail&&v&&!v.ended){ v.addEventListener("ended",rm); setTimeout(rm,6000); }
+  setTimeout(function(){ if(!tail) rm();
     var f=introFph(); if(f){ f.classList.remove("intro","reveal"); f.style.removeProperty("--iw"); f.style.removeProperty("--ih"); f.style.removeProperty("--is"); } },1500); }
 /* Called every time the intro area is drawn, so the video survives the page redrawing itself (for example when the language changes). */
 function playIntro(){
@@ -1425,19 +1428,19 @@ function playIntro(){
   if(introBox){ fph.appendChild(introBox); var v0=introBox.querySelector("video"); try{ var p0=v0.play(); if(p0&&p0.catch) p0.catch(function(){}); }catch(e){} return; }
   try{ if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){ introOver=true; fph.classList.remove("intro"); return; } }catch(e){}
   var box=introBox=document.createElement("div"); box.className="ivid";
-  box.innerHTML='<div class="ivm"><video playsinline preload="auto" poster="/img/intro-poster.jpg" src="/img/intro.mp4?v=4"></video></div><i class="fc tl"></i><i class="fc tr"></i><i class="fc bl"></i><i class="fc br"></i><i class="fd t"></i><i class="fd b"></i>'+
+  box.innerHTML='<div class="ivm"><video playsinline preload="auto" poster="/img/intro-poster.jpg" src="/img/intro-v5.mp4"></video></div><i class="fc tl"></i><i class="fc tr"></i><i class="fc bl"></i><i class="fc br"></i><i class="fd t"></i><i class="fd b"></i>'+
     '<div class="ibar"><button type="button" class="isnd">🔊 '+(es?"Sonido":"Sound")+'</button><button type="button" class="iskip">'+(es?"Saltar":"Skip")+' ›</button></div>'+
     '<div class="iquote" aria-hidden="true"><svg class="q-or" viewBox="0 0 120 14"><path d="M2 7h42M76 7h42" stroke="#c9962b" stroke-width="1.2"/><path d="M60 1l6 6-6 6-6-6z" fill="none" stroke="#c9962b" stroke-width="1.2"/><circle cx="48" cy="7" r="1.6" fill="#c9962b"/><circle cx="72" cy="7" r="1.6" fill="#c9962b"/></svg>'+
     '<p class="q-es">“Venimos de raíces fuertes, de familias que soñaron en grande. Tu casa es el siguiente capítulo de ese sueño.”</p>'+
     '<p class="q-en">We come from strong roots and families who dreamed big. Your home is the next chapter of that dream.</p></div>';
   fph.appendChild(box);
   var v=box.querySelector("video");
-  v.addEventListener("ended",introFinish); v.addEventListener("error",introFinish);
-  box.querySelector(".iskip").addEventListener("click",introFinish);
+  v.addEventListener("ended",function(){ introFinish(true); }); v.addEventListener("error",function(){ introFinish(); }); v.addEventListener("timeupdate",function(){ if(v.currentTime>=11.7) introFinish(true); });
+  box.querySelector(".iskip").addEventListener("click",function(){ introFinish(); });
   var snd=box.querySelector(".isnd");
   function label(){ snd.textContent=(v.muted?"🔊 ":"🔇 ")+(lang==="es"?"Sonido":"Sound"); }
   snd.addEventListener("click",function(){ v.muted=!v.muted; v.volume=0.6; label(); });
-  introTimer=setTimeout(introFinish,16000);
+  introTimer=setTimeout(function(){ introFinish(true); },16000);
   /* Try to start with the music on. Browsers only allow that after the visitor has touched the page, so if it is refused the video starts silent and the music joins on their first tap or key press. */
   function quiet(){ v.muted=true; label();
     var pm; try{ pm=v.play(); }catch(e){ introFinish(); return; }
