@@ -843,6 +843,18 @@ body.mp-theme .fhero .fph{transition:margin-top .9s ease}
 body.mp-theme .fph.intro{margin-top:clamp(0px,calc((100svh - 520px)/2),150px)}
 body.mp-theme .iquote{top:calc(100% + 46px)}
 body.mp-theme .demo{display:none}
+@media (max-width:520px){
+body.mp-theme .ivid::before{inset:-10px}
+body.mp-theme .ivid::after{inset:-5px}
+body.mp-theme .ivid .fc{width:16px;height:16px}
+body.mp-theme .ivid .fc.tl{left:-16px;top:-16px}
+body.mp-theme .ivid .fc.tr{right:-16px;top:-16px}
+body.mp-theme .ivid .fc.bl{left:-16px;bottom:-16px}
+body.mp-theme .ivid .fc.br{right:-16px;bottom:-16px}
+body.mp-theme .ivid .fd{width:7px;height:7px;margin-left:-3.5px;outline-width:4px}
+body.mp-theme .ivid .fd.t{top:-14px}
+body.mp-theme .ivid .fd.b{bottom:-14px}
+}
 .mpbrand{background:var(--paper);text-align:center;padding:26px 20px 6px}
 .mpbrand img{display:block;margin:0 auto;width:min(78%,340px);height:auto}
 .fhero .mpwelcome{width:100%;max-width:520px;display:flex;flex-direction:column;gap:6px;align-items:center}
@@ -1408,7 +1420,7 @@ function introFinish(){ if(introOver) return; introOver=true; clearTimeout(intro
 function playIntro(){
   if(introOver||MODE!=="public") return;
   var fph=introFph(); if(!fph||!fph.firstElementChild) return;
-  var iw=isMonica()?Math.min(window.innerWidth-68,560):Math.min(window.innerWidth*0.94,860), ih=iw*9/16, es=lang==="es";
+  var iw=isMonica()?Math.min(window.innerWidth-(window.innerWidth<=520?40:72),860):Math.min(window.innerWidth*0.94,860), ih=iw*9/16, es=lang==="es";
   fph.style.setProperty("--iw",iw+"px"); fph.style.setProperty("--ih",ih+"px"); fph.classList.add("intro");
   if(introBox){ fph.appendChild(introBox); var v0=introBox.querySelector("video"); try{ var p0=v0.play(); if(p0&&p0.catch) p0.catch(function(){}); }catch(e){} return; }
   try{ if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){ introOver=true; fph.classList.remove("intro"); return; } }catch(e){}
