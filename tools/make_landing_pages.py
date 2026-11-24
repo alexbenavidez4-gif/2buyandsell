@@ -9,8 +9,8 @@ P={
  cta="Take the free 2-minute buyer check",cta2="Call (210) 249-8331",
  secs=[("Find out if you're ready to buy","The free readiness check asks about your savings, income, debts and timing. It takes about 2 minutes and never touches your credit. You get a readiness score, a realistic price range and a clear next step, and Monica replies to you personally."),
  ("What buying in San Antonio usually looks like","Most purchases follow the same path: get your finances in order, talk with a lender about loan options, search for homes in the neighborhoods you like, make an offer, complete the inspection and option period, and close with a title company. Monica explains each step before you get to it, so there are no surprises."),
- ("Loan options to ask about","Depending on your situation, you may want to compare conventional, FHA and VA loans, and ask a lender whether any down payment assistance programs fit you. If you or your spouse serve at Joint Base San Antonio, ask Monica about buying with VA benefits."),
- ("Where Monica helps you buy","San Antonio and Bexar County, plus nearby cities including Converse, Schertz, Cibolo, Universal City, Live Oak, Selma, New Braunfels, Boerne and Helotes.")],
+ ("Loan options to ask about","Depending on your situation, you may want to compare conventional, FHA and VA loans, and ask a lender whether any down payment assistance programs fit you. If you or your spouse serve at Joint Base San Antonio, ask Monica about buying with VA benefits. She holds the Military and Veteran Housing Certification (MVHC)."),
+ ("Where Monica helps you buy","San Antonio, Converse, Live Oak, Cibolo, New Braunfels and Seguin.")],
  faq=[("Does the buyer check cost anything?","No. It's free, takes about 2 minutes and doesn't check your credit."),("Can I work with a Spanish-speaking agent?","Yes. Monica is bilingual and can guide you through the whole purchase in English or Spanish."),("Do I need a big down payment?","Not always. Loan programs and down payment amounts vary, so the check helps you see what may fit before you talk to a lender.")],
  other=("sell-your-home-san-antonio","Selling a home instead?","Sell your home in San Antonio")),
 "sell-your-home-san-antonio":dict(lang="en",alt="vender-casa-san-antonio",go="sell",
@@ -22,8 +22,8 @@ P={
  secs=[("See what you could walk away with","The free seller check asks a few simple questions about your home and your timing. You see a value range and an estimate of what you could net after costs. It's free, takes about 2 minutes and doesn't check your credit."),
  ("What selling usually looks like","Selling typically means pricing the home with local sales in mind, preparing it for photos and showings, reviewing offers, handling the buyer's inspection and option period, and closing with a title company. Monica walks you through each step and answers your questions as they come up."),
  ("Selling and buying at the same time","Many families need to sell before they can buy. The check lets you answer for both, so you can see how the sale could fund your next home."),
- ("Where Monica helps you sell","San Antonio and Bexar County, plus Converse, Schertz, Cibolo, Universal City, Live Oak, Selma, New Braunfels, Boerne and Helotes.")],
- faq=[("How do I find out what my home is worth?","Take the free seller check, or enter your address in the home value section on the home page. Monica sends you a personal estimate within one business day."),("Does the seller check cost anything?","No. It's free and doesn't check your credit."),("Can you help me in Spanish?","Yes. Monica is bilingual and can explain every step of selling in English or Spanish.")],
+ ("Where Monica helps you sell","San Antonio, Converse, Live Oak, Cibolo, New Braunfels and Seguin.")],
+ faq=[("How do I find out what my home is worth?","Take the free seller check, or enter your address in the home value section on the home page. Monica replies within 48 hours and aims for 24."),("Does the seller check cost anything?","No. It's free and doesn't check your credit."),("Can you help me in Spanish?","Yes. Monica is bilingual and can explain every step of selling in English or Spanish.")],
  other=("buy-a-home-san-antonio","Buying a home instead?","Buy a home in San Antonio")),
 "comprar-casa-san-antonio":dict(lang="es",alt="buy-a-home-san-antonio",go="buy",
  title="Comprar Casa en San Antonio, TX | Agente en Español | Monica Polo",
@@ -33,8 +33,8 @@ P={
  cta="Hacer la evaluación gratis de 2 minutos",cta2="Llama al (210) 249-8331",
  secs=[("Descubre si estás listo para comprar","La evaluación gratis te pregunta por tus ahorros, ingresos, deudas y tiempos. Toma unos 2 minutos y no revisa tu crédito. Recibes una calificación de preparación, un rango de precio realista y un siguiente paso claro, y Monica te responde personalmente."),
  ("Cómo suele ser comprar en San Antonio","La mayoría de las compras siguen el mismo camino: ordenar tus finanzas, hablar con un prestamista sobre tus opciones, buscar casas en las zonas que te gustan, hacer una oferta, completar la inspección y el periodo de opción, y cerrar con una compañía de título. Monica te explica cada paso antes de llegar a él, para que no haya sorpresas."),
- ("Opciones de préstamo para preguntar","Según tu situación, puedes comparar préstamos convencionales, FHA y VA, y preguntarle a un prestamista si algún programa de ayuda para el enganche te sirve. Si tú o tu pareja sirven en Joint Base San Antonio, pregúntale a Monica sobre comprar con beneficios VA."),
- ("Dónde te ayuda Monica","San Antonio y el condado de Bexar, además de ciudades cercanas como Converse, Schertz, Cibolo, Universal City, Live Oak, Selma, New Braunfels, Boerne y Helotes.")],
+ ("Opciones de préstamo para preguntar","Según tu situación, puedes comparar préstamos convencionales, FHA y VA, y preguntarle a un prestamista si algún programa de ayuda para el enganche te sirve. Si tú o tu pareja sirven en Joint Base San Antonio, pregúntale a Monica sobre comprar con beneficios VA. Ella tiene la Certificación de Vivienda para Militares y Veteranos (MVHC)."),
+ ("Dónde te ayuda Monica","San Antonio, Converse, Live Oak, Cibolo, New Braunfels y Seguin.")],
  faq=[("¿Cuesta algo la evaluación para compradores?","No. Es gratis, toma unos 2 minutos y no revisa tu crédito."),("¿Puedo trabajar con un agente que hable español?","Sí. Monica es bilingüe y te acompaña en toda la compra en español o en inglés."),("¿Necesito mucho dinero para el enganche?","No siempre. Los programas y los enganches varían, y la evaluación te ayuda a ver qué podría funcionar antes de hablar con un prestamista.")],
  other=("vender-casa-san-antonio","¿Quieres vender tu casa?","Vender tu casa en San Antonio")),
 "vender-casa-san-antonio":dict(lang="es",alt="sell-your-home-san-antonio",go="sell",
@@ -46,8 +46,8 @@ P={
  secs=[("Mira cuánto podrías quedarte","La evaluación gratis para vendedores te hace unas preguntas sencillas sobre tu casa y tus tiempos. Ves un rango de valor y un estimado de lo que te quedaría después de costos. Es gratis, toma unos 2 minutos y no revisa tu crédito."),
  ("Cómo suele ser vender una casa","Vender normalmente significa fijar el precio según las ventas locales, preparar la casa para fotos y visitas, revisar ofertas, atender la inspección y el periodo de opción del comprador, y cerrar con una compañía de título. Monica te acompaña en cada paso y responde tus preguntas conforme surgen."),
  ("Vender y comprar al mismo tiempo","Muchas familias necesitan vender antes de poder comprar. La evaluación te deja responder por las dos cosas, para ver cómo la venta podría ayudarte a pagar tu próxima casa."),
- ("Dónde te ayuda Monica","San Antonio y el condado de Bexar, además de Converse, Schertz, Cibolo, Universal City, Live Oak, Selma, New Braunfels, Boerne y Helotes.")],
- faq=[("¿Cómo sé cuánto vale mi casa?","Haz la evaluación gratis para vendedores, o escribe tu dirección en la sección del valor de tu casa en la página principal. Monica te manda un estimado personal en un día hábil."),("¿Cuesta algo la evaluación para vendedores?","No. Es gratis y no revisa tu crédito."),("¿Me pueden ayudar en español?","Sí. Monica es bilingüe y te explica cada paso de la venta en español o en inglés.")],
+ ("Dónde te ayuda Monica","San Antonio, Converse, Live Oak, Cibolo, New Braunfels y Seguin.")],
+ faq=[("¿Cómo sé cuánto vale mi casa?","Haz la evaluación gratis para vendedores, o escribe tu dirección en la sección del valor de tu casa en la página principal. Monica responde en un máximo de 48 horas y busca hacerlo en 24."),("¿Cuesta algo la evaluación para vendedores?","No. Es gratis y no revisa tu crédito."),("¿Me pueden ayudar en español?","Sí. Monica es bilingüe y te explica cada paso de la venta en español o en inglés.")],
  other=("comprar-casa-san-antonio","¿Quieres comprar casa?","Comprar casa en San Antonio")),
 }
 CSS="""<style>
@@ -89,7 +89,7 @@ def build(slug,d):
       lang="English version" if es else "Versión en español",
       iabs="Información sobre los servicios de corretaje (TREC)" if es else "Information About Brokerage Services (TREC)",
       cpn="Aviso de protección al consumidor (TREC)" if es else "Consumer Protection Notice (TREC)",
-      sub="Monica Polo, REALTOR® · Reliance Residential Realty · San Antonio, TX")
+      sub="Monica Polo, REALTOR® · Texas License #769628 · Reliance Residential Realty · San Antonio, TX")
     other_lang_slug=d["alt"]
     return f'''<!DOCTYPE html>
 <html lang="{d["lang"]}">

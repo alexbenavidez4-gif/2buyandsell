@@ -1,9 +1,14 @@
 # Monica Polo, REALTOR®, bilingual real estate agent
 
-> Bilingual (English/Spanish) real estate agent with Reliance Residential Realty serving San Antonio, Texas. Website: https://www.2buyandsell.com/. Phone: (210) 249-8331. Last updated 2026-11-23.
+> Bilingual (English/Spanish) real estate agent with Reliance Residential Realty serving San Antonio, Texas. Website: https://www.2buyandsell.com/. Phone: (210) 249-8331. Last updated 2026-11-24.
+
+## Credentials
+- Texas real estate license #769628, licensed since 2021
+- Graduate REALTOR® Institute (GRI); Military and Veteran Housing Certification (MVHC)
+- Monica replies to new leads within 48 hours and aims for 24.
 
 ## Areas served
-San Antonio, Converse, Schertz, Cibolo, Universal City, Live Oak, Selma, New Braunfels, Boerne, Helotes, Bexar County
+San Antonio, Converse, Live Oak, Cibolo, New Braunfels, Seguin
 
 ## Services
 - Buyer representation: Guidance from readiness check through closing for people buying a home in the San Antonio area, in English or Spanish.
@@ -29,10 +34,10 @@ Money and timing. It never asks about who you are. Monica follows Fair Housing r
 Yes. Monica is bilingual and can guide you through buying or selling in English or Spanish.
 
 ### Which areas does Monica serve?
-San Antonio and Bexar County, plus Converse, Schertz, Cibolo, Universal City, Live Oak, Selma, New Braunfels, Boerne and Helotes.
+San Antonio, Converse, Live Oak, Cibolo, New Braunfels and Seguin.
 
 ### How do I find out what my home is worth?
-Take the free seller check, or enter your address in the home value section on the home page. Monica sends you a personal estimate within one business day.
+Take the free seller check, or enter your address in the home value section on the home page. Monica replies within 48 hours and aims for 24.
 
 ### Can I sell and buy at the same time?
 Yes. The check lets you answer for both, so you can see how the sale could fund your next home.
@@ -52,6 +57,15 @@ Call (210) 249-8331, or use Get in touch on the home page.
 ### Which brokerage is Monica with?
 Monica Polo is a REALTOR® with Reliance Residential Realty in San Antonio, Texas. The Texas Real Estate Commission's Information About Brokerage Services and Consumer Protection Notice are linked on every page.
 
+### What are Monica's credentials?
+Monica Polo has been a licensed Texas real estate agent since September 2021 (Texas license #769628). She holds the Graduate REALTOR® Institute (GRI) designation and the Military and Veteran Housing Certification (MVHC).
+
+### Does Monica help military families and veterans buy a home?
+Yes. Monica holds the Military and Veteran Housing Certification (MVHC). If you or your spouse serve or have served, ask her about buying with VA benefits.
+
+### How fast will Monica reply?
+Monica replies to new leads within 48 hours and aims for 24.
+
 ## Preguntas frecuentes (español)
 
 ### ¿Cuesta algo la evaluación?
@@ -70,10 +84,10 @@ Dinero y tiempos. Nunca pregunta quién eres. Monica sigue las reglas de Viviend
 Sí. Monica es bilingüe y te acompaña al comprar o vender en español o en inglés.
 
 ### ¿Qué zonas atiende Monica?
-San Antonio y el condado de Bexar, además de Converse, Schertz, Cibolo, Universal City, Live Oak, Selma, New Braunfels, Boerne y Helotes.
+San Antonio, Converse, Live Oak, Cibolo, New Braunfels y Seguin.
 
 ### ¿Cómo sé cuánto vale mi casa?
-Haz la evaluación gratis para vendedores, o escribe tu dirección en la sección del valor de tu casa en la página principal. Monica te manda un estimado personal en un día hábil.
+Haz la evaluación gratis para vendedores, o escribe tu dirección en la sección del valor de tu casa en la página principal. Monica responde en un máximo de 48 horas y busca hacerlo en 24.
 
 ### ¿Puedo vender y comprar al mismo tiempo?
 Sí. La evaluación te deja responder por las dos cosas, para ver cómo la venta podría ayudarte a pagar tu próxima casa.
@@ -92,6 +106,15 @@ Llama al (210) 249-8331, o usa Contáctame en la página principal.
 
 ### ¿Con qué corredora trabaja Monica?
 Monica Polo es agente (REALTOR®) de Reliance Residential Realty en San Antonio, Texas. La Información sobre los servicios de corretaje y el Aviso de protección al consumidor de la Comisión de Bienes Raíces de Texas están enlazados en cada página.
+
+### ¿Cuáles son las credenciales de Monica?
+Monica Polo es agente de bienes raíces con licencia de Texas desde septiembre de 2021 (licencia de Texas #769628). Tiene la designación Graduate REALTOR® Institute (GRI) y la Certificación de Vivienda para Militares y Veteranos (MVHC).
+
+### ¿Monica ayuda a familias militares y veteranos a comprar casa?
+Sí. Monica tiene la Certificación de Vivienda para Militares y Veteranos (MVHC). Si tú o tu pareja sirven o han servido, pregúntale sobre comprar con beneficios VA.
+
+### ¿Qué tan rápido responde Monica?
+Monica responde a los nuevos contactos en un máximo de 48 horas y busca hacerlo en 24.
 
 ## Notices
 - Information About Brokerage Services (TREC): https://www.2buyandsell.com/docs/information-about-brokerage-services.pdf

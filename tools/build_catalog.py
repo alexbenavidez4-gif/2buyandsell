@@ -23,7 +23,7 @@ def page(lang):
     L=dict(svc="Servicios" if es else "Services",home="Inicio" if es else "Home",lang="English version" if es else "Versión en español",
       iabs="Información sobre los servicios de corretaje (TREC)" if es else "Information About Brokerage Services (TREC)",
       cpn="Aviso de protección al consumidor (TREC)" if es else "Consumer Protection Notice (TREC)",
-      upd="Actualizado" if es else "Last updated",sub="Monica Polo, REALTOR® · Reliance Residential Realty · San Antonio, TX")
+      upd="Actualizado" if es else "Last updated",sub=f"Monica Polo, REALTOR® · Texas License #{A['license']} · Reliance Residential Realty · San Antonio, TX")
     go=f"/?go=buy{'&lang=es' if es else ''}"
     return f'''<!DOCTYPE html>
 <html lang="{lang}">
@@ -79,7 +79,7 @@ for lang,fn in (("en","faq.html"),("es","preguntas-frecuentes.html")):
     open(f"{R}/{fn}","w").write(page(lang))
 # llms.txt + markdown catalog
 md=[f"# {A['name']}, {A['title']['en']}",f"",f"> Bilingual (English/Spanish) real estate agent with {A['brokerage']} serving San Antonio, Texas. Website: {A['website']}. Phone: {A['phoneDisplay']}. Last updated {C['updated']}.","",
- "## Areas served",", ".join(C["areas"]),"","## Services"]
+ "## Credentials",f"- Texas real estate license #{A['license']}, licensed since {A['licensedSince']}","- "+"; ".join(A["certifications"]),"- "+A["responseTime"]["en"],"","## Areas served",", ".join(C["areas"]),"","## Services"]
 for s in C["services"]: md.append(f"- {s['name']['en']}: {s['desc']['en']}")
 md+=["","## Frequently asked questions (English)",""]
 for f in C["faq"]: md+=[f"### {f['q']['en']}",f['a']['en'],""]

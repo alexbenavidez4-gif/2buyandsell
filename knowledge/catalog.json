@@ -1,36 +1,320 @@
 {
-  "updated": "2026-11-23",
+  "updated": "2026-11-24",
   "agent": {
     "name": "Monica Polo",
-    "title": {"en": "REALTOR®, bilingual real estate agent", "es": "Agente de bienes raíces (REALTOR®) bilingüe"},
+    "title": {
+      "en": "REALTOR®, bilingual real estate agent",
+      "es": "Agente de bienes raíces (REALTOR®) bilingüe"
+    },
     "brokerage": "Reliance Residential Realty",
     "phone": "+1-210-249-8331",
     "phoneDisplay": "(210) 249-8331",
-    "languages": ["en", "es"],
+    "languages": [
+      "en",
+      "es"
+    ],
     "website": "https://www.2buyandsell.com/",
     "instagram": "https://www.instagram.com/agentmonipolo/",
-    "brokerPage": "https://monicapolo.reliancerr.com/"
+    "brokerPage": "https://monicapolo.reliancerr.com/",
+    "license": "769628",
+    "licensedSince": 2021,
+    "certifications": [
+      "Graduate REALTOR® Institute (GRI)",
+      "Military and Veteran Housing Certification (MVHC)"
+    ],
+    "responseTime": {
+      "en": "Monica replies to new leads within 48 hours and aims for 24.",
+      "es": "Monica responde a los nuevos contactos en un máximo de 48 horas y busca hacerlo en 24."
+    }
   },
-  "areas": ["San Antonio", "Converse", "Schertz", "Cibolo", "Universal City", "Live Oak", "Selma", "New Braunfels", "Boerne", "Helotes", "Bexar County"],
+  "areas": [
+    "San Antonio",
+    "Converse",
+    "Live Oak",
+    "Cibolo",
+    "New Braunfels",
+    "Seguin"
+  ],
   "services": [
-    {"id": "buy", "name": {"en": "Buyer representation", "es": "Representación para compradores"}, "desc": {"en": "Guidance from readiness check through closing for people buying a home in the San Antonio area, in English or Spanish.", "es": "Acompañamiento desde la evaluación de preparación hasta el cierre para quienes compran casa en el área de San Antonio, en español o en inglés."}, "url": "/buy-a-home-san-antonio.html", "urlEs": "/comprar-casa-san-antonio.html"},
-    {"id": "sell", "name": {"en": "Seller representation", "es": "Representación para vendedores"}, "desc": {"en": "Help pricing, preparing, listing and closing the sale of a home in the San Antonio area, in English or Spanish.", "es": "Ayuda para fijar el precio, preparar, publicar y cerrar la venta de una casa en el área de San Antonio, en español o en inglés."}, "url": "/sell-your-home-san-antonio.html", "urlEs": "/vender-casa-san-antonio.html"},
-    {"id": "value", "name": {"en": "Free home value estimate", "es": "Estimado gratis del valor de tu casa"}, "desc": {"en": "A personal estimate of what a home could sell for, sent within one business day.", "es": "Un estimado personal de en cuánto podría venderse una casa, en un día hábil."}, "url": "/", "urlEs": "/"},
-    {"id": "check", "name": {"en": "Free 2-minute readiness check", "es": "Evaluación gratis de 2 minutos"}, "desc": {"en": "Free, about 2 minutes, no credit check. Shows buyers a readiness score and price range, and sellers a value range and estimated net.", "es": "Gratis, unos 2 minutos, sin revisar tu crédito. Muestra a compradores su preparación y rango de precio, y a vendedores un rango de valor y lo que les quedaría."}, "url": "/", "urlEs": "/"}
+    {
+      "id": "buy",
+      "name": {
+        "en": "Buyer representation",
+        "es": "Representación para compradores"
+      },
+      "desc": {
+        "en": "Guidance from readiness check through closing for people buying a home in the San Antonio area, in English or Spanish.",
+        "es": "Acompañamiento desde la evaluación de preparación hasta el cierre para quienes compran casa en el área de San Antonio, en español o en inglés."
+      },
+      "url": "/buy-a-home-san-antonio.html",
+      "urlEs": "/comprar-casa-san-antonio.html"
+    },
+    {
+      "id": "sell",
+      "name": {
+        "en": "Seller representation",
+        "es": "Representación para vendedores"
+      },
+      "desc": {
+        "en": "Help pricing, preparing, listing and closing the sale of a home in the San Antonio area, in English or Spanish.",
+        "es": "Ayuda para fijar el precio, preparar, publicar y cerrar la venta de una casa en el área de San Antonio, en español o en inglés."
+      },
+      "url": "/sell-your-home-san-antonio.html",
+      "urlEs": "/vender-casa-san-antonio.html"
+    },
+    {
+      "id": "value",
+      "name": {
+        "en": "Free home value estimate",
+        "es": "Estimado gratis del valor de tu casa"
+      },
+      "desc": {
+        "en": "A personal estimate of what a home could sell for, sent within one business day.",
+        "es": "Un estimado personal de en cuánto podría venderse una casa, en un día hábil."
+      },
+      "url": "/",
+      "urlEs": "/"
+    },
+    {
+      "id": "check",
+      "name": {
+        "en": "Free 2-minute readiness check",
+        "es": "Evaluación gratis de 2 minutos"
+      },
+      "desc": {
+        "en": "Free, about 2 minutes, no credit check. Shows buyers a readiness score and price range, and sellers a value range and estimated net.",
+        "es": "Gratis, unos 2 minutos, sin revisar tu crédito. Muestra a compradores su preparación y rango de precio, y a vendedores un rango de valor y lo que les quedaría."
+      },
+      "url": "/",
+      "urlEs": "/"
+    }
   ],
   "faq": [
-    {"id": "cost", "tags": ["check"], "q": {"en": "Does the readiness check cost anything?", "es": "¿Cuesta algo la evaluación?"}, "a": {"en": "No. It's free, takes about 2 minutes and doesn't check your credit. Monica replies to you personally.", "es": "No. Es gratis, toma unos 2 minutos y no revisa tu crédito. Monica te responde personalmente."}},
-    {"id": "credit", "tags": ["check"], "q": {"en": "Does the check affect my credit score?", "es": "¿La evaluación afecta mi puntaje de crédito?"}, "a": {"en": "No. The check never touches your credit report or score. It asks you for an approximate score only to estimate your options.", "es": "No. La evaluación nunca toca tu reporte ni tu puntaje de crédito. Solo te pide un cálculo aproximado para estimar tus opciones."}},
-    {"id": "who-sees", "tags": ["privacy"], "q": {"en": "Who sees my answers, and is my information sold?", "es": "¿Quién ve mis respuestas y se vende mi información?"}, "a": {"en": "Your answers go to one local real estate agent, Monica Polo. Your information is never sold.", "es": "Tus respuestas le llegan a una sola agente local, Monica Polo. Tu información nunca se vende."}},
-    {"id": "fair-housing", "tags": ["policy"], "q": {"en": "What does the check ask about?", "es": "¿Qué pregunta la evaluación?"}, "a": {"en": "Money and timing. It never asks about who you are. Monica follows Fair Housing rules.", "es": "Dinero y tiempos. Nunca pregunta quién eres. Monica sigue las reglas de Vivienda Justa (Fair Housing)."}},
-    {"id": "spanish", "tags": ["language"], "q": {"en": "Can I work with a Spanish-speaking agent?", "es": "¿Puedo trabajar con una agente que hable español?"}, "a": {"en": "Yes. Monica is bilingual and can guide you through buying or selling in English or Spanish.", "es": "Sí. Monica es bilingüe y te acompaña al comprar o vender en español o en inglés."}},
-    {"id": "areas", "tags": ["areas"], "q": {"en": "Which areas does Monica serve?", "es": "¿Qué zonas atiende Monica?"}, "a": {"en": "San Antonio and Bexar County, plus Converse, Schertz, Cibolo, Universal City, Live Oak, Selma, New Braunfels, Boerne and Helotes.", "es": "San Antonio y el condado de Bexar, además de Converse, Schertz, Cibolo, Universal City, Live Oak, Selma, New Braunfels, Boerne y Helotes."}},
-    {"id": "value", "tags": ["sell"], "q": {"en": "How do I find out what my home is worth?", "es": "¿Cómo sé cuánto vale mi casa?"}, "a": {"en": "Take the free seller check, or enter your address in the home value section on the home page. Monica sends you a personal estimate within one business day.", "es": "Haz la evaluación gratis para vendedores, o escribe tu dirección en la sección del valor de tu casa en la página principal. Monica te manda un estimado personal en un día hábil."}},
-    {"id": "both", "tags": ["buy", "sell"], "q": {"en": "Can I sell and buy at the same time?", "es": "¿Puedo vender y comprar al mismo tiempo?"}, "a": {"en": "Yes. The check lets you answer for both, so you can see how the sale could fund your next home.", "es": "Sí. La evaluación te deja responder por las dos cosas, para ver cómo la venta podría ayudarte a pagar tu próxima casa."}},
-    {"id": "loans", "tags": ["buy"], "q": {"en": "What loan options should I ask about when buying?", "es": "¿Qué opciones de préstamo debo preguntar al comprar?"}, "a": {"en": "Depending on your situation, compare conventional, FHA and VA loans, and ask a lender whether any down payment assistance programs fit you. If you or your spouse serve at Joint Base San Antonio, ask Monica about buying with VA benefits.", "es": "Según tu situación, compara préstamos convencionales, FHA y VA, y pregúntale a un prestamista si algún programa de ayuda para el enganche te sirve. Si tú o tu pareja sirven en Joint Base San Antonio, pregúntale a Monica sobre comprar con beneficios VA."}},
-    {"id": "buy-steps", "tags": ["buy"], "q": {"en": "What are the steps to buy a home in San Antonio?", "es": "¿Cuáles son los pasos para comprar casa en San Antonio?"}, "a": {"en": "Most purchases follow the same path: get your finances in order, talk with a lender about loan options, search for homes, make an offer, complete the inspection and option period, and close with a title company. Monica explains each step before you get to it.", "es": "La mayoría de las compras siguen el mismo camino: ordenar tus finanzas, hablar con un prestamista, buscar casas, hacer una oferta, completar la inspección y el periodo de opción, y cerrar con una compañía de título. Monica te explica cada paso antes de llegar a él."}},
-    {"id": "sell-steps", "tags": ["sell"], "q": {"en": "What are the steps to sell a home in San Antonio?", "es": "¿Cuáles son los pasos para vender una casa en San Antonio?"}, "a": {"en": "Selling typically means pricing the home with local sales in mind, preparing it for photos and showings, reviewing offers, handling the buyer's inspection and option period, and closing with a title company. Monica walks you through each step.", "es": "Vender normalmente significa fijar el precio según las ventas locales, preparar la casa para fotos y visitas, revisar ofertas, atender la inspección y el periodo de opción del comprador, y cerrar con una compañía de título. Monica te acompaña en cada paso."}},
-    {"id": "contact", "tags": ["contact"], "q": {"en": "How do I reach Monica?", "es": "¿Cómo contacto a Monica?"}, "a": {"en": "Call (210) 249-8331, or use Get in touch on the home page.", "es": "Llama al (210) 249-8331, o usa Contáctame en la página principal."}},
-    {"id": "broker", "tags": ["policy"], "q": {"en": "Which brokerage is Monica with?", "es": "¿Con qué corredora trabaja Monica?"}, "a": {"en": "Monica Polo is a REALTOR® with Reliance Residential Realty in San Antonio, Texas. The Texas Real Estate Commission's Information About Brokerage Services and Consumer Protection Notice are linked on every page.", "es": "Monica Polo es agente (REALTOR®) de Reliance Residential Realty en San Antonio, Texas. La Información sobre los servicios de corretaje y el Aviso de protección al consumidor de la Comisión de Bienes Raíces de Texas están enlazados en cada página."}}
+    {
+      "id": "cost",
+      "tags": [
+        "check"
+      ],
+      "q": {
+        "en": "Does the readiness check cost anything?",
+        "es": "¿Cuesta algo la evaluación?"
+      },
+      "a": {
+        "en": "No. It's free, takes about 2 minutes and doesn't check your credit. Monica replies to you personally.",
+        "es": "No. Es gratis, toma unos 2 minutos y no revisa tu crédito. Monica te responde personalmente."
+      }
+    },
+    {
+      "id": "credit",
+      "tags": [
+        "check"
+      ],
+      "q": {
+        "en": "Does the check affect my credit score?",
+        "es": "¿La evaluación afecta mi puntaje de crédito?"
+      },
+      "a": {
+        "en": "No. The check never touches your credit report or score. It asks you for an approximate score only to estimate your options.",
+        "es": "No. La evaluación nunca toca tu reporte ni tu puntaje de crédito. Solo te pide un cálculo aproximado para estimar tus opciones."
+      }
+    },
+    {
+      "id": "who-sees",
+      "tags": [
+        "privacy"
+      ],
+      "q": {
+        "en": "Who sees my answers, and is my information sold?",
+        "es": "¿Quién ve mis respuestas y se vende mi información?"
+      },
+      "a": {
+        "en": "Your answers go to one local real estate agent, Monica Polo. Your information is never sold.",
+        "es": "Tus respuestas le llegan a una sola agente local, Monica Polo. Tu información nunca se vende."
+      }
+    },
+    {
+      "id": "fair-housing",
+      "tags": [
+        "policy"
+      ],
+      "q": {
+        "en": "What does the check ask about?",
+        "es": "¿Qué pregunta la evaluación?"
+      },
+      "a": {
+        "en": "Money and timing. It never asks about who you are. Monica follows Fair Housing rules.",
+        "es": "Dinero y tiempos. Nunca pregunta quién eres. Monica sigue las reglas de Vivienda Justa (Fair Housing)."
+      }
+    },
+    {
+      "id": "spanish",
+      "tags": [
+        "language"
+      ],
+      "q": {
+        "en": "Can I work with a Spanish-speaking agent?",
+        "es": "¿Puedo trabajar con una agente que hable español?"
+      },
+      "a": {
+        "en": "Yes. Monica is bilingual and can guide you through buying or selling in English or Spanish.",
+        "es": "Sí. Monica es bilingüe y te acompaña al comprar o vender en español o en inglés."
+      }
+    },
+    {
+      "id": "areas",
+      "tags": [
+        "areas"
+      ],
+      "q": {
+        "en": "Which areas does Monica serve?",
+        "es": "¿Qué zonas atiende Monica?"
+      },
+      "a": {
+        "en": "San Antonio, Converse, Live Oak, Cibolo, New Braunfels and Seguin.",
+        "es": "San Antonio, Converse, Live Oak, Cibolo, New Braunfels y Seguin."
+      }
+    },
+    {
+      "id": "value",
+      "tags": [
+        "sell"
+      ],
+      "q": {
+        "en": "How do I find out what my home is worth?",
+        "es": "¿Cómo sé cuánto vale mi casa?"
+      },
+      "a": {
+        "en": "Take the free seller check, or enter your address in the home value section on the home page. Monica replies within 48 hours and aims for 24.",
+        "es": "Haz la evaluación gratis para vendedores, o escribe tu dirección en la sección del valor de tu casa en la página principal. Monica responde en un máximo de 48 horas y busca hacerlo en 24."
+      }
+    },
+    {
+      "id": "both",
+      "tags": [
+        "buy",
+        "sell"
+      ],
+      "q": {
+        "en": "Can I sell and buy at the same time?",
+        "es": "¿Puedo vender y comprar al mismo tiempo?"
+      },
+      "a": {
+        "en": "Yes. The check lets you answer for both, so you can see how the sale could fund your next home.",
+        "es": "Sí. La evaluación te deja responder por las dos cosas, para ver cómo la venta podría ayudarte a pagar tu próxima casa."
+      }
+    },
+    {
+      "id": "loans",
+      "tags": [
+        "buy"
+      ],
+      "q": {
+        "en": "What loan options should I ask about when buying?",
+        "es": "¿Qué opciones de préstamo debo preguntar al comprar?"
+      },
+      "a": {
+        "en": "Depending on your situation, compare conventional, FHA and VA loans, and ask a lender whether any down payment assistance programs fit you. If you or your spouse serve at Joint Base San Antonio, ask Monica about buying with VA benefits.",
+        "es": "Según tu situación, compara préstamos convencionales, FHA y VA, y pregúntale a un prestamista si algún programa de ayuda para el enganche te sirve. Si tú o tu pareja sirven en Joint Base San Antonio, pregúntale a Monica sobre comprar con beneficios VA."
+      }
+    },
+    {
+      "id": "buy-steps",
+      "tags": [
+        "buy"
+      ],
+      "q": {
+        "en": "What are the steps to buy a home in San Antonio?",
+        "es": "¿Cuáles son los pasos para comprar casa en San Antonio?"
+      },
+      "a": {
+        "en": "Most purchases follow the same path: get your finances in order, talk with a lender about loan options, search for homes, make an offer, complete the inspection and option period, and close with a title company. Monica explains each step before you get to it.",
+        "es": "La mayoría de las compras siguen el mismo camino: ordenar tus finanzas, hablar con un prestamista, buscar casas, hacer una oferta, completar la inspección y el periodo de opción, y cerrar con una compañía de título. Monica te explica cada paso antes de llegar a él."
+      }
+    },
+    {
+      "id": "sell-steps",
+      "tags": [
+        "sell"
+      ],
+      "q": {
+        "en": "What are the steps to sell a home in San Antonio?",
+        "es": "¿Cuáles son los pasos para vender una casa en San Antonio?"
+      },
+      "a": {
+        "en": "Selling typically means pricing the home with local sales in mind, preparing it for photos and showings, reviewing offers, handling the buyer's inspection and option period, and closing with a title company. Monica walks you through each step.",
+        "es": "Vender normalmente significa fijar el precio según las ventas locales, preparar la casa para fotos y visitas, revisar ofertas, atender la inspección y el periodo de opción del comprador, y cerrar con una compañía de título. Monica te acompaña en cada paso."
+      }
+    },
+    {
+      "id": "contact",
+      "tags": [
+        "contact"
+      ],
+      "q": {
+        "en": "How do I reach Monica?",
+        "es": "¿Cómo contacto a Monica?"
+      },
+      "a": {
+        "en": "Call (210) 249-8331, or use Get in touch on the home page.",
+        "es": "Llama al (210) 249-8331, o usa Contáctame en la página principal."
+      }
+    },
+    {
+      "id": "broker",
+      "tags": [
+        "policy"
+      ],
+      "q": {
+        "en": "Which brokerage is Monica with?",
+        "es": "¿Con qué corredora trabaja Monica?"
+      },
+      "a": {
+        "en": "Monica Polo is a REALTOR® with Reliance Residential Realty in San Antonio, Texas. The Texas Real Estate Commission's Information About Brokerage Services and Consumer Protection Notice are linked on every page.",
+        "es": "Monica Polo es agente (REALTOR®) de Reliance Residential Realty en San Antonio, Texas. La Información sobre los servicios de corretaje y el Aviso de protección al consumidor de la Comisión de Bienes Raíces de Texas están enlazados en cada página."
+      }
+    },
+    {
+      "id": "credentials",
+      "tags": [
+        "expertise"
+      ],
+      "q": {
+        "en": "What are Monica's credentials?",
+        "es": "¿Cuáles son las credenciales de Monica?"
+      },
+      "a": {
+        "en": "Monica Polo has been a licensed Texas real estate agent since September 2021 (Texas license #769628). She holds the Graduate REALTOR® Institute (GRI) designation and the Military and Veteran Housing Certification (MVHC).",
+        "es": "Monica Polo es agente de bienes raíces con licencia de Texas desde septiembre de 2021 (licencia de Texas #769628). Tiene la designación Graduate REALTOR® Institute (GRI) y la Certificación de Vivienda para Militares y Veteranos (MVHC)."
+      }
+    },
+    {
+      "id": "military",
+      "tags": [
+        "buy",
+        "expertise"
+      ],
+      "q": {
+        "en": "Does Monica help military families and veterans buy a home?",
+        "es": "¿Monica ayuda a familias militares y veteranos a comprar casa?"
+      },
+      "a": {
+        "en": "Yes. Monica holds the Military and Veteran Housing Certification (MVHC). If you or your spouse serve or have served, ask her about buying with VA benefits.",
+        "es": "Sí. Monica tiene la Certificación de Vivienda para Militares y Veteranos (MVHC). Si tú o tu pareja sirven o han servido, pregúntale sobre comprar con beneficios VA."
+      }
+    },
+    {
+      "id": "response",
+      "tags": [
+        "contact"
+      ],
+      "q": {
+        "en": "How fast will Monica reply?",
+        "es": "¿Qué tan rápido responde Monica?"
+      },
+      "a": {
+        "en": "Monica replies to new leads within 48 hours and aims for 24.",
+        "es": "Monica responde a los nuevos contactos en un máximo de 48 horas y busca hacerlo en 24."
+      }
+    }
   ]
 }
