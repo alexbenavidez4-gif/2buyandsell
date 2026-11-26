@@ -376,6 +376,17 @@ details.assume summary{cursor:pointer;color:var(--muted);font-size:15px}
 body:not(.ready) .about-agent,body:not(.ready) .sharebar,body:not(.ready) #legalFoot,body:not(.ready) #view-tool .shell{display:none}
 #hPhoto{display:inline-block;min-width:40px;min-height:40px}
 /* About Monica: plain text in the page itself, in both languages, so search engines can read it */
+.rev-mp{background:#F5F0E7;border-top:1px solid rgba(49,86,79,.15);margin-top:28px}
+.rev-mp .in{max-width:1080px;margin:0 auto;padding:34px 16px 30px;text-align:center}
+.rev-mp h2{font-size:24px;margin:0 0 4px;line-height:1.25;color:#31564F}
+.rev-mp .sub{margin:0 0 20px;color:#3f4a44;font-size:15px}
+.rev-mp .grid{display:grid;gap:14px;text-align:left}
+@media (min-width:760px){.rev-mp .grid{grid-template-columns:repeat(3,1fr)}}
+.rev-mp figure{margin:0;background:#fff;border:1px solid rgba(184,117,91,.45);padding:18px 18px 14px}
+.rev-mp .st{color:#B8755B;letter-spacing:2px;font-size:16px}
+.rev-mp blockquote{margin:8px 0 10px;font-family:var(--serif);font-style:italic;font-size:18px;line-height:1.45;color:#31564F}
+.rev-mp figcaption{font-size:13px;color:#3f4a44}
+.rev-mp .more{display:inline-block;margin-top:18px;color:#31564F;font-weight:600;text-decoration:underline;text-underline-offset:3px}
 .about-agent{background:var(--card);border-top:1px solid var(--line);margin-top:28px}
 .about-agent .in{max-width:1080px;margin:0 auto;padding:30px 16px 34px;display:grid;gap:34px}
 @media (min-width:860px){.about-agent .in{grid-template-columns:1fr 1fr;gap:44px}}
@@ -884,7 +895,7 @@ body.mp-theme .ivid .fd.b{bottom:-14px}
   </div>
 </header>
 
-<main id="view-tool"><div id="heroWrap" hidden></div><div class="shell"><aside class="side" id="side"></aside><div class="col" id="app"></div></div><section class="about-agent" id="about" aria-label="About Monica Polo · Acerca de Monica Polo"><div class="in"><div class="aa-col" lang="en"><h2>Monica Polo, REALTOR® · Bilingual · San Antonio</h2>
+<main id="view-tool"><div id="heroWrap" hidden></div><div class="shell"><aside class="side" id="side"></aside><div class="col" id="app"></div></div><section class="rev-mp" id="reviews" aria-label="Client reviews · Reseñas de clientes"><div class="in"><h2>What clients say · Lo que dicen mis clientes</h2><p class="sub">5.0 ★ from 7 Google reviews · 5.0 ★ en 7 reseñas de Google</p><div class="grid"><figure><div class="st" aria-label="5 stars">★★★★★</div><blockquote>“We are very grateful and fortunate that Monica was the realtor that assisted us in finding our first home. She was extremely patient and knowledgeable throughout the entire process and always responded quickly anytime we had questions or concerns. We highly recommend her to everyone.”</blockquote><figcaption>Steven M. · Google review · Reseña de Google</figcaption></figure><figure><div class="st" aria-label="5 stars">★★★★★</div><blockquote>“As first time home buyers, we appreciate Monica’s hard work and dedication. We are beyond happy to have chosen to work with her.”</blockquote><figcaption>Breanna B. · Google review · Reseña de Google</figcaption></figure><figure><div class="st" aria-label="5 stars">★★★★★</div><blockquote>“Monica Polo was so helpful and patient. She help me find my forever home and made it super easy for us.”</blockquote><figcaption>Vanessa R. · Google review · Reseña de Google</figcaption></figure></div><a class="more" href="https://www.google.com/search?q=monica+polo+realtor+san+antonio" target="_blank" rel="noopener">See all reviews on Google · Ver todas las reseñas en Google</a></div></section><section class="about-agent" id="about" aria-label="About Monica Polo · Acerca de Monica Polo"><div class="in"><div class="aa-col" lang="en"><h2>Monica Polo, REALTOR® · Bilingual · San Antonio</h2>
 <p>I'm Monica Polo, a sales agent with Reliance Residential Realty and a member of the San Antonio Board of REALTORS®. I help families buy and sell homes across San Antonio and Bexar County, and I explain every step in plain words, in English or Spanish, with no pressure.</p>
 <h3>How I can help</h3><ul>
 <li><b>Buying your first home.</b> Start with the free 2-minute readiness check, then we make a plan together.</li>
